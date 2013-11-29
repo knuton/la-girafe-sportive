@@ -1,5 +1,5 @@
-La Girafe Sportif
-=================
+La Girafe Sportive
+==================
 
 Coq-verified statements about lambda calculi.
 
