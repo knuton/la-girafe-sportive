@@ -17,3 +17,11 @@ Inductive pterm : Type :=
   | App : pterm -> pterm -> pterm.
 
 End PrettyTerm.
+
+(** Useless, but why not have it **)
+Fixpoint gfold (f: nat -> nat) (t: lterm) : lterm :=
+  match t with
+      | Var i => Var (f i)
+      | Lam t => Lam (gfold f t)
+      | App m n => App (gfold f m) (gfold f n)
+  end.
