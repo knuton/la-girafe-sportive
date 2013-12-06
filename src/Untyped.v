@@ -9,13 +9,18 @@ Inductive lterm : Type :=
   | Lam : lterm -> lterm
   | App : lterm -> lterm -> lterm.
 
-(** Useless, but why not have it **)
-Fixpoint gfold (f: nat -> nat) (t: lterm) : lterm :=
+(** Helper for lamfold below **)
+Fixpoint lamfold' (f: nat -> nat -> nat) (l: nat) (t: lterm) : lterm :=
   match t with
-      | Var i => Var (f i)
-      | Lam t => Lam (gfold f t)
-      | App m n => App (gfold f m) (gfold f n)
+      | Var i => Var (f l i)
+      | Lam t => Lam (lamfold' f (l+1) t)
+      | App m n => App (lamfold' f l m) (lamfold' f l n)
   end.
+
+(** This is like a (f)map, except that it has an accumulator which denotes
+    the current binder level **)
+Definition lamfold (f: nat -> nat -> nat) (t: lterm) : lterm :=
+    lamfold' f 0 t.
 
 End DeBruijn.
 
