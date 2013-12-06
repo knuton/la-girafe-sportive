@@ -69,18 +69,18 @@ Fixpoint hide (s: string) (ls: list (string * nat)) : list (string * nat) :=
   | (x, n) :: t => if string_dec x s then (x, 0) :: t else (x, n + 1) :: hide s t
   end.
 
-Fixpoint dename1 (t: PrettyTerm.pterm) (binds: list (string * nat)) : lterm :=
+Fixpoint dename' (t: PrettyTerm.pterm) (binds: list (string * nat)) : lterm :=
   match t with
   | PrettyTerm.Var s => match lookup s binds with
              | Some n => Var n
              | None => Var 0
              end
-  | PrettyTerm.Lam s t => Lam (dename1 t (hide s binds))
-  | PrettyTerm.App t1 t2 => App (dename1 t1 binds) (dename1 t2 binds) 
+  | PrettyTerm.Lam s t => Lam (dename' t (hide s binds))
+  | PrettyTerm.App t1 t2 => App (dename' t1 binds) (dename' t2 binds) 
   end.
 
 Definition dename (t : PrettyTerm.pterm) : lterm :=
-  dename1 t nil.
+  dename' t nil.
 
 (** To convince ourselves of the correctness of [dename], let us briefly look at what
     it does to the combinators K and S.
