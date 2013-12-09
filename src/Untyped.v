@@ -82,6 +82,8 @@ Fixpoint dename' (t: PrettyTerm.pterm) (binds: list (string * nat)) : lterm :=
 Definition dename (t : PrettyTerm.pterm) : lterm :=
   dename' t nil.
 
+Coercion dename : PrettyTerm.pterm >-> lterm.
+
 (** To convince ourselves of the correctness of [dename], let us briefly look at what
     it does to the combinators K and S.
 *)
@@ -89,7 +91,13 @@ Definition dename (t : PrettyTerm.pterm) : lterm :=
 Example k_comb : dename (\"x" ~> \"y" ~> `"x") = Lam (Lam (Var 1)).
 Proof. reflexivity. Qed.
 
+(** Using the coercion defined above, the explicit call to [dename] can be removed
+    (after reordering of the terms to coerce in the right direction). *)
+
+Example k_comb_impl :  Lam (Lam (Var 1)) = \"x" ~> \"y" ~> `"x".
+Proof. reflexivity. Qed.
+
 Example s_comb :
-  dename (\"x" ~> \"y" ~> \"z" ~> `"x" $ `"z" $ (`"y" $ `"z")) =
-  Lam (Lam (Lam (App (App (Var 2) (Var 0)) (App (Var 1) (Var 0))))).
+  Lam (Lam (Lam (App (App (Var 2) (Var 0)) (App (Var 1) (Var 0))))) =
+   \"x" ~> \"y" ~> \"z" ~> `"x" $ `"z" $ (`"y" $ `"z").
 Proof. reflexivity. Qed.
