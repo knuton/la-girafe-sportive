@@ -17,7 +17,7 @@ Fixpoint subst (v: nat) (r: lterm) (t: lterm) : lterm :=
   match t with
       | Var i =>  match (nat_compare i v) with
                            | Lt => Var i
-                           | Eq => lift 0 v r
+                           | Eq => lift v 0 r
                            | Gt => Var (i - 1)
                   end
       | App m n => App (subst v r m) (subst v r n)
