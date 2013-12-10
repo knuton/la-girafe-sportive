@@ -57,12 +57,21 @@ Proof.
 Qed.
 
 Lemma lift_lem3:
-  forall (i j k: nat) (N L P: lterm),
-  k <= i /\ i < k + (j + 1) -> subst i P (lift (j+1) k L) = lift j k L.
+  forall (L P: lterm) (i j k: nat),
+  k <= i < k + (j + 1) -> subst i P (lift (j+1) k L) = lift j k L.
 Proof.
-  admit.
-Qed.
+  intro L. induction L.
+  intros. simpl. destruct (lt_dec n k).
+    intros. simpl. assert (n < i). apply lt_le_trans with k. assumption. apply H.
+    apply nat_compare_lt in H0. rewrite H0. reflexivity.
 
+    simpl. apply not_lt in n0. assert (i < n + (j + 1)). omega.
+     apply nat_compare_gt in H0. rewrite H0. apply f_equal. omega.
+
+  intros. simpl. apply f_equal. apply IHL. omega.
+  intros. simpl. rewrite IHL1. rewrite IHL2. reflexivity.
+  auto. auto.
+Qed.
 
 Lemma subst_var_idemp:
   forall (n: nat) (N: lterm), subst n N (Var n) = N.
