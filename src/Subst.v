@@ -1,4 +1,5 @@
 Require Export Untyped.
+Require Import Omega.
 Require Import Coq.Arith.Compare_dec.
 Require Import Coq.Arith.Plus.
 Require Import Coq.Arith.Lt.
@@ -50,10 +51,82 @@ Proof.
 Qed.
 
 Lemma lift_lem2:
-  forall (i j k: nat) (N L: lterm),
+  forall (N L: lterm) (i j k: nat),
   k <= j -> lift i k (subst j L N) = subst (j+i) L (lift i k N).
 Proof.
-  admit.
+  induction N as [v | N' | N1 ].
+    (** N := Var v **)
+    intros. simpl. case_eq (nat_compare v j).
+      (** v Eq j **)
+      intros. apply nat_compare_eq in H0. rewrite lift_fuse.
+      destruct (lt_dec v k).
+        (** v < k **)
+        simpl. case_eq (nat_compare v (j + i)).
+          (** Eq **)
+          rewrite plus_comm. reflexivity.
+          (** Lt **)
+          contradict l. omega.
+          (** Gt **)
+          intros. apply nat_compare_gt in H1. contradict H1. omega.
+        (** ~ v < k **)
+        simpl. case_eq (nat_compare (v+i) (j+i)).
+          (** Eq **)
+          intros. rewrite plus_comm. reflexivity.
+          (** Lt **)
+          intros. apply nat_compare_lt in H1. contradict H1. omega.
+          (** Gt **)
+          intros. apply nat_compare_gt in H1. contradict H1. omega.
+        split. omega. omega.
+      (** v Lt j **)
+      intros. apply nat_compare_lt in H0. destruct (lt_dec v k).
+        (** v < k **)
+        simpl. destruct (lt_dec v k).
+          (** v < k **)
+          case_eq (nat_compare v (j + i)).
+            (** Eq **)
+            intros. apply nat_compare_eq in H1. contradict H0. omega.
+            (** Lt **)
+            intros. reflexivity.
+            (** Gt **)
+            intros. apply nat_compare_gt in H1. contradict H1. omega.
+          (** ~ v < k **)
+          contradiction.
+        (** ~ v < k **)
+        simpl. destruct (lt_dec v k).
+          (** v < k **)
+          contradiction.
+          (** ~ v < k **)
+          case_eq (nat_compare (v+i) (j+i)).
+            (** Eq **)
+            intros. apply nat_compare_eq in H1. contradict H0. omega.
+            (** Lt **)
+            intros. reflexivity.
+            (** Gt **)
+            intros. apply nat_compare_gt in H1. contradict H0. omega.
+      (** v Gt j **)
+      intros. apply nat_compare_gt in H0. simpl. destruct (lt_dec (v - 1) k).
+        (** v - 1 < k **)
+        contradict l. omega.
+        (** ~ v - 1 < k **)
+        destruct (lt_dec v k).
+          (** v < k **)
+          contradict l. omega.
+          (** ~ v < k **)
+          simpl. case_eq (nat_compare (v + i) (j + i)).
+            (** Eq **)
+            intros. apply nat_compare_eq in H1. contradict H0. omega.
+            (** Lt **)
+            intros. apply nat_compare_lt in H1. contradict H0. omega.
+            (** Gt **)
+            intros. apply nat_compare_gt in H1. f_equal. omega.
+    (** N := Lam N' **)
+    intros. simpl. f_equal.
+    assert (U: j + 1 + i = j + i + 1). omega. rewrite <- U.
+    apply (IHN' L i (j+1) (k+1)). omega.
+    (** N := App N1 N2 **)
+    intros. simpl. f_equal.
+    apply IHN1. assumption.
+    apply IHN2. assumption.
 Qed.
 
 Lemma lift_lem3:
