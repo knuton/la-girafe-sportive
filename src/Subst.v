@@ -1,11 +1,12 @@
 Require Export Untyped.
 Require Import Coq.Arith.Compare_dec.
 Require Import Coq.Arith.Plus.
+Require Import Coq.Arith.Lt.
 
 (** (l)ift (t)erms below the (b)ound by some (l)evel **)
 Fixpoint lift (l: nat) (b: nat) (t: lterm) : lterm :=
   match t with
-      | Var i as v =>  if (lt_dec i b) then Var (i+l) else v
+      | Var i as v =>  if (lt_dec i b) then v else Var (i+l)
       | App m n => App (lift l b m) (lift l b n)
       | Lam t => Lam (lift l (b+1) t)
   end.
