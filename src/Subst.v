@@ -27,53 +27,11 @@ Fixpoint subst (v: nat) (r: lterm) (t: lterm) : lterm :=
 (** The following lemmas are described in Berghofer and Urban, who
     seem to trace down these due to Huet **)
 
-(* Lemma lt_dec_lt: forall m n, m <= n -> le_lt_dec m n. *)
-
-Example fishy: 2 <= 4 <= 2 + 100 /\ lift 3 4 (lift 100 2 (Var 1)) <> lift 103 2 (Var 1).
-Proof.
-  split. split. auto. simpl. assert (0 <= 98). apply Le.le_0_n. apply (plus_le_compat_r 0 98 4) in H. simpl in H. assumption.
-  simpl. unfold not. intros. inversion H.
-Qed.
-
-Example lift_lem_1_bs:
-  ~ forall (i j n m: nat) (N: lterm),
+Lemma lift_fuse:
+  forall (N: lterm) (i j n m: nat),
     i <= j <= i + m -> lift n j (lift m i N) = lift (n+m) i N.
 Proof.
-  unfold not. intros L.
-  assert (I: 2 <= 4 <= 2 + 100 -> lift 3 4 (lift 100 2 (Var 1)) = lift (3 + 100) 2 (Var 1)).
-  apply (L 2 4 3 100).
-  assert (INQ: 2 <= 4 <= 2 + 100). split. auto. simpl. assert (TRIV: 0 <= 98). apply Le.le_0_n.  apply (plus_le_compat_r 0 98 4) in TRIV. simpl in TRIV. assumption.
-  apply I in INQ. simpl in INQ. inversion INQ.
-Qed.
-
-Lemma lift_lem1:
-  forall (i j n m: nat) (N: lterm),
-    i <= j <= i + m -> lift n j (lift m i N) = lift (n+m) i N.
-Proof.
-  intros i j n m N.
-  generalize i j n m. clear i j n m.
-  induction N as [k | N1 N2 | N1].
-    (** N := Var k *)
-    intros i j n m (ij, jim).
-    simpl. case (lt_dec k i).
-      (** k < i *)
-      intro ki.
-      intro ki. simpl. elim (lt_dec (k + m) j)
-        intro kpmj. rewrite plus_assoc_reverse. assert (m + n = n + m). apply plus_comm. rewrite H. reflexivity.
-      (** CHEATED *)
-      intro negkpmj. unfold not in negkpmj. assert (k + m < j). admit. apply negkpmj in H. inversion H.
-      intro negki. unfold not in negki. admit.
-    (** N := Lam N1 *)
-    intros i j n m (ij, jim). simpl. f_equal. apply N2. split.
-      (** i + 1 <= j + 1 *)
-      apply plus_le_compat_r. assumption.
-      (** j + 1 <= i + 1 + m *)
-      rewrite <- plus_assoc. rewrite plus_permute. rewrite plus_comm.
-      apply plus_le_compat_l. assumption.
-    (** N := App N1 N2 *)
-    intros i j n m (ij, jim). simpl. f_equal.
-    apply IHN1. split. assumption. assumption.
-    apply IHN2. split. assumption. assumption.
+  admit.
 Qed.
 
 Lemma lift_lem2:
