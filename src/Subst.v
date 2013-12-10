@@ -2,6 +2,7 @@ Require Export Untyped.
 Require Import Coq.Arith.Compare_dec.
 Require Import Coq.Arith.Plus.
 Require Import Coq.Arith.Lt.
+Require Import Omega.
 
 (** (l)ift (t)erms below the (b)ound by some (l)evel **)
 Fixpoint lift (l: nat) (b: nat) (t: lterm) : lterm :=
@@ -31,7 +32,21 @@ Lemma lift_fuse:
   forall (N: lterm) (i j n m: nat),
     i <= j <= i + m -> lift n j (lift m i N) = lift (n+m) i N.
 Proof.
-  admit.
+  induction N as [k | N1 N2 | N1].
+    (** N := Var k **)
+    intros. simpl. case_eq (lt_dec k i).
+      (** k < i **)
+      intros. simpl. assert (k < j).
+          apply lt_le_trans with i. assumption. apply H.
+          destruct (lt_dec k j). reflexivity. contradict H1. auto.
+      (** k >= i **)
+      intros. simpl.
+          destruct (lt_dec (k+m) j). contradict l. omega. apply f_equal.
+          omega.
+    (** N := Lam .. **)
+    intros. simpl. apply f_equal. rewrite N2. reflexivity. omega.
+    (** N := App .. .. **)
+    intros. simpl. rewrite IHN1. rewrite IHN2. auto. auto. auto.
 Qed.
 
 Lemma lift_lem2:
