@@ -2,7 +2,7 @@ Require Import Untyped.
 Require Import Subst.
 Require Import Relation_Operators.
 
-Module Rels.
+Module Export Beta.
 
 (** * β-reduction *)
 
@@ -44,4 +44,4 @@ Proof.
   apply bstar_step. apply bred_base.
 Qed.
 
-End Rels.
+End Beta.
