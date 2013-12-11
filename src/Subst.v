@@ -73,23 +73,53 @@ Proof.
   auto. auto.
 Qed.
 
-Lemma subst_var_idemp:
-  forall (n: nat) (N: lterm), subst n N (Var n) = N.
-Proof.
-  intros. destruct n; trivial.
-  intros. simpl.
-Abort.
-
 Lemma var_subst_lemma: forall (i j n: nat), forall (N L: lterm),
    (i <= j) ->
        subst j L (subst i N (Var n)) =
                  subst i (subst (j-i) L N) (subst (j+1) L (Var n)).
 Proof.
-  admit.
-(**
-  intros i j n. generalize dependent j.
-  case_eq (nat_compare i n).
-**)
+  intros. simpl. case_eq (nat_compare n i).
+  (** n = i **)
+    intros. simpl. apply nat_compare_eq in H0. rewrite H0. simpl.
+    assert (i < j + 1). omega. apply nat_compare_lt in H1. rewrite H1.
+    simpl. assert (i = i). reflexivity. apply nat_compare_eq_iff in H2.
+    rewrite H2. clear H1 H2. rewrite lift_lem2.
+    assert (Jeq: j - i + i = j). omega. rewrite Jeq. reflexivity. omega.
+  (** n < i **)
+    simpl. intros. apply nat_compare_lt in H0.
+    assert (n < j). omega. assert (n < j + 1). omega.
+    apply nat_compare_lt in H0.
+    apply nat_compare_lt in H1.
+    apply nat_compare_lt in H2.
+    rewrite  H1, H2. simpl. rewrite H0. reflexivity.
+  (** n > i **)
+    intros.
+    apply nat_compare_gt in H0.
+    case_eq (nat_compare n (j + 1)).
+      (** n = j + 1 **)
+      intros. apply nat_compare_eq in H1. rewrite H1.
+      assert (Jeq: j + 1 - 1 = j). omega. rewrite Jeq. simpl.
+      assert (HH: nat_compare j j = Eq). assert (JJ: j = j). reflexivity.
+          apply nat_compare_eq_iff in JJ. assumption.
+      rewrite HH. rewrite lift_lem3. reflexivity. omega.
+      (** n < j + 1 **)
+      intros. apply nat_compare_lt in H1. simpl.
+      assert (HLt: nat_compare (n-1) j = Lt).
+        assert (n - 1 < j). omega. apply nat_compare_lt in H2. assumption.
+        rewrite HLt.
+      assert (Hgt: nat_compare n i = Gt).
+        apply nat_compare_gt in H0. assumption.
+        rewrite Hgt.
+      reflexivity.
+      (** n > j + 1 **)
+      intros. apply nat_compare_gt in H1. simpl.
+      assert (Ineq1: nat_compare (n - 1) j = Gt).
+        assert (F: n - 1 > j). omega.
+        apply nat_compare_gt in F. assumption. rewrite Ineq1.
+      assert (Ineq2: nat_compare (n - 1) i = Gt).
+        assert (n - 1 > i). omega. apply nat_compare_gt in H2. assumption.
+        rewrite Ineq2.
+      reflexivity.
 Qed.
 
 
