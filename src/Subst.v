@@ -127,9 +127,15 @@ Qed.
    x =/= y and x not free in L implies:
        M[x/N][y/L] = M[y/L][x/(N[y/L])]
 **)
-Lemma subst_lemma: forall (i j: nat), forall (m n l: lterm),
+Lemma subst_lemma: forall (M N L: lterm), forall (i j: nat),
    (i <= j) ->
-       subst j l (subst i n m) = subst i (subst (j-i) l n) (subst (j+1) l m).
+       subst j L (subst i N M) = subst i (subst (j-i) L N) (subst (j+1) L M).
 Proof.
-  admit.
+  induction M.
+  intros. intros. apply var_subst_lemma. assumption.
+  intros. simpl. apply f_equal. rewrite IHM.
+  assert (AllGood: j + 1 - (i + 1) = j - i). omega.
+  rewrite AllGood. reflexivity. omega.
+  intros. simpl. rewrite IHM1. rewrite IHM2. reflexivity.
+  auto. auto.
 Qed.
