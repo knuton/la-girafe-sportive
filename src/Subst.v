@@ -27,26 +27,27 @@ Fixpoint subst (v: nat) (r: lterm) (t: lterm) : lterm :=
 
 
 (** The following lemmas are described in Berghofer and Urban, who
-    seem to trace down these due to Huet **)
+    seem to trace down these due to Huet
+*)
 
 Lemma lift_fuse:
   forall (N: lterm) (i j n m: nat),
     i <= j <= i + m -> lift n j (lift m i N) = lift (n+m) i N.
 Proof.
   induction N as [k | N1 N2 | N1].
-    (** N := Var k **)
+    (* N := Var k *)
     intros. simpl. case_eq (lt_dec k i).
-      (** k < i **)
+      (* k < i *)
       intros. simpl. assert (k < j).
           apply lt_le_trans with i. assumption. apply H.
           destruct (lt_dec k j). reflexivity. contradict H1. auto.
-      (** k >= i **)
+      (* k >= i *)
       intros. simpl.
           destruct (lt_dec (k+m) j). contradict l. omega. apply f_equal.
           omega.
-    (** N := Lam .. **)
+    (* N := Lam .. *)
     intros. simpl. apply f_equal. rewrite N2. reflexivity. omega.
-    (** N := App .. .. **)
+    (* N := App .. .. *)
     intros. simpl. rewrite IHN1. rewrite IHN2. auto. auto. auto.
 Qed.
 
@@ -55,75 +56,75 @@ Lemma lift_lem2:
   k <= j -> lift i k (subst j L N) = subst (j+i) L (lift i k N).
 Proof.
   induction N as [v | N' | N1 ].
-    (** N := Var v **)
+    (* N := Var v *)
     intros. simpl. case_eq (nat_compare v j).
-      (** v Eq j **)
+      (* v Eq j *)
       intros. apply nat_compare_eq in H0. rewrite lift_fuse.
       destruct (lt_dec v k).
-        (** v < k **)
+        (* v < k *)
         simpl. case_eq (nat_compare v (j + i)).
-          (** Eq **)
+          (* Eq *)
           rewrite plus_comm. reflexivity.
-          (** Lt **)
+          (* Lt *)
           contradict l. omega.
-          (** Gt **)
+          (* Gt *)
           intros. apply nat_compare_gt in H1. contradict H1. omega.
-        (** ~ v < k **)
+        (* ~ v < k *)
         simpl. case_eq (nat_compare (v+i) (j+i)).
-          (** Eq **)
+          (* Eq *)
           intros. rewrite plus_comm. reflexivity.
-          (** Lt **)
+          (* Lt *)
           intros. apply nat_compare_lt in H1. contradict H1. omega.
-          (** Gt **)
+          (* Gt *)
           intros. apply nat_compare_gt in H1. contradict H1. omega.
         split. omega. omega.
-      (** v Lt j **)
+      (* v Lt j *)
       intros. apply nat_compare_lt in H0. destruct (lt_dec v k).
-        (** v < k **)
+        (* v < k *)
         simpl. destruct (lt_dec v k).
-          (** v < k **)
+          (* v < k *)
           case_eq (nat_compare v (j + i)).
-            (** Eq **)
+            (* Eq *)
             intros. apply nat_compare_eq in H1. contradict H0. omega.
-            (** Lt **)
+            (* Lt *)
             intros. reflexivity.
-            (** Gt **)
+            (* Gt *)
             intros. apply nat_compare_gt in H1. contradict H1. omega.
-          (** ~ v < k **)
+          (* ~ v < k *)
           contradiction.
-        (** ~ v < k **)
+        (* ~ v < k *)
         simpl. destruct (lt_dec v k).
-          (** v < k **)
+          (* v < k *)
           contradiction.
-          (** ~ v < k **)
+          (* ~ v < k *)
           case_eq (nat_compare (v+i) (j+i)).
-            (** Eq **)
+            (* Eq *)
             intros. apply nat_compare_eq in H1. contradict H0. omega.
-            (** Lt **)
+            (* Lt *)
             intros. reflexivity.
-            (** Gt **)
+            (* Gt *)
             intros. apply nat_compare_gt in H1. contradict H0. omega.
-      (** v Gt j **)
+      (* v Gt j *)
       intros. apply nat_compare_gt in H0. simpl. destruct (lt_dec (v - 1) k).
-        (** v - 1 < k **)
+        (* v - 1 < k *)
         contradict l. omega.
-        (** ~ v - 1 < k **)
+        (* ~ v - 1 < k *)
         destruct (lt_dec v k).
-          (** v < k **)
+          (* v < k *)
           contradict l. omega.
-          (** ~ v < k **)
+          (* ~ v < k *)
           simpl. case_eq (nat_compare (v + i) (j + i)).
-            (** Eq **)
+            (* Eq *)
             intros. apply nat_compare_eq in H1. contradict H0. omega.
-            (** Lt **)
+            (* Lt *)
             intros. apply nat_compare_lt in H1. contradict H0. omega.
-            (** Gt **)
+            (* Gt *)
             intros. apply nat_compare_gt in H1. f_equal. omega.
-    (** N := Lam N' **)
+    (* N := Lam N' *)
     intros. simpl. f_equal.
     assert (U: j + 1 + i = j + i + 1). omega. rewrite <- U.
     apply (IHN' L i (j+1) (k+1)). omega.
-    (** N := App N1 N2 **)
+    (* N := App N1 N2 *)
     intros. simpl. f_equal.
     apply IHN1. assumption.
     apply IHN2. assumption.
@@ -152,30 +153,30 @@ Lemma var_subst_lemma: forall (i j n: nat), forall (N L: lterm),
                  subst i (subst (j-i) L N) (subst (j+1) L (Var n)).
 Proof.
   intros. simpl. case_eq (nat_compare n i).
-  (** n = i **)
+  (* n = i *)
     intros. simpl. apply nat_compare_eq in H0. rewrite H0. simpl.
     assert (i < j + 1). omega. apply nat_compare_lt in H1. rewrite H1.
     simpl. assert (i = i). reflexivity. apply nat_compare_eq_iff in H2.
     rewrite H2. clear H1 H2. rewrite lift_lem2.
     assert (Jeq: j - i + i = j). omega. rewrite Jeq. reflexivity. omega.
-  (** n < i **)
+  (* n < i *)
     simpl. intros. apply nat_compare_lt in H0.
     assert (n < j). omega. assert (n < j + 1). omega.
     apply nat_compare_lt in H0.
     apply nat_compare_lt in H1.
     apply nat_compare_lt in H2.
     rewrite  H1, H2. simpl. rewrite H0. reflexivity.
-  (** n > i **)
+  (* n > i *)
     intros.
     apply nat_compare_gt in H0.
     case_eq (nat_compare n (j + 1)).
-      (** n = j + 1 **)
+      (* n = j + 1 *)
       intros. apply nat_compare_eq in H1. rewrite H1.
       assert (Jeq: j + 1 - 1 = j). omega. rewrite Jeq. simpl.
       assert (HH: nat_compare j j = Eq). assert (JJ: j = j). reflexivity.
           apply nat_compare_eq_iff in JJ. assumption.
       rewrite HH. rewrite lift_lem3. reflexivity. omega.
-      (** n < j + 1 **)
+      (* n < j + 1 *)
       intros. apply nat_compare_lt in H1. simpl.
       assert (HLt: nat_compare (n-1) j = Lt).
         assert (n - 1 < j). omega. apply nat_compare_lt in H2. assumption.
@@ -184,7 +185,7 @@ Proof.
         apply nat_compare_gt in H0. assumption.
         rewrite Hgt.
       reflexivity.
-      (** n > j + 1 **)
+      (* n > j + 1 *)
       intros. apply nat_compare_gt in H1. simpl.
       assert (Ineq1: nat_compare (n - 1) j = Gt).
         assert (F: n - 1 > j). omega.
