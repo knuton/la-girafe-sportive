@@ -66,7 +66,7 @@ Fixpoint lookup (s: string) (ls: list (string * nat)) : option nat :=
 Fixpoint hide (s: string) (ls: list (string * nat)) : list (string * nat) :=
   match ls with
   | nil => (s, 0) :: nil
-  | (x, n) :: t => if string_dec x s then (x, 0) :: t else (x, n + 1) :: hide s t
+  | (x, n) :: t => if string_dec x s then (x, 0) :: hide s t else (x, n + 1) :: hide s t
   end.
 
 Fixpoint dename' (t: PrettyTerm.pterm) (binds: list (string * nat)) : lterm :=
