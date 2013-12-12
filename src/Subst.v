@@ -13,6 +13,9 @@ Fixpoint lift (l: nat) (b: nat) (t: lterm) : lterm :=
       | Lam t => Lam (lift l (b+1) t)
   end.
 
+Definition shift (b: nat) (t: lterm) : lterm :=
+  lift 1 b t.
+
 (** Substitute the variable with index `v` by `r` in the term `t` **)
 Fixpoint subst (v: nat) (r: lterm) (t: lterm) : lterm :=
   match t with
