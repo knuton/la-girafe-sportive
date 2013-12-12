@@ -21,10 +21,11 @@ Proof.
   apply clos_base. apply eta_base. unfold shift. auto.
 Qed.
 
-(* TODO *)
 Example ex3_eta: ~ eta (Lam (App (Lam (Var 1)) (Var 0))) (Lam (Var 0)).
 Proof.
-  admit.
+  unfold not. intros. inversion H.
+  inversion H0. discriminate.
+  inversion H2. inversion H3.
 Qed.
 
 (** * Reflexive-transitive closure of η-conversion *)
