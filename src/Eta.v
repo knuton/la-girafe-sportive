@@ -63,14 +63,12 @@ Proof.
   unfold eta.
   induction H.
   intros. apply clos_base. apply eta_prim_substitutive. assumption.
-  (* This seems to go ugly, but the intuition tactic works...
-     I wonder if this has to do anything with the `lt_dec` in lift.
-     Also, what is that {struct t} doing there?!
-     Also, am I doing this whole proof wrong?
+  (* TODO: find out why subst unfolds into the ugly thing after applying
+     one of the clos_{lam,appl,appr}
    *)
-  intros. apply clos_lam. intuition.
-  intros. apply clos_appl. intuition.
-  intros. apply clos_appr. intuition.
+  intros. apply clos_lam. apply IHclos_compat.
+  intros. apply clos_appl. apply IHclos_compat.
+  intros. apply clos_appr. apply IHclos_compat.
 Qed.
 
 End Eta.
