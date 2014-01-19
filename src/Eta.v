@@ -113,7 +113,7 @@ Qed.
 Fixpoint lam_k (k: nat) (M: lterm) : lterm :=
   match k with
     | 0 => M
-    | (S n) => Lam (App (lam_k n (shift 0 M)) (Var 0))
+    | (S n) => Lam (App (shift 0 (lam_k n M)) (Var 0))
   end.
 
 Example lam_k_zero:
@@ -121,25 +121,6 @@ Example lam_k_zero:
 Proof.
   auto.
 Qed.
-
-
-Lemma shift_lam_k_commute:
-  forall k, forall t,
-                 shift 0 (lam_k k t) = lam_k k (shift 0 t).
-Proof.
-  induction k.
-  simpl. reflexivity.
-  intros. simpl.
-  unfold shift. simpl. f_equal. f_equal.
-  assert (HH: lift 1 1 (lam_k k (lift 1 0 t)) = shift 0 (lam_k k (lift 1 0 t))).
-  unfold shift.
-  unfold shift in IHk.
-  rewrite IHk. rewrite <- IHk. rewrite <- IHk. rewrite <- IHk.
-  rewrite lift_fuse. simpl. rewrite lift_fuse. simpl.
-  reflexivity. simpl. auto. simpl. auto.
-  rewrite HH. apply IHk.
-Qed.
-
 
 Lemma eta_par_lam_k_var:
   forall M, forall n,
@@ -154,8 +135,7 @@ Proof.
   apply lam_k_zero.
   destruct IHeta_par.
   rewrite H.
-  exists (S x). simpl. f_equal. f_equal.
-  apply shift_lam_k_commute.
+  exists (S x). simpl. f_equal.
   (** <- **)
   intros.
   destruct H.
@@ -171,7 +151,7 @@ Proof.
   intros.
   simpl.
   apply eta_par_base with (lam_k k (Var n)).
-  rewrite shift_lam_k_commute. reflexivity.
+  reflexivity.
   apply IHk.
 Qed.
 
@@ -206,7 +186,7 @@ Proof.
     destruct H. destruct H1.
     split. assumption.
     apply f_equal.
-    f_equal. rewrite H2. apply shift_lam_k_commute.
+    f_equal. rewrite H2. reflexivity.
     (* <- *)
     intros.
     destruct H as [k].
@@ -229,7 +209,6 @@ Proof.
     destruct H as [H1].
     destruct H as [H2].
     rewrite H.
-    rewrite <- shift_lam_k_commute.
     apply eta_par_base with (lam_k k (App M_1 M_2)).
     reflexivity.
     apply IHk.
@@ -257,8 +236,7 @@ Proof.
     exists (S k).
     exists M'.
     split. assumption.
-    simpl. rewrite H. f_equal. f_equal.
-    apply shift_lam_k_commute.
+    simpl. rewrite H. f_equal.
 
     (* <- *)
     intros.
@@ -275,7 +253,7 @@ Proof.
     destruct H as [M'].
     destruct H as [H1].
     rewrite H.
-    simpl. rewrite <- shift_lam_k_commute.
+    simpl.
     apply eta_par_base with (lam_k k (Lam M')).
     reflexivity.
     apply IHk.
@@ -283,6 +261,21 @@ Proof.
     split. assumption.
     reflexivity.
 Qed.
+
+
+Lemma shift_0_lam_commute:
+            forall n, forall t,
+              shift 0 (lam_k n t) = (lam_k n (shift 0 t)).
+Proof.
+    induction n.
+    simpl. reflexivity.
+    intros. simpl. unfold shift. simpl.
+    apply f_equal. f_equal.
+    rewrite lift_fuse. simpl. rewrite <- IHn. unfold shift.
+    rewrite lift_fuse. simpl.
+    reflexivity. simpl. auto. simpl. auto.
+Qed.
+
 
 End Eta.
 
