@@ -1,6 +1,8 @@
 Require Import Untyped.
 Require Import Subst.
 Require Import Relation_Operators.
+Require Import Coq.Program.Equality.
+
 
 Module Export Beta.
 
@@ -42,6 +44,53 @@ Proof.
   apply bstar_trans with ((\"x" ~> `"x" $ `"z") $ `"y").
   apply bstar_step. apply inner_bred.
   apply bstar_step. apply bred_base.
+Qed.
+
+
+Inductive beta_par : lterm -> lterm -> Prop :=
+  | beta_par_var: forall n, beta_par (Var n) (Var n)
+  | beta_par_lam: forall M M',
+                    beta_par M M' -> beta_par (Lam M) (Lam M')
+  | beta_par_app: forall M M' N N',
+                   beta_par M M' -> beta_par N N' -> beta_par (App M N) (App M' N')
+  | beta_par_base: forall M M' N N',
+                     beta_par M M' ->
+                     beta_par N N' ->
+                     beta_par (App (Lam M) N) (subst 0 N' M').
+
+
+Lemma beta_par_refl:
+  forall t, beta_par t t.
+Proof.
+  induction t.
+  apply beta_par_var.
+  apply beta_par_lam.
+  apply IHt.
+  apply beta_par_app.
+  assumption.
+  assumption.
+Qed.
+
+Lemma beta_par_shift:
+  forall k, forall M M', beta_par M M' -> beta_par (shift k M) (shift k M').
+Proof.
+  intros.
+  generalize dependent k.
+  dependent induction H.
+  intros. apply beta_par_refl.
+  intros. unfold shift. simpl. apply beta_par_lam.
+      apply IHbeta_par.
+  intros. unfold shift. simpl. constructor.
+      apply IHbeta_par1.
+      apply IHbeta_par2.
+  intros.
+  unfold shift. simpl. rewrite lift_subst_semicom.
+  replace (lift 1) with shift.
+  apply beta_par_base.
+      apply IHbeta_par1.
+      apply IHbeta_par2.
+  reflexivity.
+  omega.
 Qed.
 
 End Beta.
