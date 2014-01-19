@@ -92,6 +92,17 @@ Inductive eta_par : lterm -> lterm -> Prop :=
                                          eta_par (Lam (App M (Var 0))) N'.
 
 
+Lemma eta_par_refl:
+  forall t, eta_par t t.
+Proof.
+  induction t.
+  constructor.
+  apply eta_par_lam.
+  assumption.
+  apply eta_par_app.
+  assumption. assumption.
+Qed.
+
 Lemma eta_par_substitutive:
   forall (M M' N N': lterm), forall (n: nat),
     eta_par M M' -> eta_par N N' -> eta_par (subst n N M) (subst n N' M').
