@@ -28,6 +28,18 @@ Fixpoint subst (v: nat) (r: lterm) (t: lterm) : lterm :=
       | Lam m => Lam (subst (v+1) r m)
   end.
 
+Lemma lift_0_ident:
+  forall M, forall b,
+    lift 0 b M = M.
+Proof.
+  induction M.
+  intros. simpl. replace (n + 0) with n. case (lt_dec n b).
+     reflexivity. reflexivity.
+     auto.
+  simpl. intros. rewrite IHM. reflexivity.
+  simpl. intros. rewrite IHM1. rewrite IHM2. reflexivity.
+Qed.
+
 
 (** The following lemmas are described in Berghofer and Urban, who
     seem to trace down these due to Huet
@@ -215,4 +227,44 @@ Proof.
   rewrite AllGood. reflexivity. omega.
   intros. simpl. rewrite IHM1. rewrite IHM2. reflexivity.
   auto. auto.
+Qed.
+
+
+(** A few other useful lemmas about [lift] and [subst] **)
+
+Lemma subst_shift_ident:
+    forall v k t,
+    subst k v (shift k t) =  t.
+Proof.
+  admit.
+Qed.
+
+Lemma subst_S_k_shift_k:
+    forall t k,
+    subst (S k) (Var k) (shift k t) = t.
+Proof.
+  admit.
+Qed.
+
+Lemma subst_k_shift_S_k:
+    forall t k,
+    subst k (Var k) (shift (S k) t) = t.
+Proof.
+  admit.
+Qed.
+
+Lemma lift_lift:
+    forall t k s wk ws,
+      k <= s ->
+      lift wk k (lift ws s t) = lift ws (wk + s) (lift wk k t).
+Proof.
+  admit.
+Qed.
+
+Lemma lift_subst_semicom:
+  forall M N, forall i b v,
+    v <= b ->
+    lift i b (subst v N M) = subst v (lift i b N) (lift i (b+1) M).
+Proof.
+  admit.
 Qed.
