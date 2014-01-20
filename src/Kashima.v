@@ -239,6 +239,51 @@ Proof.
     apply hap_hred. apply hap'_hred.
 Qed.
 
+(*
+Lemma unpack_var : forall i j,
+  Var i = Var j -> 
+*)
+(*
+Lemma succ_pred : forall k, k > 0 -> k = S (k - 1).
+Proof.
+  intros k Hk.
+  apply Minus.le_plus_minus.
+  unfold minus.
+  SearchAbout minus.
+  intros k. induction k.
+  intro. inversion H.
+  f_equal.
+*)
+
+Lemma subst_to_var : forall t t' i,
+  subst 0 t' t = Var i -> t = Var 0 /\ t' = Var i \/ t = Var (i + 1).
+Proof.
+  intros. induction t.
+    (* Var *)
+    inversion H. case_eq (Compare_dec.nat_compare n 0).
+      (* Eq *)
+      intros nEQ0. rewrite nEQ0 in H1. rewrite Compare_dec.nat_compare_eq_iff in nEQ0.
+      left. split.
+        f_equal. assumption.
+        rewrite (lift_0_ident t' 0). reflexivity.
+      (* Lt *)
+      intro nLT0. rewrite <- Compare_dec.nat_compare_lt in nLT0. contradict nLT0. omega.
+      (* Gt *)
+      intro nGT0. rewrite nGT0 in H1. rewrite <- Compare_dec.nat_compare_gt in nGT0.
+      right. f_equal. rewrite Plus.plus_comm.
+      inversion H1. apply Minus.le_plus_minus. omega.
+    (* Lam *)
+    simpl in H. inversion H.
+    (* App *)
+    simpl in H. inversion H.
+Qed.
+
+Lemma subst_indist : forall i r r',
+  i > 0 -> subst 0 r (Var i) = subst 0 r' (Var i).
+Proof.
+  intros. simpl. rewrite Compare_dec.nat_compare_gt in H. rewrite H. reflexivity.
+Qed.
+
 Lemma lift_first_hap : forall t n i k,
   hap t (Var i) -> i < k -> hap (lift n k t) (Var i).
 Proof.
@@ -255,18 +300,35 @@ Proof.
     dependent induction H.
       apply hap_hred. simpl.
       rewrite <- x.
-      assert (t2ISi: t2 = Var i).
-      (* TODO [doable] *) admit.
-      rewrite t2ISi.
-      assert (LFT: Var i = lift n k (Var i)). simpl. case_eq (Compare_dec.lt_dec i k).
-        (* i < k *)
-        intros. reflexivity.
-        (* ~ i < k *)
-        intros. contradiction.
-      rewrite <- LFT.
-      assert (IGN: subst 0 (Var i) t0 = subst 0 (Var i) (lift n (k + 1) t0)).
-      (* TODO [doable] *) admit.
-      rewrite IGN. apply hap'_hred.
+(*      assert (t2ISi: t2 = Var i).*)
+      case (subst_to_var t0 t2 i). assumption.
+        (* t2 = Var i *)
+        intro HC. inversion HC as [Ht0 Ht2]. rewrite Ht2.
+        assert (LFT: Var i = lift n k (Var i)). simpl. case_eq (Compare_dec.lt_dec i k).
+          (* i < k *)
+          intros. reflexivity.
+          (* ~ i < k *)
+          intros. contradiction.
+        rewrite <- LFT.
+        assert (IGN: t0 = lift n (k + 1) t0).
+          rewrite Ht0. simpl. case_eq (Compare_dec.lt_dec 0 (k + 1)).
+            (* 0 < k + 1 *)
+            intros. reflexivity.
+            (* ~ 0 < k + 1 *)
+            intros. contradict iLTk. omega.
+        rewrite <- IGN. apply hap'_hred.
+        (* t0 = Var (i + 1) *)
+        intro Hti1. rewrite Hti1.
+        assert (INDIST: subst 0 t2 (Var (i+1)) = subst 0 (lift n k t2) (Var (i+1))).
+          apply subst_indist. omega.
+        rewrite INDIST.
+        assert (IGN: lift n (k+1) (Var (i+1)) = Var (i+1)).
+          simpl. case_eq (Compare_dec.lt_dec (i + 1) (k + 1)).
+            (* i + 1 < k + 1 *)
+            intros. reflexivity.
+            (* ~ i + 1 < k + 1 *)
+            intros FLS. contradict FLS. omega.
+        rewrite IGN. apply hap'_hred.
       rewrite <- lift_app.
       apply IHhap1.
         apply IHt2.
