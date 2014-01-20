@@ -14,17 +14,6 @@ Require Import Omega.
 
 Module Export Postpone.
 
-Lemma lam_k_alt:
-  forall k, forall M,
-    lam_k (S k) M = lam_k k (Lam (App (shift 0 M) (Var 0))).
-Proof.
-  induction k.
-  intros. simpl. reflexivity.
-  intros.
-  simpl. do 4 f_equal. rewrite <- IHk. simpl.
-  reflexivity.
-Qed.
-
 Lemma lam_k_beta_subst:
   forall k, forall M M' N N',
     beta_par M M' -> beta_par N N' ->

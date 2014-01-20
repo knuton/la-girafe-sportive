@@ -113,8 +113,29 @@ Qed.
 Fixpoint lam_k (k: nat) (M: lterm) : lterm :=
   match k with
     | 0 => M
+    (*
+     Note: This should have probably been defined in a tail-recursive way, as:
+
+      [ (S n) => lam_k (App (shift 0 M) (Var 0)) ]
+
+      since it is much easier to work with. However,
+      I realised this way too late, so left it this way in order to avoid
+      modifying existing proofs. Instead, an equivalence of these definitions
+      is proved in the [lam_k_alt] lemma.
+    *)
     | (S n) => Lam (App (shift 0 (lam_k n M)) (Var 0))
   end.
+
+Lemma lam_k_alt:
+  forall k, forall M,
+    lam_k (S k) M = lam_k k (Lam (App (shift 0 M) (Var 0))).
+Proof.
+  induction k.
+  intros. simpl. reflexivity.
+  intros.
+  simpl. do 4 f_equal. rewrite <- IHk. simpl.
+  reflexivity.
+Qed.
 
 Example lam_k_zero:
   forall M, lam_k 0 M = M.
