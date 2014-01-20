@@ -4,11 +4,17 @@ Require Import Beta.
 Require Import Relation_Operators.
 Require Import Coq.Program.Equality.
 
+(** Reduction Numbering (Definition 2.1) **)
+
+(* Predicate characterising abstractions. *)
+
 Inductive abstr : lterm -> Prop :=
   | islam : forall t, abstr (Lam t).
 
 Example notabstr : ~ abstr (`"x").
 Proof. unfold not. intro. inversion H. Qed.
+
+(* Count the total number of redexes in a term. *)
 
 Fixpoint redcount (t : lterm) : nat :=
   match t with
@@ -25,6 +31,10 @@ Proof.
     compute. reflexivity.
     split; compute; reflexivity.
 Qed.
+
+(* This is the predicate defined in 2.1.
+   [nthred n t t'] states that [t'] is the result of reducing the [n]-th redex in [t].
+*)
 
 Inductive nthred : nat -> lterm -> lterm -> Prop :=
   | nthred_prim : forall t1 t2,
@@ -78,19 +88,29 @@ Proof.
     apply nthred_prim.
 Qed.
 
-Definition bet (t1 t2 : lterm) : Prop := exists n : nat, nthred n t1 t2.
+(** Beta-reduction and left-most reduction (Definition 2.2) **)
 
-Definition lmost (t1 t2 : lterm) : Prop := nthred 1 t1 t2.
+(* The paper defines beta-reduction in terms of the [nthred] relation.
+   Equivalence with the definition found in [Beta] has yet to be proven (if necessary).
+*)
+
+Definition bet (t1 t2 : lterm) : Prop := exists n : nat, nthred n t1 t2.
 
 Definition betstar := clos_refl_trans lterm bet.
 Definition betstar_step := rt_step lterm bet.
 Definition betstar_refl := rt_refl lterm bet.
 Definition betstar_trans := rt_trans lterm bet.
 
+(* Left-most reduction is simply reduction of the first redex. *)
+
+Definition lmost (t1 t2 : lterm) : Prop := nthred 1 t1 t2.
+
 Definition lstar := clos_refl_trans lterm lmost.
 Definition lstar_step := rt_step lterm lmost.
 Definition lstar_refl := rt_refl lterm lmost.
 Definition lstar_trans := rt_trans lterm lmost.
+
+(** Head-reduction in application (Definition 3.1) **)
 
 Inductive hap' : lterm -> lterm -> Prop :=
   | hap'_hred : forall t0 t1, hap' (App (Lam t0) t1) (subst 0 t1 t0)
@@ -100,6 +120,8 @@ Inductive hap : lterm -> lterm -> Prop :=
   | hap_refl : forall t, hap t t
   | hap_hred : forall t0 t1, hap' t0 t1 -> hap t0 t1
   | hap_trans : forall t1 t2 t3, hap t1 t2 -> hap t2 t3 -> hap t1 t3.
+
+(** Standard reduction (Definition 3.2) **)
 
 Inductive st : lterm -> lterm -> Prop :=
   | st_hap : forall t i, hap t (Var i) -> st t (Var i)
@@ -124,7 +146,10 @@ Proof.
     apply lstar_trans with (y := t2). apply IHhap1. apply IHhap2.
 Qed.
 
+(* (2) needs definition not yet introduced *)
+
 (** Lemma 3.4 **)
+
 (* (1) *)
 Lemma st_refl : forall t, st t t.
 Proof.
@@ -158,8 +183,10 @@ Proof.
       apply hap_trans with (t2 := t); assumption.
       assumption.
 Qed.
-    
+
 (* (4) *)
+
+(* We first prove [subst_hap'], after which the actual lemma is easy to show. *)
 
 Lemma subst_hap' : forall t1 t2 t3, forall n,
   hap' t1 t2 -> hap' (subst n t3 t1) (subst n t3 t2).
@@ -185,7 +212,9 @@ Proof.
     apply hap_trans with (t2 := subst n t3 t2); assumption.
 Qed.
 
-(** Busywork for (5) **)
+(* We need to do quite a bit of busywork for (5). *)
+
+(* First, lift-independence of [hap], which is easy. *)
 
 Lemma lift_hap' : forall t t',
   hap' t t' -> forall n k, hap' (lift n k t) (lift n k t').
@@ -209,6 +238,8 @@ Proof.
     (* hap_trans *)
     apply hap_trans with (t2 := lift n k t2); assumption.
 Qed.
+
+(* Second, lift-independence for [st], which is more intricate. *)
 
 Lemma hap'_no_lhs_var : forall i t,
   ~ hap' (Var i) t.
@@ -267,6 +298,13 @@ Lemma subst_indist : forall i r r',
 Proof.
   intros. simpl. rewrite Compare_dec.nat_compare_gt in H. rewrite H. reflexivity.
 Qed.
+
+(* This lemma is not yet fully established, there are two [admit]s.
+   The first [admit] should be straightforward to eliminate (intuitively).
+   Somehow the transitive evidence rule for [hap] makes it hard to show
+   that [hap] does not hold between any two terms if the first is an
+   abstraction, however.
+*)
 
 Lemma lift_first_hap : forall t n i k,
   hap t (Var i) -> i < k -> hap (lift n k t) (Var i).
