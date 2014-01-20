@@ -5,7 +5,7 @@ Require Import Coq.Arith.Plus.
 Require Import Coq.Arith.Lt.
 Require Import Omega.
 
-(** (l)ift (t)erms below the (b)ound by some (l)evel **)
+(** (l)ift (t)erms by some (l)evel if greater or equal the (b)ound **)
 Fixpoint lift (l: nat) (b: nat) (t: lterm) : lterm :=
   match t with
       | Var i as v =>  if (lt_dec i b) then v else Var (i+l)
@@ -229,7 +229,6 @@ Proof.
   auto. auto.
 Qed.
 
-
 (** A few other useful lemmas about [lift] and [subst] **)
 
 Lemma subst_shift_ident:
@@ -268,3 +267,22 @@ Lemma lift_subst_semicom:
 Proof.
   admit.
 Qed.
+
+(** Some trivialities for convenient rewriting. **)
+
+Lemma subst_app : forall t1 t2 t3, forall n,
+  subst n t3 (App t1 t2) = App (subst n t3 t1) (subst n t3 t2).
+Proof. intros. reflexivity. Qed.
+
+Lemma subst_lam : forall t t', forall n,
+  subst n t' (Lam t) = Lam (subst (n+1) t' t).
+Proof.  intros. reflexivity. Qed.
+
+Lemma lift_app : forall t t' n k,
+  lift n k (App t t') = App (lift n k t) (lift n k t').
+Proof. intros. reflexivity. Qed.
+
+Lemma lift_lam : forall t n k,
+  lift n k (Lam t) = Lam (lift n (k+1) t).
+Proof. intros. reflexivity. Qed.
+
