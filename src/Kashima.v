@@ -239,22 +239,6 @@ Proof.
     apply hap_hred. apply hap'_hred.
 Qed.
 
-(*
-Lemma unpack_var : forall i j,
-  Var i = Var j -> 
-*)
-(*
-Lemma succ_pred : forall k, k > 0 -> k = S (k - 1).
-Proof.
-  intros k Hk.
-  apply Minus.le_plus_minus.
-  unfold minus.
-  SearchAbout minus.
-  intros k. induction k.
-  intro. inversion H.
-  f_equal.
-*)
-
 Lemma subst_to_var : forall t t' i,
   subst 0 t' t = Var i -> t = Var 0 /\ t' = Var i \/ t = Var (i + 1).
 Proof.
@@ -300,7 +284,6 @@ Proof.
     dependent induction H.
       apply hap_hred. simpl.
       rewrite <- x.
-(*      assert (t2ISi: t2 = Var i).*)
       case (subst_to_var t0 t2 i). assumption.
         (* t2 = Var i *)
         intro HC. inversion HC as [Ht0 Ht2]. rewrite Ht2.
