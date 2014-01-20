@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<link href="coqdoc.css" rel="stylesheet" type="text/css"/>
+<title>Beta</title>
+</head>
+
+<body>
+
+<div id="page">
+
+<div id="header">
+</div>
+
+<div id="main">
+
+<h1 class="libtitle">Library Beta</h1>
+
+<div class="code">
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Untyped.html#"><span class="id" type="library">Untyped</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Subst.html#"><span class="id" type="library">Subst</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#"><span class="id" type="library">Relation_Operators</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Program.Equality.html#"><span class="id" type="library">Coq.Program.Equality</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Module</span> <span class="id" type="keyword">Export</span> <a name="Beta"><span class="id" type="module">Beta</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab1"></a><h1 class="section">β-reduction</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Inductive</span> <a name="Beta.bred"><span class="id" type="inductive">bred</span></a> : <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> → <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> → <span class="id" type="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;| <a name="Beta.bred_base"><span class="id" type="constructor">bred_base</span></a> : <span class="id" type="keyword">∀</span> <span class="id" type="var">t1</span> <span class="id" type="var">t2</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#bred"><span class="id" type="inductive">bred</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#t1"><span class="id" type="variable">t1</span></a>) <a class="idref" href="Beta.html#t2"><span class="id" type="variable">t2</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> 0 <a class="idref" href="Beta.html#t2"><span class="id" type="variable">t2</span></a> <a class="idref" href="Beta.html#t1"><span class="id" type="variable">t1</span></a>)<br/>
+&nbsp;&nbsp;| <a name="Beta.bred_lam"><span class="id" type="constructor">bred_lam</span></a>  : <span class="id" type="keyword">∀</span> <span class="id" type="var">t1</span> <span class="id" type="var">t2</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#bred"><span class="id" type="inductive">bred</span></a> <a class="idref" href="Beta.html#t1"><span class="id" type="variable">t1</span></a> <a class="idref" href="Beta.html#t2"><span class="id" type="variable">t2</span></a> → <a class="idref" href="Beta.html#bred"><span class="id" type="inductive">bred</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#t1"><span class="id" type="variable">t1</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#t2"><span class="id" type="variable">t2</span></a>)<br/>
+&nbsp;&nbsp;| <a name="Beta.bred_appl"><span class="id" type="constructor">bred_appl</span></a> : <span class="id" type="keyword">∀</span> <span class="id" type="var">t1</span> <span class="id" type="var">t2</span> <span class="id" type="var">t3</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#bred"><span class="id" type="inductive">bred</span></a> <a class="idref" href="Beta.html#t1"><span class="id" type="variable">t1</span></a> <a class="idref" href="Beta.html#t2"><span class="id" type="variable">t2</span></a> → <a class="idref" href="Beta.html#bred"><span class="id" type="inductive">bred</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#t1"><span class="id" type="variable">t1</span></a> <a class="idref" href="Beta.html#t3"><span class="id" type="variable">t3</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#t2"><span class="id" type="variable">t2</span></a> <a class="idref" href="Beta.html#t3"><span class="id" type="variable">t3</span></a>)<br/>
+&nbsp;&nbsp;| <a name="Beta.bred_appr"><span class="id" type="constructor">bred_appr</span></a> : <span class="id" type="keyword">∀</span> <span class="id" type="var">t1</span> <span class="id" type="var">t2</span> <span class="id" type="var">t3</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#bred"><span class="id" type="inductive">bred</span></a> <a class="idref" href="Beta.html#t1"><span class="id" type="variable">t1</span></a> <a class="idref" href="Beta.html#t2"><span class="id" type="variable">t2</span></a> → <a class="idref" href="Beta.html#bred"><span class="id" type="inductive">bred</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#t3"><span class="id" type="variable">t3</span></a> <a class="idref" href="Beta.html#t1"><span class="id" type="variable">t1</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#t3"><span class="id" type="variable">t3</span></a> <a class="idref" href="Beta.html#t2"><span class="id" type="variable">t2</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Consider the following two examples of one-step beta reduction.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Example</span> <a name="Beta.triv_bred"><span class="id" type="definition">triv_bred</span></a> : <a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a> (<a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">\</span></a>"x" <a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">~&gt;</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"x"<a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"y") (<a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"y").<br/>
+<span class="id" type="keyword">Proof</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_base"><span class="id" type="constructor">bred_base</span></a>. <span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Example</span> <a name="Beta.inner_bred"><span class="id" type="definition">inner_bred</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a> (<a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">\</span></a>"x" <a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">~&gt;</span></a> <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">\</span></a>"y" <a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">~&gt;</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"x" <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"y"<a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"z"<a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"y") (<a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">\</span></a>"x" <a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">~&gt;</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"x" <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"z"<a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"y").<br/>
+<span class="id" type="keyword">Proof</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_appl"><span class="id" type="constructor">bred_appl</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_lam"><span class="id" type="constructor">bred_lam</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_base"><span class="id" type="constructor">bred_base</span></a>. <span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab2"></a><h1 class="section">Reflexive-transitive closure of beta reduction</h1>
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="Beta.bstar"><span class="id" type="definition">bstar</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#clos_refl_trans"><span class="id" type="inductive">clos_refl_trans</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="Beta.bstar_step"><span class="id" type="definition">bstar_step</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#rt_step"><span class="id" type="constructor">rt_step</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="Beta.bstar_refl"><span class="id" type="definition">bstar_refl</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="Beta.bstar_trans"><span class="id" type="definition">bstar_trans</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+Again, we consider a simple example of the multi-step reduction relation.
+
+</div>
+<div class="code">
+
+<br/>
+<span class="id" type="keyword">Example</span> <a name="Beta.bred_halt"><span class="id" type="definition">bred_halt</span></a> :<br/>
+&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">\</span></a>"x" <a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">~&gt;</span></a> <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">\</span></a>"y" <a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">~&gt;</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"x" <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"y"<a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"z"<a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"y") (<a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"y" <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"z").<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_trans"><span class="id" type="definition">bstar_trans</span></a> <span class="id" type="keyword">with</span> (<a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">(</span></a><a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">\</span></a>"x" <a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">~&gt;</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"x" <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"z"<a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"y").<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_step"><span class="id" type="definition">bstar_step</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.inner_bred"><span class="id" type="definition">inner_bred</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_step"><span class="id" type="definition">bstar_step</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_base"><span class="id" type="constructor">bred_base</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Inductive</span> <a name="Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> : <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> → <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> → <span class="id" type="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;| <a name="Beta.beta_par_var"><span class="id" type="constructor">beta_par_var</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">n</span>, <a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> <a class="idref" href="Beta.html#n"><span class="id" type="variable">n</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> <a class="idref" href="Beta.html#n"><span class="id" type="variable">n</span></a>)<br/>
+&nbsp;&nbsp;| <a name="Beta.beta_par_lam"><span class="id" type="constructor">beta_par_lam</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>)<br/>
+&nbsp;&nbsp;| <a name="Beta.beta_par_app"><span class="id" type="constructor">beta_par_app</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> → <a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a>)<br/>
+&nbsp;&nbsp;| <a name="Beta.beta_par_base"><span class="id" type="constructor">beta_par_base</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> 0 <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.beta_par_refl"><span class="id" type="lemma">beta_par_refl</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">t</span>, <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#t"><span class="id" type="variable">t</span></a> <a class="idref" href="Beta.html#t"><span class="id" type="variable">t</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">t</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_var"><span class="id" type="constructor">beta_par_var</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_lam"><span class="id" type="constructor">beta_par_lam</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHt</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_app"><span class="id" type="constructor">beta_par_app</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.beta_par_shift"><span class="id" type="lemma">beta_par_shift</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span>, <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">generalize</span> <span class="id" type="tactic">dependent</span> <span class="id" type="var">k</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_refl"><span class="id" type="lemma">beta_par_refl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">unfold</span> <a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a>. <span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_lam"><span class="id" type="constructor">beta_par_lam</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHbeta_par</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">unfold</span> <a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a>. <span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHbeta_par1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHbeta_par2</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a>. <span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">rewrite</span> <a class="idref" href="Subst.html#lift_subst_semicom"><span class="id" type="lemma">lift_subst_semicom</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">replace</span> (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> 1) <span class="id" type="keyword">with</span> <a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_base"><span class="id" type="constructor">beta_par_base</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHbeta_par1</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHbeta_par2</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">reflexivity</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">omega</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">End</span> <a class="idref" href="Beta.html#"><span class="id" type="module">Beta</span></a>.<br/>
+</div>
+</div>
+
+<div id="footer">
+<hr/><a href="index.html">Index</a><hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
+</div>
+
+</div>
+
+</body>
+</html>
