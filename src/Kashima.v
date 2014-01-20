@@ -278,14 +278,25 @@ Proof.
 Lemma lift_st : forall t t',
   st t t' -> forall n k, st (lift n k t) (lift n k t').
 Proof.
-  intros t t' H. induction H.
-  intros n k. simpl. case_eq (Compare_dec.lt_dec i k). intros.
-  apply st_hap. apply lift_first_hap.
-    (* FIXME/TODO I had this one, not sure how it broke. *)
-    assumption.
-    assumption.
-    intros. admit.
-    admit. admit.
+  intros t t' H. dependent induction H.
+    (* st_hap *)
+    intros n k. simpl. case_eq (Compare_dec.lt_dec i k).
+      (* i < k *)
+      intros. apply st_hap. apply lift_first_hap; assumption.
+      (* ~ i < k *)
+      intros. apply st_hap.
+      assert (FLD: Var (i + n) = lift n k (Var i)). simpl.
+        case_eq (Compare_dec.lt_dec i k). intros. contradiction. intros. reflexivity.
+      rewrite FLD. apply lift_hap. assumption.
+    (* st_hap_st_st *)
+    intros n k. apply st_hap_st_st with (t1 := lift n k t1) (t2 := lift n k t2).
+    rewrite <- lift_app. apply lift_hap. assumption.
+    fold lift. apply IHst1.
+    fold lift. apply IHst2.
+    (* st_haplam_st *)
+    intros n k. apply st_haplam_st with (t1 := lift n (k+1) t1).
+    rewrite <- lift_lam. apply lift_hap. assumption.
+    fold lift. apply IHst.
 Qed.
 
 (* (5) *)
