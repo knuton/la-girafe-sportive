@@ -47,18 +47,22 @@ Proof.
 Qed.
 
 
+(** * Parallel [beta] reduction *)
 Inductive beta_par : lterm -> lterm -> Prop :=
-  | beta_par_var: forall n, beta_par (Var n) (Var n)
+  | beta_par_var: forall n,
+        beta_par (Var n) (Var n)
   | beta_par_lam: forall M M',
-                    beta_par M M' -> beta_par (Lam M) (Lam M')
+        beta_par M M' -> beta_par (Lam M) (Lam M')
   | beta_par_app: forall M M' N N',
-                   beta_par M M' -> beta_par N N' -> beta_par (App M N) (App M' N')
+        beta_par M M' -> beta_par N N' -> beta_par (App M N) (App M' N')
   | beta_par_base: forall M M' N N',
-                     beta_par M M' ->
-                     beta_par N N' ->
-                     beta_par (App (Lam M) N) (subst 0 N' M').
+        beta_par M M' ->
+        beta_par N N' ->
+        beta_par (App (Lam M) N) (subst 0 N' M').
 
+(** A couple of useful results about [beta_par] **)
 
+(** Parallel beta reduction is reflexive on all [lterm]'s **)
 Lemma beta_par_refl:
   forall t, beta_par t t.
 Proof.
@@ -71,6 +75,7 @@ Proof.
   assumption.
 Qed.
 
+(** [beta_par] is closed under [shift k] **)
 Lemma beta_par_shift:
   forall k, forall M M', beta_par M M' -> beta_par (shift k M) (shift k M').
 Proof.
