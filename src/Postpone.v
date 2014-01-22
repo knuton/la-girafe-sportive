@@ -127,7 +127,74 @@ Lemma postpone_comm:
 Proof.
   intros.
   generalize dependent M.
-  dependent induction H0.
+  rename H0 into H.
+  dependent induction H.
+  (* [P = (Var n) = N] *)
+      intros.
+      exists M. split.
+      apply beta_par_refl.
+      assumption.
+  (* [P = (Lam P1)] *)
+      intro K.
+      intros.
+      rename M' into N1.
+      rename M into P.
+      rename K into M.
+      apply eta_par_lam_k_lam in H0.
+      do 3 destruct H0.
+      rewrite H1; clear H1; clear M.
+      apply IHbeta_par in H0.
+      do 2 destruct H0.
+      exists (Lam x1).
+      split.
+      apply lam_k_beta_lam. assumption.
+      constructor. assumption.
+
+   (* App case *)
+      intros MM HH.
+      apply eta_par_lam_k_app in HH.
+      destruct HH. do 3 destruct H1.
+      destruct H2.
+      rewrite H3; clear H3; clear MM.
+      apply IHbeta_par1 in H1.
+      apply IHbeta_par2 in H2.
+      do 2 destruct H1.
+      do 2 destruct H2.
+      (* This feels like a weird choice, but seems to work. *)
+      exists (lam_k x (App x2 x3)).
+      split.
+      Focus 2.
+      induction x.
+      simpl. constructor; assumption.
+      simpl. apply eta_par_base with (lam_k x (App x2 x3)).
+      reflexivity. assumption.
+      induction x.
+      simpl. constructor; assumption.
+      simpl. constructor. constructor.
+      apply beta_par_shift. assumption. apply beta_par_refl.
+
+   (* subst case *)
+      intros.
+      apply eta_par_lam_k_app in H1.
+      do 4 destruct H1. destruct H2.
+      rewrite H3. clear H3. clear M0.
+      apply eta_par_lam_k_lam in H1.
+      do 3 destruct H1. rewrite H3. clear H3. clear x0.
+      apply IHbeta_par1 in H1.
+      apply IHbeta_par2 in H2.
+      do 2 destruct H1.
+      do 2 destruct H2.
+      exists (lam_k x (subst 0 x4 x0)).
+      split.
+
+      apply beta_par_lam_k_closed.
+      apply lam_k_beta_subst. assumption. assumption.
+
+      apply lam_k_eta_red.
+      apply eta_par_substitutive.
+      assumption.
+      assumption.
+Qed.
 
   intros.
   exists M. split.
