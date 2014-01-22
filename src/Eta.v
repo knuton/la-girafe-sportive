@@ -5,6 +5,7 @@ Require Import Relation_Operators.
 Require Import Relation_Definitions.
 Require Import Coq.Structures.Equalities.
 Require Import Coq.Program.Equality.
+Require Import Coq.Arith.Compare_dec.
 
 Module Export Eta.
 
@@ -59,9 +60,9 @@ Definition eta_star_trans := rt_trans lterm eta.
 (** We prove a couple of substitution lemmas, again, just to exercise the
     definition of [eta], they are not needed for the main result. **)
 
-Lemma eta_prim_substitutive:
+Lemma eta_prim_subst_closed:
   forall (M N L: lterm) (n: nat),
-  eta_prim M N -> eta_prim (subst n L M) (subst n L N).
+    eta_prim M N -> eta_prim (subst n L M) (subst n L N).
 Proof.
   intros.
   assert (What: n + 1 = S n). omega.
@@ -78,24 +79,17 @@ Proof.
   reflexivity. omega.
 Qed.
 
-Lemma eta_substitutive:
+Lemma eta_subst_closed:
   forall (M N L: lterm) (n: nat),
   eta M N -> eta (subst n L M) (subst n L N).
 Proof.
   intros. generalize dependent n. generalize dependent L.
   unfold eta.
   induction H.
-  intros. apply clos_base. apply eta_prim_substitutive. assumption.
+  intros. apply clos_base. apply eta_prim_subst_closed. assumption.
   intros. apply clos_lam. apply IHclos_compat.
   intros. apply clos_appl. apply IHclos_compat.
   intros. apply clos_appr. apply IHclos_compat.
-Qed.
-
-Lemma eta_very_substitutive:
-  forall (M M' N N': lterm) (n: nat),
-  eta M M' -> eta N N' -> eta (subst n N M) (subst n N' M').
-Proof.
-  admit.
 Qed.
 
 (** * Parallel [eta] conversion *)
@@ -184,6 +178,13 @@ Proof.
         rewrite lift_fuse. simpl. rewrite <- IHn. unfold shift.
         rewrite lift_fuse. simpl.
         reflexivity. simpl. auto. simpl. auto.
+Qed.
+
+Lemma eta_par_substitutive:
+  forall (M M' N N': lterm), forall n,
+    eta_par M M' -> eta_par N N' -> eta_par (subst n N M) (subst n N' M').
+Proof.
+  admit.
 Qed.
 
 (** We now prove some basic properties about the relationship between [[eta]]
