@@ -92,6 +92,33 @@ Proof.
   constructor. apply beta_par_shift. assumption. apply beta_par_refl.
 Qed.
 
+Lemma beta_par_lam_k_closed:
+  forall k, forall M N,
+    beta_par M N -> beta_par (lam_k k M) (lam_k k N).
+Proof.
+  induction k.
+  intros.
+  simpl. assumption.
+  intros.
+  simpl. constructor. constructor. apply beta_par_shift. apply IHk. assumption.
+  apply beta_par_refl.
+Qed.
+
+Lemma lam_k_eta_red:
+  forall k, forall M N,
+    eta_par M N -> eta_par (lam_k k M) N.
+Proof.
+  induction k.
+  intros.
+
+  simpl. assumption.
+
+  intros.
+  simpl. apply eta_par_base with (lam_k k M).
+  reflexivity.
+  apply IHk. assumption.
+Qed.
+
 
 Lemma postpone_comm:
   forall M P N,
