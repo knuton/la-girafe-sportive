@@ -196,19 +196,32 @@ Proof.
       assumption.
 Qed.
 
-  intros.
-  exists M. split.
-  apply beta_par_refl.
-  assumption.
+Definition beta_eta_star := union lterm bstar eta_star.
 
-  intros.
-  (* TODO *)
-  admit.
-  admit.
+Lemma bred_imp_beta_par:
+  forall M N,
+    bred M N -> beta_par M N.
+Proof.
   admit.
 Qed.
 
-Definition beta_eta_star := union lterm bstar eta_star.
+Lemma beta_par_imp_bstar:
+  forall M N,
+    beta_par M N -> bstar M N.
+Proof.
+  admit.
+Qed.
+
+Lemma bstar_eq_closure_of_beta_par:
+  forall M N,
+    bstar M N <-> (clos_refl_trans lterm beta_par) M N.
+Proof.
+  split.
+
+  intro.
+  admit.
+  admit.
+Qed.
 
 Theorem eta_postponement:
   forall M N,
