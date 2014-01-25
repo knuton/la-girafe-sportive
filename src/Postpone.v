@@ -196,37 +196,228 @@ Proof.
       assumption.
 Qed.
 
-Definition beta_eta_star := union lterm bstar eta_star.
 
 Lemma bred_imp_beta_par:
   forall M N,
     bred M N -> beta_par M N.
 Proof.
-  admit.
+  intros.
+  dependent induction H;
+  constructor; try apply beta_par_refl; try assumption.
+Qed.
+
+Lemma bstar_refl:
+  forall M, bstar M M.
+Proof.
+  apply rt_refl.
+Qed.
+
+Lemma bstar_lam_closed:
+  forall M N,
+    bstar M N -> bstar (Lam M) (Lam N).
+Proof.
+  intros.
+  dependent induction H.
+  constructor. constructor. assumption.
+  apply rt_refl.
+  apply rt_trans with (Lam y); assumption.
+Qed.
+
+Lemma bstar_app_closed_l:
+  forall M M' N,
+    bstar M M' -> bstar (App M N) (App M' N).
+Proof.
+  intros.
+  dependent induction H.
+  constructor. constructor. assumption.
+  apply rt_refl.
+  apply rt_trans with (App y N); assumption.
+Qed.
+
+Lemma bstar_app_closed_r:
+  forall M N N',
+    bstar N N' -> bstar (App M N) (App M N').
+Proof.
+  intros.
+  dependent induction H.
+  constructor. constructor. assumption.
+  apply rt_refl.
+  apply rt_trans with (App M y); assumption.
+Qed.
+
+Lemma bstar_app_closed:
+  forall M M' N N',
+    bstar M M' -> bstar N N' -> bstar (App M N) (App M' N').
+Proof.
+  intros ? ? ? ?. intros H1 H2.
+  apply rt_trans with (App M N').
+  apply bstar_app_closed_r. assumption.
+  apply bstar_app_closed_l. assumption.
+Qed.
+
+Lemma bstar_subst_closed_l:
+  forall M M' N,
+         bstar M M' -> bstar (App (Lam M) N) (subst 0 N M').
+Proof.
+  intros.
+  dependent induction H.
+  apply rt_trans with (App (Lam y) N).
+  apply bstar_app_closed. apply bstar_lam_closed. constructor. assumption.
+  apply rt_refl. apply rt_step. apply bred_base.
+  constructor. apply bred_base.
+  apply rt_trans with (App (Lam y) N).
+  apply bstar_app_closed. apply bstar_lam_closed. assumption.
+  apply rt_refl.
+  assumption.
+Qed.
+
+Lemma bred_lift_closed:
+  forall M N, forall b k,
+    bred M N -> bred (lift k b M) (lift k b N).
+Proof.
+  induction M.
+  intros.
+  inversion_clear H.
+
+  intros.
+  inversion_clear H.
+  simpl.
+  constructor.
+  apply IHM. assumption.
+
+  intros.
+  inversion_clear H.
+  simpl.
+  rewrite lift_subst_semicom.
+  apply bred_base. omega.
+
+  simpl. constructor. auto.
+
+  simpl. constructor. auto.
+Qed.
+
+
+Lemma bstar_lift_closed:
+  forall M N, forall b k,
+    bstar M N -> bstar (lift k b M) (lift k b N).
+Proof.
+  intros.
+
+  dependent induction H.
+
+  constructor. apply bred_lift_closed. assumption.
+
+  apply rt_refl.
+
+  apply rt_trans with (lift k b y); assumption.
+Qed.
+
+
+Lemma bstar_weak_subst:
+  forall M, forall k, forall N N',
+    bstar N N' -> bstar (subst k N M) (subst k N' M).
+Proof.
+  dependent induction M.
+  intros.
+  simpl.
+  case_eq (nat_compare n k).
+  rewrite nat_compare_eq_iff. intros.
+  apply bstar_lift_closed. assumption.
+
+  intros. apply rt_refl.
+  intros. apply rt_refl.
+
+
+  intros.
+  simpl. apply bstar_lam_closed. apply IHM. assumption.
+
+  intros.
+  simpl. apply bstar_app_closed; auto.
+Qed.
+
+
+Lemma bstar_subst_closed_r:
+  forall M N N',
+         bstar N N' -> bstar (App (Lam M) N) (subst 0 N' M).
+Proof.
+  intros.
+  dependent induction H.
+  apply rt_trans with (subst 0 x M).
+  apply rt_step. apply bred_base.
+  apply bstar_weak_subst. constructor. assumption.
+
+  apply rt_step. constructor.
+  apply rt_trans with (App (Lam M) y).
+  apply bstar_app_closed.
+  apply bstar_lam_closed.
+  apply bstar_refl.
+  assumption.
+
+  assumption.
+Qed.
+
+
+Lemma bstar_subst_closed:
+  forall M M' N N',
+   bstar M M' -> bstar N N' -> bstar (App (Lam M) N) (subst 0 N' M').
+Proof.
+  intros.
+  apply rt_trans with (App (Lam M) N').
+  apply bstar_app_closed. apply bstar_lam_closed. apply rt_refl. assumption.
+  apply bstar_subst_closed_l. assumption.
 Qed.
 
 Lemma beta_par_imp_bstar:
   forall M N,
     beta_par M N -> bstar M N.
 Proof.
-  admit.
+  intros.
+  dependent induction H.
+  apply rt_refl.
+  apply bstar_lam_closed. assumption.
+  apply bstar_app_closed; assumption.
+  apply bstar_subst_closed; assumption.
 Qed.
+
+Definition beta_par_trans := clos_trans lterm beta_par.
 
 Lemma bstar_eq_closure_of_beta_par:
   forall M N,
-    bstar M N <-> (clos_refl_trans lterm beta_par) M N.
+    bstar M N <-> beta_par_trans M N.
 Proof.
   split.
 
-  intro.
-  admit.
-  admit.
+  intros.
+  dependent induction H.
+  constructor. apply bred_imp_beta_par. assumption.
+  constructor. apply beta_par_refl.
+  apply t_trans with y; assumption.
+
+  intros.
+  dependent induction H.
+  apply beta_par_imp_bstar. assumption.
+
+  apply rt_trans with y; assumption.
 Qed.
+
+(* is this definition wrong? *)
+Definition beta_eta := union lterm bred eta.
+Definition beta_eta_star := clos_refl_trans lterm beta_eta.
 
 Theorem eta_postponement:
   forall M N,
     beta_eta_star M N -> (exists P, bstar M P /\ eta_star P N).
 Proof.
+  intros.
+  dependent induction H.
+  destruct H.
+  apply bred_imp_beta_par in H.
+  exists y. split. apply beta_par_imp_bstar. assumption. apply rt_refl.
+
+  exists x. split. apply rt_refl. constructor. assumption.
+
+  admit.
+
   admit.
 Qed.
 
