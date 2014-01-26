@@ -125,6 +125,39 @@ Proof.
   assumption. assumption.
 Qed.
 
+Lemma eta_imp_eta_par:
+  forall M N, eta M N -> eta_par M N.
+Proof.
+  admit.
+Qed.
+
+Lemma eta_par_imp_eta_star:
+  forall M N,
+    eta_par M N -> eta_star M N.
+Proof.
+  admit.
+Qed.
+
+Definition eta_par_trans := clos_trans lterm eta_par.
+
+Lemma eta_star_eq_closure_of_eta_par:
+  forall M N,
+    eta_star M N <-> eta_par_trans M N.
+Proof.
+  split.
+
+  intros.
+  dependent induction H.
+  constructor. apply eta_imp_eta_par. assumption.
+  constructor. apply eta_par_refl.
+  apply t_trans with y; assumption.
+
+  intros.
+  dependent induction H.
+  apply eta_par_imp_eta_star. assumption.
+
+  apply rt_trans with y; assumption.
+Qed.
 
 (** We now define a function for expressing a [k]-fold [eta] expansion of
     an [lterm]. **)
