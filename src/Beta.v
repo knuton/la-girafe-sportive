@@ -46,7 +46,7 @@ Proof.
   intros.
   inversion_clear H.
   simpl.
-  rewrite lift_subst_semicom. replace (b - 0) with b by omega.
+  rewrite lift_distr_subst. replace (b - 0) with b by omega.
   apply bred_base. omega.
 
   simpl. constructor. auto.
@@ -272,7 +272,7 @@ Proof.
       apply IHbeta_par1.
       apply IHbeta_par2.
   intros.
-  unfold shift. simpl. rewrite lift_subst_semicom.
+  unfold shift. simpl. rewrite lift_distr_subst.
   replace (k - 0) with k by omega.
   replace (lift 1) with shift.
   apply beta_par_base.

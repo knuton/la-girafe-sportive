@@ -354,7 +354,7 @@ Proof.
   reflexivity.
 Qed.
 
-Lemma lift_subst_semicom:
+Lemma lift_distr_subst:
   forall M N, forall v, forall i b,
     v <= b ->
     lift i b (subst v N M) = subst v (lift i (b-v) N) (lift i (b+1) M).

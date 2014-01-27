@@ -222,7 +222,7 @@ Proof.
   intros t t' H. induction H.
     (* hap'_hred *)
     intros n k. simpl.
-    rewrite lift_subst_semicom.
+    rewrite lift_distr_subst.
     replace (k - 0) with k by omega.
     apply hap'_hred. omega.
     (* hap'_hreds *)
