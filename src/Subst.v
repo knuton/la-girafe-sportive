@@ -355,11 +355,88 @@ Proof.
 Qed.
 
 Lemma lift_subst_semicom:
-  forall M N, forall i b v,
+  forall M N, forall v, forall i b,
     v <= b ->
-    lift i b (subst v N M) = subst v (lift i b N) (lift i (b+1) M).
+    lift i b (subst v N M) = subst v (lift i (b-v) N) (lift i (b+1) M).
 Proof.
-  admit.
+  induction M. intros N v.
+  generalize dependent N.
+  generalize dependent n.
+  induction v.
+  intros ? ? ? ? HH. simpl. case_eq (nat_compare n 0).
+  intros H. apply nat_compare_eq_iff in H. rewrite H. simpl.
+  replace (b + 1) with (S b) by omega. simpl.
+  rewrite lift_0_ident. rewrite lift_0_ident.
+  replace (b - 0) with b by omega. reflexivity.
+
+  intros. simpl. apply nat_compare_lt in H. omega.
+  intros. simpl. apply nat_compare_gt in H.
+
+  assert (H1: exists n', n = (S n')).
+  inversion H. exists 0. reflexivity.
+  exists m. reflexivity.
+
+  destruct H1. rewrite H0. replace (S x - 1) with x by omega.
+  simpl.  replace (b +1) with (S b) by omega.
+  case_eq (lt_dec x b).
+  simpl.
+  intros. case_eq (lt_dec (S x) (S b)).
+  intros. simpl. f_equal. omega.
+  intros. omega. intros.
+  case_eq (lt_dec (S x) (S b)). intros. simpl. omega.
+  intros. simpl. f_equal. omega.
+
+  intros ? ? ? ? HH. simpl.
+  case_eq (nat_compare n (S v)).
+  intros H. apply nat_compare_eq_iff in H.
+  rewrite H. simpl.
+  case_eq (lt_dec (S v) (b + 1)).
+  intros.
+  simpl. replace (nat_compare v v) with Eq.
+  replace b with (((b - S v) + (S v))) by omega.
+  rewrite lift_lift_rev. reflexivity.
+  omega. symmetry. apply nat_compare_eq_iff. reflexivity.
+  intros. simpl.
+  case_eq (nat_compare (v+i) v).
+  intros. apply nat_compare_eq_iff in H1.
+  assert (HHH: i = 0). omega.
+  rewrite HHH. rewrite lift_0_ident.
+  f_equal. rewrite lift_0_ident. reflexivity.
+  intros. apply nat_compare_lt in H1.
+  omega. intros. apply nat_compare_gt in H1.
+  omega.
+  intros.
+  apply nat_compare_lt in H.
+  simpl.
+  case_eq (lt_dec n b).
+  intros.
+  case_eq (lt_dec n (b+1)).
+  simpl. intros.
+  replace (nat_compare n (S v)) with Lt.
+  reflexivity. symmetry. apply nat_compare_lt. assumption.
+  intros. omega.
+  intros. omega.
+  intros. apply nat_compare_gt in H.
+  simpl. case_eq (lt_dec (n - 1) b).
+  intros. case_eq (lt_dec n (b+1)).
+  intros. simpl. replace (nat_compare n (S v)) with Gt.
+  reflexivity. symmetry. apply nat_compare_gt. assumption.
+  intros. omega.
+  intros. case_eq (lt_dec n (b+1)). intros.
+  omega. intros. simpl.
+  case_eq (nat_compare (n+i) (S v)).
+  intros. apply nat_compare_eq_iff in H2.
+  omega.
+  intros. apply nat_compare_lt in H2.
+  omega.
+  intros. f_equal. omega.
+
+  intros.
+  simpl. f_equal.
+  rewrite IHM. f_equal. f_equal. omega. omega.
+
+  intros. simpl. f_equal. apply IHM1. omega.
+  apply IHM2. omega.
 Qed.
 
 (** Some trivialities for convenient rewriting. **)
