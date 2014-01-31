@@ -92,6 +92,47 @@ Proof.
   intros. apply clos_appr. apply IHclos_compat.
 Qed.
 
+Lemma eta_prim_lift_closed:
+  forall M N, forall b k,
+    eta_prim M N -> eta_prim (lift k b M) (lift k b N).
+Proof.
+  intros.
+  generalize dependent b. generalize dependent k.
+  dependent induction H.
+  intros. rewrite H.
+  simpl.
+  case_eq (lt_dec 0 (b+1)).
+  intros.
+  unfold shift.
+  apply eta_base. unfold shift.
+  rewrite lift_lift_rev.
+  replace (b + 1 - 1) with b by omega. reflexivity.
+  omega.
+  intros. omega.
+Qed.
+
+
+Lemma eta_lift_closed:
+  forall M N, forall b k,
+    eta M N -> eta (lift k b M) (lift k b N).
+Proof.
+  induction M.
+  intros.
+  inversion_clear H. inversion_clear H0.
+
+  intros.
+  inversion_clear H. apply eta_prim_lift_closed  with (b := b) (k := k) in H0.
+  constructor. assumption.
+
+  simpl. apply clos_lam. apply IHM. assumption.
+
+  intros.
+  inversion_clear H. inversion_clear H0.
+  simpl. apply clos_appl. apply IHM1. assumption.
+  simpl. apply clos_appr. apply IHM2. assumption.
+Qed.
+
+
 (** * Parallel [eta] conversion *)
 
 (** We now define parallel eta conversion [eta_par],
@@ -125,6 +166,151 @@ Proof.
   assumption. assumption.
 Qed.
 
+Lemma eta_imp_eta_par:
+  forall M N, eta M N -> eta_par M N.
+Proof.
+  intros.
+  dependent induction H.
+  destruct H. apply eta_par_base with g. assumption.
+  apply eta_par_refl.
+  constructor. assumption.
+  constructor. assumption. apply eta_par_refl.
+  constructor. apply eta_par_refl. assumption.
+Qed.
+
+Lemma eta_par_lift_closed:
+  forall M N, forall k b,
+    eta_par M N -> eta_par (lift k b M) (lift k b N).
+Proof.
+  intros.
+  generalize dependent k.
+  generalize dependent b.
+  dependent induction H.
+  intros. apply eta_par_refl.
+  simpl. intros. constructor. apply IHeta_par.
+  simpl. intros. constructor. apply IHeta_par1. apply IHeta_par2.
+
+  simpl. intros.
+  replace (b +1) with (S b) by omega. simpl.
+  unfold shift. replace (S b) with (b+1) by omega.
+  rewrite H.
+  apply eta_par_base with (lift k b N).
+  unfold shift. replace (S b) with (b+1) by omega.
+  rewrite lift_lift_rev. replace (b+1-1) with b by omega.
+  reflexivity. omega.
+  apply IHeta_par.
+Qed.
+
+Lemma eta_star_lam_closed:
+  forall M N,
+    eta_star M N -> eta_star (Lam M) (Lam N).
+Proof.
+  intros.
+  dependent induction H.
+  constructor.
+  apply clos_lam in H. assumption. apply rt_refl.
+  apply rt_trans with (Lam y); assumption.
+Qed.
+
+Lemma eta_star_app_closed_l:
+  forall M M' N,
+    eta_star M M' -> eta_star (App M N) (App M' N).
+Proof.
+  intros.
+  dependent induction H.
+  constructor. apply clos_appl. assumption.
+  apply rt_refl.
+  apply rt_trans with (App y N); assumption.
+Qed.
+
+Lemma eta_star_app_closed_r:
+  forall M N N',
+    eta_star N N' -> eta_star (App M N) (App M N').
+Proof.
+  intros.
+  dependent induction H.
+  constructor. apply clos_appr. assumption.
+  apply rt_refl.
+  apply rt_trans with (App M y); assumption.
+Qed.
+
+Lemma eta_star_app_closed:
+  forall M M' N N',
+    eta_star M M' -> eta_star N N' -> eta_star (App M N) (App M' N').
+Proof.
+  intros ? ? ? ?. intros H1 H2.
+  apply rt_trans with (App M N').
+  apply eta_star_app_closed_r. assumption.
+  apply eta_star_app_closed_l. assumption.
+Qed.
+
+Lemma eta_star_lift_closed:
+  forall M N, forall k b,
+    eta_star M N -> eta_star (lift k b M) (lift k b N).
+Proof.
+  intros.
+  dependent induction H.
+  constructor. apply eta_lift_closed. assumption.
+  apply eta_star_refl.
+  apply eta_star_trans with (lift k b y).
+  assumption. assumption.
+Qed.
+
+
+Lemma eta_star_base_closed:
+  forall M N N',
+    (M = shift 0 N) -> eta_star N N' ->
+          eta_star (Lam (App M (Var 0))) N'.
+Proof.
+  intros.
+  rewrite H. clear H. clear M.
+  dependent induction H0.
+  apply rt_trans with (Lam (App (shift 0 y) (Var 0))).
+  apply eta_star_lam_closed. apply eta_star_app_closed.
+  apply eta_star_lift_closed. constructor. assumption.
+  apply rt_refl.
+  constructor. apply clos_base. apply eta_base. reflexivity.
+  constructor. apply clos_base. apply eta_base. reflexivity.
+
+  apply rt_trans with (Lam (App (shift 0 y) (Var 0))).
+  apply eta_star_lam_closed. apply eta_star_app_closed.
+  apply eta_star_lift_closed. assumption. apply rt_refl.
+  assumption.
+Qed.
+
+
+Lemma eta_par_imp_eta_star:
+  forall M N,
+    eta_par M N -> eta_star M N.
+Proof.
+  intros.
+  dependent induction H.
+  apply rt_refl.
+  apply eta_star_lam_closed. assumption.
+  apply eta_star_app_closed; assumption.
+  apply eta_star_base_closed with N; assumption.
+Qed.
+
+Definition eta_par_trans := clos_trans lterm eta_par.
+
+Lemma eta_star_eq_closure_of_eta_par:
+  forall M N,
+    eta_star M N <-> eta_par_trans M N.
+Proof.
+  split.
+
+  intros.
+  dependent induction H.
+  constructor. apply eta_imp_eta_par. assumption.
+  constructor. apply eta_par_refl.
+  apply t_trans with y; assumption.
+
+  intros.
+  dependent induction H.
+  apply eta_par_imp_eta_star. assumption.
+
+  apply rt_trans with y; assumption.
+Qed.
 
 (** We now define a function for expressing a [k]-fold [eta] expansion of
     an [lterm]. **)
@@ -180,11 +366,48 @@ Proof.
         reflexivity. simpl. auto. simpl. auto.
 Qed.
 
+Lemma eta_par_subst_closed:
+  forall (M N L: lterm) (n: nat),
+  eta_par M N -> eta_par (subst n L M) (subst n L N).
+Proof.
+  intros. generalize dependent n.
+  dependent induction H.
+  intros. apply eta_par_refl.
+  simpl. constructor. apply IHeta_par.
+  simpl. constructor. apply IHeta_par1. apply IHeta_par2.
+  intros.
+  simpl. replace (n+1) with (S n) by omega.
+  rewrite H. replace (S n) with (n+1) by omega.
+  rewrite <- lift_lem2.
+  apply eta_par_base with (subst n L N). reflexivity.
+  apply IHeta_par. omega.
+Qed.
+
+
 Lemma eta_par_substitutive:
   forall (M M' N N': lterm), forall n,
     eta_par M M' -> eta_par N N' -> eta_par (subst n N M) (subst n N' M').
 Proof.
-  admit.
+  intros. generalize dependent n.
+  dependent induction H. intros. simpl.
+  case_eq (nat_compare n n0).
+  intros.
+  apply eta_par_lift_closed. assumption.
+  intros. apply eta_par_refl.
+  intros. apply eta_par_refl.
+
+  intros. simpl. apply eta_par_lam. apply IHeta_par. assumption.
+  intros. simpl. apply eta_par_app. apply IHeta_par1. assumption.
+                                    apply IHeta_par2. assumption.
+
+  intros.
+  simpl. replace (n+1) with (S n) by omega. simpl.
+  rewrite H. simpl.
+  apply eta_par_base with (subst n N N0).
+  unfold shift. replace (S n) with (n+1) by omega.
+  rewrite lift_lem2. reflexivity.
+  omega.
+  apply IHeta_par. assumption.
 Qed.
 
 (** We now prove some basic properties about the relationship between [[eta]]
