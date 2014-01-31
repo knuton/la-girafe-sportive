@@ -19,10 +19,13 @@
 <h1 class="libtitle">Library Beta</h1>
 
 <div class="code">
-<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Untyped.html#"><span class="id" type="library">Untyped</span></a>.<br/>
-<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Subst.html#"><span class="id" type="library">Subst</span></a>.<br/>
 <span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#"><span class="id" type="library">Relation_Operators</span></a>.<br/>
 <span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Program.Equality.html#"><span class="id" type="library">Coq.Program.Equality</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Arith.Compare_dec.html#"><span class="id" type="library">Coq.Arith.Compare_dec</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Untyped.html#"><span class="id" type="library">Untyped</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Subst.html#"><span class="id" type="library">Subst</span></a>.<br/>
 
 <br/>
 <span class="id" type="keyword">Module</span> <span class="id" type="keyword">Export</span> <a name="Beta"><span class="id" type="module">Beta</span></a>.<br/>
@@ -66,6 +69,36 @@ Consider the following two examples of one-step beta reduction.
 <span class="id" type="keyword">Proof</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_appl"><span class="id" type="constructor">bred_appl</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_lam"><span class="id" type="constructor">bred_lam</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_base"><span class="id" type="constructor">bred_base</span></a>. <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bred_lift_closed"><span class="id" type="lemma">bred_lift_closed</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">b</span> <span class="id" type="var">k</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a> (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#b"><span class="id" type="variable">b</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#b"><span class="id" type="variable">b</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">M</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">inversion_clear</span> <span class="id" type="var">H</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">inversion_clear</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHM</span>. <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">inversion_clear</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">rewrite</span> <a class="idref" href="Subst.html#lift_distr_subst"><span class="id" type="lemma">lift_distr_subst</span></a>. <span class="id" type="tactic">replace</span> (<span class="id" type="var">b</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Peano.html#:nat_scope:x_'-'_x"><span class="id" type="notation">-</span></a> 0) <span class="id" type="keyword">with</span> <span class="id" type="var">b</span> <span class="id" type="tactic">by</span> <span class="id" type="tactic">omega</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_base"><span class="id" type="constructor">bred_base</span></a>. <span class="id" type="tactic">omega</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">auto</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
 </div>
 
 <div class="doc">
@@ -99,18 +132,185 @@ Again, we consider a simple example of the multi-step reduction relation.
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" type="keyword">Inductive</span> <a name="Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> : <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> → <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> → <span class="id" type="keyword">Prop</span> :=<br/>
-&nbsp;&nbsp;| <a name="Beta.beta_par_var"><span class="id" type="constructor">beta_par_var</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">n</span>, <a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> <a class="idref" href="Beta.html#n"><span class="id" type="variable">n</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> <a class="idref" href="Beta.html#n"><span class="id" type="variable">n</span></a>)<br/>
-&nbsp;&nbsp;| <a name="Beta.beta_par_lam"><span class="id" type="constructor">beta_par_lam</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>)<br/>
-&nbsp;&nbsp;| <a name="Beta.beta_par_app"><span class="id" type="constructor">beta_par_app</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> → <a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a>)<br/>
-&nbsp;&nbsp;| <a name="Beta.beta_par_base"><span class="id" type="constructor">beta_par_base</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> 0 <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_reflexive"><span class="id" type="lemma">bstar_reflexive</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span>, <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_lam_closed"><span class="id" type="lemma">bstar_lam_closed</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <span class="id" type="var">y</span>); <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_app_closed_l"><span class="id" type="lemma">bstar_app_closed_l</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <span class="id" type="var">y</span> <span class="id" type="var">N</span>); <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_app_closed_r"><span class="id" type="lemma">bstar_app_closed_r</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <span class="id" type="var">M</span> <span class="id" type="var">y</span>); <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_app_closed"><span class="id" type="lemma">bstar_app_closed</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span> ? ? ? ?. <span class="id" type="tactic">intros</span> <span class="id" type="var">H1</span> <span class="id" type="var">H2</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <span class="id" type="var">M</span> <span class="id" type="var">N'</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_app_closed_r"><span class="id" type="lemma">bstar_app_closed_r</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_app_closed_l"><span class="id" type="lemma">bstar_app_closed_l</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_subst_closed_l"><span class="id" type="lemma">bstar_subst_closed_l</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> 0 <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <span class="id" type="var">y</span>) <span class="id" type="var">N</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_app_closed"><span class="id" type="lemma">bstar_app_closed</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_lam_closed"><span class="id" type="lemma">bstar_lam_closed</span></a>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_step"><span class="id" type="constructor">rt_step</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_base"><span class="id" type="constructor">bred_base</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_base"><span class="id" type="constructor">bred_base</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <span class="id" type="var">y</span>) <span class="id" type="var">N</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_app_closed"><span class="id" type="lemma">bstar_app_closed</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_lam_closed"><span class="id" type="lemma">bstar_lam_closed</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_lift_closed"><span class="id" type="lemma">bstar_lift_closed</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">b</span> <span class="id" type="var">k</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#b"><span class="id" type="variable">b</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#b"><span class="id" type="variable">b</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_lift_closed"><span class="id" type="lemma">bred_lift_closed</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> <span class="id" type="var">k</span> <span class="id" type="var">b</span> <span class="id" type="var">y</span>); <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_weak_subst"><span class="id" type="lemma">bstar_weak_subst</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">M</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="var">case_eq</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Arith.Compare_dec.html#nat_compare"><span class="id" type="definition">nat_compare</span></a> <span class="id" type="var">n</span> <span class="id" type="var">k</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">rewrite</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Arith.Compare_dec.html#nat_compare_eq_iff"><span class="id" type="lemma">nat_compare_eq_iff</span></a>. <span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_lift_closed"><span class="id" type="lemma">bstar_lift_closed</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_lam_closed"><span class="id" type="lemma">bstar_lam_closed</span></a>. <span class="id" type="tactic">apply</span> <span class="id" type="var">IHM</span>. <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_app_closed"><span class="id" type="lemma">bstar_app_closed</span></a>; <span class="id" type="tactic">auto</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_subst_closed_r"><span class="id" type="lemma">bstar_subst_closed_r</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> 0 <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> 0 <span class="id" type="var">x</span> <span class="id" type="var">M</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_step"><span class="id" type="constructor">rt_step</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_base"><span class="id" type="constructor">bred_base</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_weak_subst"><span class="id" type="lemma">bstar_weak_subst</span></a>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_step"><span class="id" type="constructor">rt_step</span></a>. <span class="id" type="tactic">constructor</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <span class="id" type="var">M</span>) <span class="id" type="var">y</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_app_closed"><span class="id" type="lemma">bstar_app_closed</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_lam_closed"><span class="id" type="lemma">bstar_lam_closed</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_reflexive"><span class="id" type="lemma">bstar_reflexive</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_subst_closed"><span class="id" type="lemma">bstar_subst_closed</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
+&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> 0 <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <span class="id" type="var">M</span>) <span class="id" type="var">N'</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_app_closed"><span class="id" type="lemma">bstar_app_closed</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_lam_closed"><span class="id" type="lemma">bstar_lam_closed</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_subst_closed_l"><span class="id" type="lemma">bstar_subst_closed_l</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<a name="lab3"></a><h1 class="section">Parallel <span class="inlinecode"><span class="id" type="keyword">beta</span></span> reduction</h1>
+
+</div>
+<div class="code">
+<span class="id" type="keyword">Inductive</span> <a name="Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> : <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> → <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> → <span class="id" type="keyword">Prop</span> :=<br/>
+&nbsp;&nbsp;| <a name="Beta.beta_par_var"><span class="id" type="constructor">beta_par_var</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">n</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> <a class="idref" href="Beta.html#n"><span class="id" type="variable">n</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> <a class="idref" href="Beta.html#n"><span class="id" type="variable">n</span></a>)<br/>
+&nbsp;&nbsp;| <a name="Beta.beta_par_lam"><span class="id" type="constructor">beta_par_lam</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>)<br/>
+&nbsp;&nbsp;| <a name="Beta.beta_par_app"><span class="id" type="constructor">beta_par_app</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> → <a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a>)<br/>
+&nbsp;&nbsp;| <a name="Beta.beta_par_base"><span class="id" type="constructor">beta_par_base</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> 0 <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+A couple of useful results about <span class="inlinecode"><a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a></span> 
+<div class="paragraph"> </div>
+
+ Parallel beta reduction is reflexive on all <span class="inlinecode"><a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a></span>'s 
+</div>
+<div class="code">
 <span class="id" type="keyword">Lemma</span> <a name="Beta.beta_par_refl"><span class="id" type="lemma">beta_par_refl</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">t</span>, <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#t"><span class="id" type="variable">t</span></a> <a class="idref" href="Beta.html#t"><span class="id" type="variable">t</span></a>.<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
@@ -124,6 +324,41 @@ Again, we consider a simple example of the multi-step reduction relation.
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+Parallel beta subsumes beta 
+</div>
+<div class="code">
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bred_imp_beta_par"><span class="id" type="lemma">bred_imp_beta_par</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">constructor</span>; <span class="id" type="tactic">try</span> <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_refl"><span class="id" type="lemma">beta_par_refl</span></a>; <span class="id" type="tactic">try</span> <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.beta_par_imp_bstar"><span class="id" type="lemma">beta_par_imp_bstar</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_lam_closed"><span class="id" type="lemma">bstar_lam_closed</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_app_closed"><span class="id" type="lemma">bstar_app_closed</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_subst_closed"><span class="id" type="lemma">bstar_subst_closed</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+<span class="inlinecode"><a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a></span> is closed under <span class="inlinecode"><a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a></span> <span class="inlinecode"><a class="idref" href="Subst.html#k"><span class="id" type="variable">k</span></a></span> 
+</div>
+<div class="code">
 <span class="id" type="keyword">Lemma</span> <a name="Beta.beta_par_shift"><span class="id" type="lemma">beta_par_shift</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span>, <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
@@ -137,13 +372,40 @@ Again, we consider a simple example of the multi-step reduction relation.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHbeta_par1</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHbeta_par2</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a>. <span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">rewrite</span> <a class="idref" href="Subst.html#lift_subst_semicom"><span class="id" type="lemma">lift_subst_semicom</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">unfold</span> <a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a>. <span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">rewrite</span> <a class="idref" href="Subst.html#lift_distr_subst"><span class="id" type="lemma">lift_distr_subst</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">replace</span> (<span class="id" type="var">k</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Peano.html#:nat_scope:x_'-'_x"><span class="id" type="notation">-</span></a> 0) <span class="id" type="keyword">with</span> <span class="id" type="var">k</span> <span class="id" type="tactic">by</span> <span class="id" type="tactic">omega</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">replace</span> (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> 1) <span class="id" type="keyword">with</span> <a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_base"><span class="id" type="constructor">beta_par_base</span></a>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHbeta_par1</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHbeta_par2</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">reflexivity</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">omega</span>.<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+<span class="id" type="keyword">Definition</span> <a name="Beta.beta_par_trans"><span class="id" type="definition">beta_par_trans</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#clos_trans"><span class="id" type="inductive">clos_trans</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a>.<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_eq_closure_of_beta_par"><span class="id" type="lemma">bstar_eq_closure_of_beta_par</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">↔</span></a> <a class="idref" href="Beta.html#Beta.beta_par_trans"><span class="id" type="definition">beta_par_trans</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_imp_beta_par"><span class="id" type="lemma">bred_imp_beta_par</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_refl"><span class="id" type="lemma">beta_par_refl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#t_trans"><span class="id" type="constructor">t_trans</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">y</span>; <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_imp_bstar"><span class="id" type="lemma">beta_par_imp_bstar</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
+
+<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">y</span>; <span class="id" type="tactic">assumption</span>.<br/>
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>

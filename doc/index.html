@@ -47,7 +47,7 @@
 <td>Z</td>
 <td>_</td>
 <td><a href="index.html#global_*">other</a></td>
-<td>(169 entries)</td>
+<td>(207 entries)</td>
 </tr>
 <tr>
 <td>Notation Index</td>
@@ -239,7 +239,7 @@
 <td>Z</td>
 <td>_</td>
 <td>other</td>
-<td>(48 entries)</td>
+<td>(83 entries)</td>
 </tr>
 <tr>
 <td>Inductive Index</td>
@@ -335,7 +335,7 @@
 <td>Z</td>
 <td>_</td>
 <td>other</td>
-<td>(51 entries)</td>
+<td>(54 entries)</td>
 </tr>
 </table>
 <hr/>
@@ -346,7 +346,9 @@
 <a href="Kashima.html#bet">bet</a> [definition, in <a href="Kashima.html">Kashima</a>]<br/>
 <a href="Beta.html#Beta">Beta</a> [module, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html">Beta</a> [library]<br/>
+<a href="Beta.html#Beta.beta_par_trans">Beta.beta_par_trans</a> [definition, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.beta_par_shift">Beta.beta_par_shift</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.beta_par_imp_bstar">Beta.beta_par_imp_bstar</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.beta_par_refl">Beta.beta_par_refl</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.beta_par_base">Beta.beta_par_base</a> [constructor, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.beta_par_app">Beta.beta_par_app</a> [constructor, in <a href="Beta.html">Beta</a>]<br/>
@@ -354,12 +356,25 @@
 <a href="Beta.html#Beta.beta_par_var">Beta.beta_par_var</a> [constructor, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.beta_par">Beta.beta_par</a> [inductive, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bred">Beta.bred</a> [inductive, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bred_imp_beta_par">Beta.bred_imp_beta_par</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bred_halt">Beta.bred_halt</a> [definition, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bred_lift_closed">Beta.bred_lift_closed</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bred_appr">Beta.bred_appr</a> [constructor, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bred_appl">Beta.bred_appl</a> [constructor, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bred_lam">Beta.bred_lam</a> [constructor, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bred_base">Beta.bred_base</a> [constructor, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bstar">Beta.bstar</a> [definition, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_eq_closure_of_beta_par">Beta.bstar_eq_closure_of_beta_par</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_subst_closed">Beta.bstar_subst_closed</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_subst_closed_r">Beta.bstar_subst_closed_r</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_weak_subst">Beta.bstar_weak_subst</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_lift_closed">Beta.bstar_lift_closed</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_subst_closed_l">Beta.bstar_subst_closed_l</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_app_closed">Beta.bstar_app_closed</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_app_closed_r">Beta.bstar_app_closed_r</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_app_closed_l">Beta.bstar_app_closed_l</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_lam_closed">Beta.bstar_lam_closed</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_reflexive">Beta.bstar_reflexive</a> [lemma, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bstar_trans">Beta.bstar_trans</a> [definition, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bstar_refl">Beta.bstar_refl</a> [definition, in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bstar_step">Beta.bstar_step</a> [definition, in <a href="Beta.html">Beta</a>]<br/>
@@ -393,15 +408,28 @@
 <a href="Eta.html#Eta.eta_par_lam_k_app">Eta.eta_par_lam_k_app</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_par_lam_k_var">Eta.eta_par_lam_k_var</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_par_substitutive">Eta.eta_par_substitutive</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_par_subst_closed">Eta.eta_par_subst_closed</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_eq_closure_of_eta_par">Eta.eta_star_eq_closure_of_eta_par</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_par_trans">Eta.eta_par_trans</a> [definition, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_par_imp_eta_star">Eta.eta_par_imp_eta_star</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_base_closed">Eta.eta_star_base_closed</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_lift_closed">Eta.eta_star_lift_closed</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_app_closed">Eta.eta_star_app_closed</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_app_closed_r">Eta.eta_star_app_closed_r</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_app_closed_l">Eta.eta_star_app_closed_l</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_lam_closed">Eta.eta_star_lam_closed</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_par_lift_closed">Eta.eta_par_lift_closed</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_imp_eta_par">Eta.eta_imp_eta_par</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_par_refl">Eta.eta_par_refl</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_par_base">Eta.eta_par_base</a> [constructor, in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_par_app">Eta.eta_par_app</a> [constructor, in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_par_lam">Eta.eta_par_lam</a> [constructor, in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_par_var">Eta.eta_par_var</a> [constructor, in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_par">Eta.eta_par</a> [inductive, in <a href="Eta.html">Eta</a>]<br/>
-<a href="Eta.html#Eta.eta_very_substitutive">Eta.eta_very_substitutive</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
-<a href="Eta.html#Eta.eta_substitutive">Eta.eta_substitutive</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
-<a href="Eta.html#Eta.eta_prim_substitutive">Eta.eta_prim_substitutive</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_lift_closed">Eta.eta_lift_closed</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_prim_lift_closed">Eta.eta_prim_lift_closed</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_subst_closed">Eta.eta_subst_closed</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_prim_subst_closed">Eta.eta_prim_subst_closed</a> [lemma, in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_star_trans">Eta.eta_star_trans</a> [definition, in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_star_refl">Eta.eta_star_refl</a> [definition, in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_star_step">Eta.eta_star_step</a> [definition, in <a href="Eta.html">Eta</a>]<br/>
@@ -446,7 +474,8 @@
 <a href="Kashima.html#lift_hap'">lift_hap'</a> [lemma, in <a href="Kashima.html">Kashima</a>]<br/>
 <a href="Subst.html#lift_lam">lift_lam</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#lift_app">lift_app</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
-<a href="Subst.html#lift_subst_semicom">lift_subst_semicom</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
+<a href="Subst.html#lift_distr_subst">lift_distr_subst</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
+<a href="Subst.html#lift_lift_rev">lift_lift_rev</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#lift_lift">lift_lift</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#lift_lem3">lift_lem3</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#lift_lem2">lift_lem2</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
@@ -471,12 +500,22 @@
 <a href="Postpone.html#Postpone">Postpone</a> [module, in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html">Postpone</a> [library]<br/>
 <a href="Postpone.html#Postpone.beta_eta_star">Postpone.beta_eta_star</a> [definition, in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.beta_eta">Postpone.beta_eta</a> [definition, in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.beta_par_lam_k_closed">Postpone.beta_par_lam_k_closed</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html#Postpone.eta_postponement">Postpone.eta_postponement</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.eta_postponement_basic">Postpone.eta_postponement_basic</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.eta_baby_postpone_beta">Postpone.eta_baby_postpone_beta</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.eta_baby_postpone_eta">Postpone.eta_baby_postpone_eta</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.lam_k_eta_red">Postpone.lam_k_eta_red</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html#Postpone.lam_S_k_beta">Postpone.lam_S_k_beta</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html#Postpone.lam_k_beta_app">Postpone.lam_k_beta_app</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html#Postpone.lam_k_beta_lam">Postpone.lam_k_beta_lam</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html#Postpone.lam_k_beta_subst">Postpone.lam_k_beta_subst</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.par_impl_par_trans">Postpone.par_impl_par_trans</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html#Postpone.postpone_comm">Postpone.postpone_comm</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.rewrite_existential_beta">Postpone.rewrite_existential_beta</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.rewrite_existential_eta">Postpone.rewrite_existential_eta</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.star_exists_iff_par_exists">Postpone.star_exists_iff_par_exists</a> [lemma, in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Untyped.html#prettier">prettier</a> [definition, in <a href="Untyped.html">Untyped</a>]<br/>
 <a href="Untyped.html#PrettyTerm">PrettyTerm</a> [module, in <a href="Untyped.html">Untyped</a>]<br/>
 <a href="Untyped.html#PrettyTerm.App">PrettyTerm.App</a> [constructor, in <a href="Untyped.html">Untyped</a>]<br/>
@@ -511,7 +550,6 @@
 <a href="Subst.html#subst_lam">subst_lam</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#subst_app">subst_app</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#subst_k_shift_S_k">subst_k_shift_S_k</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
-<a href="Subst.html#subst_S_k_shift_k">subst_S_k_shift_k</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#subst_shift_ident">subst_shift_ident</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#subst_lemma">subst_lemma</a> [lemma, in <a href="Subst.html">Subst</a>]<br/>
 <a href="Untyped.html#s_comb">s_comb</a> [definition, in <a href="Untyped.html">Untyped</a>]<br/>
@@ -619,16 +657,42 @@
 <h1>Lemma Index</h1>
 <a name="lemma_B"></a><h2>B </h2>
 <a href="Beta.html#Beta.beta_par_shift">Beta.beta_par_shift</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.beta_par_imp_bstar">Beta.beta_par_imp_bstar</a> [in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.beta_par_refl">Beta.beta_par_refl</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bred_imp_beta_par">Beta.bred_imp_beta_par</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bred_lift_closed">Beta.bred_lift_closed</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_eq_closure_of_beta_par">Beta.bstar_eq_closure_of_beta_par</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_subst_closed">Beta.bstar_subst_closed</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_subst_closed_r">Beta.bstar_subst_closed_r</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_weak_subst">Beta.bstar_weak_subst</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_lift_closed">Beta.bstar_lift_closed</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_subst_closed_l">Beta.bstar_subst_closed_l</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_app_closed">Beta.bstar_app_closed</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_app_closed_r">Beta.bstar_app_closed_r</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_app_closed_l">Beta.bstar_app_closed_l</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_lam_closed">Beta.bstar_lam_closed</a> [in <a href="Beta.html">Beta</a>]<br/>
+<a href="Beta.html#Beta.bstar_reflexive">Beta.bstar_reflexive</a> [in <a href="Beta.html">Beta</a>]<br/>
 <br/><br/><a name="lemma_E"></a><h2>E </h2>
 <a href="Eta.html#Eta.eta_par_lam_k_lam">Eta.eta_par_lam_k_lam</a> [in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_par_lam_k_app">Eta.eta_par_lam_k_app</a> [in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_par_lam_k_var">Eta.eta_par_lam_k_var</a> [in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_par_substitutive">Eta.eta_par_substitutive</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_par_subst_closed">Eta.eta_par_subst_closed</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_eq_closure_of_eta_par">Eta.eta_star_eq_closure_of_eta_par</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_par_imp_eta_star">Eta.eta_par_imp_eta_star</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_base_closed">Eta.eta_star_base_closed</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_lift_closed">Eta.eta_star_lift_closed</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_app_closed">Eta.eta_star_app_closed</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_app_closed_r">Eta.eta_star_app_closed_r</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_app_closed_l">Eta.eta_star_app_closed_l</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_star_lam_closed">Eta.eta_star_lam_closed</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_par_lift_closed">Eta.eta_par_lift_closed</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_imp_eta_par">Eta.eta_imp_eta_par</a> [in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_par_refl">Eta.eta_par_refl</a> [in <a href="Eta.html">Eta</a>]<br/>
-<a href="Eta.html#Eta.eta_very_substitutive">Eta.eta_very_substitutive</a> [in <a href="Eta.html">Eta</a>]<br/>
-<a href="Eta.html#Eta.eta_substitutive">Eta.eta_substitutive</a> [in <a href="Eta.html">Eta</a>]<br/>
-<a href="Eta.html#Eta.eta_prim_substitutive">Eta.eta_prim_substitutive</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_lift_closed">Eta.eta_lift_closed</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_prim_lift_closed">Eta.eta_prim_lift_closed</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_subst_closed">Eta.eta_subst_closed</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_prim_subst_closed">Eta.eta_prim_subst_closed</a> [in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.lam_k_alt">Eta.lam_k_alt</a> [in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.shift_0_lam_commute">Eta.shift_0_lam_commute</a> [in <a href="Eta.html">Eta</a>]<br/>
 <br/><br/><a name="lemma_H"></a><h2>H </h2>
@@ -645,19 +709,29 @@
 <a href="Kashima.html#lift_hap'">lift_hap'</a> [in <a href="Kashima.html">Kashima</a>]<br/>
 <a href="Subst.html#lift_lam">lift_lam</a> [in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#lift_app">lift_app</a> [in <a href="Subst.html">Subst</a>]<br/>
-<a href="Subst.html#lift_subst_semicom">lift_subst_semicom</a> [in <a href="Subst.html">Subst</a>]<br/>
+<a href="Subst.html#lift_distr_subst">lift_distr_subst</a> [in <a href="Subst.html">Subst</a>]<br/>
+<a href="Subst.html#lift_lift_rev">lift_lift_rev</a> [in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#lift_lift">lift_lift</a> [in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#lift_lem3">lift_lem3</a> [in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#lift_lem2">lift_lem2</a> [in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#lift_fuse">lift_fuse</a> [in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#lift_0_ident">lift_0_ident</a> [in <a href="Subst.html">Subst</a>]<br/>
 <br/><br/><a name="lemma_P"></a><h2>P </h2>
+<a href="Postpone.html#Postpone.beta_par_lam_k_closed">Postpone.beta_par_lam_k_closed</a> [in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html#Postpone.eta_postponement">Postpone.eta_postponement</a> [in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.eta_postponement_basic">Postpone.eta_postponement_basic</a> [in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.eta_baby_postpone_beta">Postpone.eta_baby_postpone_beta</a> [in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.eta_baby_postpone_eta">Postpone.eta_baby_postpone_eta</a> [in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.lam_k_eta_red">Postpone.lam_k_eta_red</a> [in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html#Postpone.lam_S_k_beta">Postpone.lam_S_k_beta</a> [in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html#Postpone.lam_k_beta_app">Postpone.lam_k_beta_app</a> [in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html#Postpone.lam_k_beta_lam">Postpone.lam_k_beta_lam</a> [in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html#Postpone.lam_k_beta_subst">Postpone.lam_k_beta_subst</a> [in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.par_impl_par_trans">Postpone.par_impl_par_trans</a> [in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Postpone.html#Postpone.postpone_comm">Postpone.postpone_comm</a> [in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.rewrite_existential_beta">Postpone.rewrite_existential_beta</a> [in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.rewrite_existential_eta">Postpone.rewrite_existential_eta</a> [in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.star_exists_iff_par_exists">Postpone.star_exists_iff_par_exists</a> [in <a href="Postpone.html">Postpone</a>]<br/>
 <br/><br/><a name="lemma_S"></a><h2>S </h2>
 <a href="Kashima.html#st_st__st_subst">st_st__st_subst</a> [in <a href="Kashima.html">Kashima</a>]<br/>
 <a href="Kashima.html#st_refl">st_refl</a> [in <a href="Kashima.html">Kashima</a>]<br/>
@@ -667,7 +741,6 @@
 <a href="Subst.html#subst_lam">subst_lam</a> [in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#subst_app">subst_app</a> [in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#subst_k_shift_S_k">subst_k_shift_S_k</a> [in <a href="Subst.html">Subst</a>]<br/>
-<a href="Subst.html#subst_S_k_shift_k">subst_S_k_shift_k</a> [in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#subst_shift_ident">subst_shift_ident</a> [in <a href="Subst.html">Subst</a>]<br/>
 <a href="Subst.html#subst_lemma">subst_lemma</a> [in <a href="Subst.html">Subst</a>]<br/>
 <br/><br/><a name="lemma_V"></a><h2>V </h2>
@@ -703,6 +776,7 @@
 <h1>Definition Index</h1>
 <a name="definition_B"></a><h2>B </h2>
 <a href="Kashima.html#bet">bet</a> [in <a href="Kashima.html">Kashima</a>]<br/>
+<a href="Beta.html#Beta.beta_par_trans">Beta.beta_par_trans</a> [in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bred_halt">Beta.bred_halt</a> [in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bstar">Beta.bstar</a> [in <a href="Beta.html">Beta</a>]<br/>
 <a href="Beta.html#Beta.bstar_trans">Beta.bstar_trans</a> [in <a href="Beta.html">Beta</a>]<br/>
@@ -727,6 +801,7 @@
 <a href="Untyped.html#dename'">dename'</a> [in <a href="Untyped.html">Untyped</a>]<br/>
 <br/><br/><a name="definition_E"></a><h2>E </h2>
 <a href="Eta.html#Eta.eta">Eta.eta</a> [in <a href="Eta.html">Eta</a>]<br/>
+<a href="Eta.html#Eta.eta_par_trans">Eta.eta_par_trans</a> [in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_star_trans">Eta.eta_star_trans</a> [in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_star_refl">Eta.eta_star_refl</a> [in <a href="Eta.html">Eta</a>]<br/>
 <a href="Eta.html#Eta.eta_star_step">Eta.eta_star_step</a> [in <a href="Eta.html">Eta</a>]<br/>
@@ -755,6 +830,7 @@
 <a href="Kashima.html#notabstr">notabstr</a> [in <a href="Kashima.html">Kashima</a>]<br/>
 <br/><br/><a name="definition_P"></a><h2>P </h2>
 <a href="Postpone.html#Postpone.beta_eta_star">Postpone.beta_eta_star</a> [in <a href="Postpone.html">Postpone</a>]<br/>
+<a href="Postpone.html#Postpone.beta_eta">Postpone.beta_eta</a> [in <a href="Postpone.html">Postpone</a>]<br/>
 <a href="Untyped.html#prettier">prettier</a> [in <a href="Untyped.html">Untyped</a>]<br/>
 <a href="Kashima.html#prim">prim</a> [in <a href="Kashima.html">Kashima</a>]<br/>
 <br/><br/><a name="definition_R"></a><h2>R </h2>
@@ -794,7 +870,7 @@
 <td>Z</td>
 <td>_</td>
 <td><a href="index.html#global_*">other</a></td>
-<td>(169 entries)</td>
+<td>(207 entries)</td>
 </tr>
 <tr>
 <td>Notation Index</td>
@@ -986,7 +1062,7 @@
 <td>Z</td>
 <td>_</td>
 <td>other</td>
-<td>(48 entries)</td>
+<td>(83 entries)</td>
 </tr>
 <tr>
 <td>Inductive Index</td>
@@ -1082,7 +1158,7 @@
 <td>Z</td>
 <td>_</td>
 <td>other</td>
-<td>(51 entries)</td>
+<td>(54 entries)</td>
 </tr>
 </table>
 <hr/>This page has been generated by <a href="http://coq.inria.fr/">coqdoc</a>
