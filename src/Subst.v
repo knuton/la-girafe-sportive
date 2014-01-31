@@ -260,6 +260,18 @@ Proof.
   admit.
 Qed.
 
+Lemma lift_lift_rev:
+  forall wk k ws s t,
+  k >= s + ws ->
+  lift wk k (lift ws s t) = lift ws s (lift wk (k - ws) t).
+Proof.
+  intros.
+  replace k with (ws + (k - ws)) by omega.
+  rewrite <- lift_lift by omega.
+  replace (ws + (k - ws) - ws) with (k - ws) by omega.
+  reflexivity.
+Qed.
+
 Lemma lift_subst_semicom:
   forall M N, forall i b v,
     v <= b ->
