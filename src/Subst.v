@@ -232,40 +232,211 @@ Qed.
 (** A few other useful lemmas about [lift] and [subst] **)
 
 Lemma subst_shift_ident:
-    forall v k t,
+    forall t, forall k v,
     subst k v (shift k t) =  t.
 Proof.
-  admit.
-Qed.
+  induction t.
+  unfold shift. intros.
+  simpl.
+  case_eq (lt_dec n k).
+  intros. simpl. clear H. rewrite nat_compare_lt in l. rewrite l.
+  reflexivity.
+  intros. simpl.
+  case_eq (nat_compare (n+1) k). intros. apply nat_compare_eq_iff in H0. omega.
+  intros. apply nat_compare_lt in H0. omega.
+  intros. f_equal. omega.
 
-Lemma subst_S_k_shift_k:
-    forall t k,
-    subst (S k) (Var k) (shift k t) = t.
-Proof.
-  admit.
+  intros. simpl. f_equal.
+  apply IHt.
+
+  intros. simpl. f_equal. apply IHt1. apply IHt2.
 Qed.
 
 Lemma subst_k_shift_S_k:
-    forall t k,
-    subst k (Var k) (shift (S k) t) = t.
+    forall t, forall k,
+    subst k (Var 0) (shift (S k) t) = t.
 Proof.
-  admit.
+  induction t.
+  unfold shift. simpl.
+  case_eq (lt_dec n 1).
+  intros. simpl. assert (HH: n = 0). omega.
+  rewrite HH. simpl.
+  case_eq (lt_dec k 1).
+  intros. simpl. assert (HHH: k = 0). omega.
+  rewrite HHH. reflexivity.
+  intros.
+  case_eq (lt_dec 0 k).
+  intros. simpl. destruct k.
+  reflexivity. reflexivity.
+  intros. omega.
+
+  intros.
+  case_eq (lt_dec n k).
+  intros. simpl.
+  case_eq (nat_compare n k).
+  intros. apply nat_compare_eq_iff in H1. f_equal. auto.
+  rewrite H1.
+  case_eq (lt_dec k (S k)).
+  intros. simpl. replace (nat_compare k k) with Eq. reflexivity.
+  symmetry. apply nat_compare_eq_iff. reflexivity.
+  intros. omega. intros. apply nat_compare_lt in H1.
+  case_eq (lt_dec n (S k)).
+  intros. simpl.
+  replace (nat_compare n k) with Lt. reflexivity.
+  symmetry. apply nat_compare_lt. assumption.
+  intros. omega. intros. apply nat_compare_gt in H1. omega.
+  intros.
+  case_eq (lt_dec n (S k)).
+  intros. assert (n = k). omega. rewrite H2.
+  simpl. replace (nat_compare k k) with Eq.
+  reflexivity. symmetry. apply nat_compare_eq_iff. reflexivity.
+  intros. simpl.
+  replace (nat_compare (n+1) k) with Gt. f_equal. omega.
+  symmetry. apply nat_compare_gt. omega.
+
+
+  intros. simpl. f_equal. apply IHt.
+
+  intros. simpl. f_equal. apply IHt1. apply IHt2.
 Qed.
 
 Lemma lift_lift:
-    forall t k s wk ws,
-      k <= s ->
-      lift wk k (lift ws s t) = lift ws (wk + s) (lift wk k t).
+    forall M, forall b1 b2 k1 k2,
+      b1 <= b2 ->
+      lift k1 b1 (lift k2 b2 M) = lift k2 (k1 + b2) (lift k1 b1 M).
 Proof.
-  admit.
+  induction M.
+  intros.
+  simpl.
+  case_eq (lt_dec n b1).
+  intros.
+  case_eq (lt_dec n b2).
+  intros.
+  simpl. rewrite H0.
+  case_eq (lt_dec n (k1 + b2)).
+  intros. reflexivity.
+  intros. omega.
+  intros. omega.
+
+  intros.
+  case_eq (lt_dec n b2).
+  intros. simpl.
+  rewrite H0.
+  case_eq (lt_dec (n+k1) (k1+b2)).
+  intros. reflexivity.
+  intros. omega.
+  intros. simpl.
+  case_eq (lt_dec (n+k2) b1).
+  intros. omega. intros.
+  case_eq (lt_dec (n+k1) (k1+b2)).
+  intros. omega.
+  intros. f_equal. omega.
+
+  intros.
+  simpl.
+  f_equal. rewrite IHM.
+  f_equal. omega. omega.
+
+  intros.
+  simpl. f_equal. apply IHM1. omega.
+  apply IHM2. omega.
 Qed.
 
-Lemma lift_subst_semicom:
-  forall M N, forall i b v,
-    v <= b ->
-    lift i b (subst v N M) = subst v (lift i b N) (lift i (b+1) M).
+Lemma lift_lift_rev:
+  forall wk k ws s t,
+  k >= s + ws ->
+  lift wk k (lift ws s t) = lift ws s (lift wk (k - ws) t).
 Proof.
-  admit.
+  intros.
+  replace k with (ws + (k - ws)) by omega.
+  rewrite <- lift_lift by omega.
+  replace (ws + (k - ws) - ws) with (k - ws) by omega.
+  reflexivity.
+Qed.
+
+Lemma lift_distr_subst:
+  forall M N, forall v, forall i b,
+    v <= b ->
+    lift i b (subst v N M) = subst v (lift i (b-v) N) (lift i (b+1) M).
+Proof.
+  induction M. intros N v.
+  generalize dependent N.
+  generalize dependent n.
+  induction v.
+  intros ? ? ? ? HH. simpl. case_eq (nat_compare n 0).
+  intros H. apply nat_compare_eq_iff in H. rewrite H. simpl.
+  replace (b + 1) with (S b) by omega. simpl.
+  rewrite lift_0_ident. rewrite lift_0_ident.
+  replace (b - 0) with b by omega. reflexivity.
+
+  intros. simpl. apply nat_compare_lt in H. omega.
+  intros. simpl. apply nat_compare_gt in H.
+
+  assert (H1: exists n', n = (S n')).
+  inversion H. exists 0. reflexivity.
+  exists m. reflexivity.
+
+  destruct H1. rewrite H0. replace (S x - 1) with x by omega.
+  simpl.  replace (b +1) with (S b) by omega.
+  case_eq (lt_dec x b).
+  simpl.
+  intros. case_eq (lt_dec (S x) (S b)).
+  intros. simpl. f_equal. omega.
+  intros. omega. intros.
+  case_eq (lt_dec (S x) (S b)). intros. simpl. omega.
+  intros. simpl. f_equal. omega.
+
+  intros ? ? ? ? HH. simpl.
+  case_eq (nat_compare n (S v)).
+  intros H. apply nat_compare_eq_iff in H.
+  rewrite H. simpl.
+  case_eq (lt_dec (S v) (b + 1)).
+  intros.
+  simpl. replace (nat_compare v v) with Eq.
+  replace b with (((b - S v) + (S v))) by omega.
+  rewrite lift_lift_rev. reflexivity.
+  omega. symmetry. apply nat_compare_eq_iff. reflexivity.
+  intros. simpl.
+  case_eq (nat_compare (v+i) v).
+  intros. apply nat_compare_eq_iff in H1.
+  assert (HHH: i = 0). omega.
+  rewrite HHH. rewrite lift_0_ident.
+  f_equal. rewrite lift_0_ident. reflexivity.
+  intros. apply nat_compare_lt in H1.
+  omega. intros. apply nat_compare_gt in H1.
+  omega.
+  intros.
+  apply nat_compare_lt in H.
+  simpl.
+  case_eq (lt_dec n b).
+  intros.
+  case_eq (lt_dec n (b+1)).
+  simpl. intros.
+  replace (nat_compare n (S v)) with Lt.
+  reflexivity. symmetry. apply nat_compare_lt. assumption.
+  intros. omega.
+  intros. omega.
+  intros. apply nat_compare_gt in H.
+  simpl. case_eq (lt_dec (n - 1) b).
+  intros. case_eq (lt_dec n (b+1)).
+  intros. simpl. replace (nat_compare n (S v)) with Gt.
+  reflexivity. symmetry. apply nat_compare_gt. assumption.
+  intros. omega.
+  intros. case_eq (lt_dec n (b+1)). intros.
+  omega. intros. simpl.
+  case_eq (nat_compare (n+i) (S v)).
+  intros. apply nat_compare_eq_iff in H2.
+  omega.
+  intros. apply nat_compare_lt in H2.
+  omega.
+  intros. f_equal. omega.
+
+  intros.
+  simpl. f_equal.
+  rewrite IHM. f_equal. f_equal. omega. omega.
+
+  intros. simpl. f_equal. apply IHM1. omega.
+  apply IHM2. omega.
 Qed.
 
 (** Some trivialities for convenient rewriting. **)
