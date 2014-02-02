@@ -584,4 +584,22 @@ Proof.
         reflexivity.
 Qed.
 
+(** Finally, we include this simple lemma which will be useful later. **)
+
+(* Parallel eta is closed under eta-expansion in the co-domain *)
+Lemma lam_k_eta_red:
+  forall k, forall M N,
+    eta_par M N -> eta_par (lam_k k M) N.
+Proof.
+  induction k.
+  intros.
+
+  simpl. assumption.
+
+  intros.
+  simpl. apply eta_par_base with (lam_k k M).
+  reflexivity.
+  apply IHk. assumption.
+Qed.
+
 End Eta.

@@ -12,18 +12,37 @@ Require Import Subst.
 Require Import Rels.
 Require Import Beta.
 Require Import Eta.
+
 Module Export Postpone.
 
+(** In this module, we prove the eta postponement theorem.
+
+    We (continue to) follow the proof of Masako Takahashi from
+    "Parallel Reductions in Lambda-calculus" (1995).
+**)
+
+(** We now prove various properties about the relation between [beta_par]
+    and the eta-expansion [lam_k]. (This is Lemma 3.3 in Takahashi).
+
+    We however do it in in a slightly different order than in the paper,
+    because the cases of the lemma actually depend on each other in a slightly
+    differently order than the one stated in the paper.
+**)
+
+(** Firstly, an application of a [k]-fold eta-expansion of a lambda
+    abstraction can be reduced simply to a substitution via
+    parallel beta.
+**)
 Lemma lam_k_beta_subst:
   forall k, forall M M' N N',
     beta_par M M' -> beta_par N N' ->
       beta_par (App (lam_k k (Lam M)) N) (subst 0 N' M').
 Proof.
   induction k.
-  (** k := 0 **)
+  (* k := 0 *)
   intros.
   simpl. apply beta_par_base; assumption.
-  (** k := (S k) **)
+  (* k := (S k) *)
   intros.
   simpl.
   apply beta_par_base. rewrite shift_0_lam_commute.
@@ -34,7 +53,8 @@ Proof.
   apply subst_k_shift_S_k. assumption.
 Qed.
 
-
+(** Similarly, a [k]-fold eta-expansion of a lambda abstraction can be reduced
+    to a single lambda abstraction via parallel beta reduction. **)
 Lemma lam_k_beta_lam:
   forall k, forall M M',
     beta_par M M' -> beta_par (lam_k k (Lam M)) (Lam M').
@@ -43,7 +63,6 @@ Proof.
   (* k := 0 *)
   intros. simpl. apply beta_par_lam. assumption.
   (* k := (S k) *)
-
   intros.
   remember H as HH. clear HeqHH. apply IHk in H.
   simpl.
@@ -57,15 +76,17 @@ Proof.
   apply subst_k_shift_S_k.
 Qed.
 
+(** In case of an application, we can also contract the whole eta-expansion of
+    the applied term via parallel beta reduction *)
 Lemma lam_k_beta_app:
   forall k, forall M M' N N',
     beta_par M M' -> beta_par N N' ->
       beta_par (App (lam_k k M) N) (App M' N').
 Proof.
   induction k.
-  (** k := 0 **)
+  (* k := 0 *)
   intros. simpl. apply beta_par_app. assumption. assumption.
-  (** k := (S k) **)
+  (* k := (S k) *)
   intros.
   rewrite lam_k_alt.
   replace (App M' N') with (subst 0 N' (App (shift 0 M') (Var 0))).
@@ -75,23 +96,33 @@ Proof.
   simpl. rewrite lift_0_ident. rewrite subst_shift_ident. reflexivity.
 Qed.
 
+(** Finally, [k+1] eta-expansions can always be contracted to only one
+    eta-expansion via parallel beta reduction. **)
 Lemma lam_S_k_beta:
   forall k, forall M M',
     beta_par M M' ->
       beta_par (lam_k (S k) M) (lam_k 1 M').
 Proof.
   induction k.
-  (** k := 0 **)
+  (* k := 0 *)
   intros. simpl.
   constructor. constructor. apply beta_par_shift. assumption.
   apply beta_par_refl.
-  (** k := (S k) **)
+  (* k := (S k) *)
   intros.
   rewrite lam_k_alt.
   apply lam_k_beta_lam.
   constructor. apply beta_par_shift. assumption. apply beta_par_refl.
 Qed.
 
+
+(** It now remains to prove the crucial Lemma 3.4 from Takahashi, stating that
+    postponement holds for the case of parallel beta and eta reductions.
+
+    Before we can do that, we need one auxiliary fact:
+**)
+
+(** Parallel beta is closed under eta-expansion. **)
 Lemma beta_par_lam_k_closed:
   forall k, forall M N,
     beta_par M N -> beta_par (lam_k k M) (lam_k k N).
@@ -104,23 +135,9 @@ Proof.
   apply beta_par_refl.
 Qed.
 
-Lemma lam_k_eta_red:
-  forall k, forall M N,
-    eta_par M N -> eta_par (lam_k k M) N.
-Proof.
-  induction k.
-  intros.
-
-  simpl. assumption.
-
-  intros.
-  simpl. apply eta_par_base with (lam_k k M).
-  reflexivity.
-  apply IHk. assumption.
-Qed.
-
-
-Lemma postpone_comm:
+(** We can now prove the postponement theorem for the specific case of parallel
+    reductions. This is Lemma 3.4 in Takahashi. **)
+Lemma postpone_par:
   forall M P N,
     eta_par M P -> beta_par P N ->
         (exists P', beta_par M P' /\ eta_par P' N).
@@ -196,11 +213,23 @@ Proof.
       assumption.
 Qed.
 
-(* is this definition wrong? *)
+(** We now define the beta-eta relation and its reflexive-transitive closure
+**)
 Definition beta_eta := union lterm bred eta.
 Definition beta_eta_star := clos_refl_trans lterm beta_eta.
 
+(** We need a couple of auxiliary statements about the relationships
+    between the parallel and reflexive-transitive versions of
+    beta and eta reductions which appear in the conclusions of the
+    postponement theorem.
 
+    They make it more convenient to do the rewriting while proving the main
+    result.
+**)
+
+(** Firstly, since the reflexive-transitive closures are equivalent
+    to the transitive closures of the parallel relations, the following holds:
+**)
 Lemma star_exists_iff_par_exists:
   forall M N,
   (exists P, bstar M P /\ eta_star P N) <->
@@ -215,6 +244,8 @@ Proof.
        assumption).
 Qed.
 
+(** Also, it is obviously sufficient to show this to hold for parallel beta,
+    in order for it to also hold for the transitive closure: *)
 Lemma par_impl_par_trans:
   forall M N,
     (exists P, beta_par M P /\ eta_par P N) ->
@@ -225,6 +256,8 @@ Proof.
   split; constructor; assumption.
 Qed.
 
+(** Finally, a couple of "one-sided" rewrites for convenience within the proof.
+**)
 Lemma rewrite_existential_eta:
   forall M N,
   (exists P, beta_par M P /\ eta_star P N) <->
@@ -239,6 +272,25 @@ Proof.
        assumption).
 Qed.
 
+Lemma rewrite_existential_beta:
+  forall M N,
+  (exists P, bstar M P /\ eta_par P N) <->
+  (exists P, beta_par_trans M P /\ eta_par P N).
+Proof.
+  split; intros;
+  do 2 destruct H;
+  exists x; split;
+  do 2 (try
+          apply bstar_eq_closure_of_beta_par ||
+          apply eta_star_eq_closure_of_eta_par;
+       assumption).
+Qed.
+
+(** We now build up to the full postponement lemma by proving a series of
+    simpler lemmas **)
+
+(** Here we consider the case where we postpone [eta_star] in the presence
+    of only a parallel beta. **)
 Lemma eta_baby_postpone_eta:
   forall M P N,
     eta_star M P -> beta_par P N ->
@@ -251,7 +303,7 @@ Proof.
   intros.
   assert (HH: exists P', beta_par x P' /\ eta_par P' N).
   apply eta_imp_eta_par in H.
-  apply postpone_comm with y; assumption.
+  apply postpone_par with y; assumption.
   destruct HH. destruct H0.
   exists x0. split. assumption. constructor. assumption.
 
@@ -270,21 +322,8 @@ Proof.
   apply t_trans with x0; assumption.
 Qed.
 
-
-Lemma rewrite_existential_beta:
-  forall M N,
-  (exists P, bstar M P /\ eta_par P N) <->
-  (exists P, beta_par_trans M P /\ eta_par P N).
-Proof.
-  split; intros;
-  do 2 destruct H;
-  exists x; split;
-  do 2 (try
-          apply bstar_eq_closure_of_beta_par ||
-          apply eta_star_eq_closure_of_eta_par;
-       assumption).
-Qed.
-
+(** Similarly, here we consider only the postponement of [eta_par] in the
+    presence [bstar]: **)
 Lemma eta_baby_postpone_beta:
   forall M P N,
     eta_par M P -> bstar P N ->
@@ -297,7 +336,7 @@ Proof.
   intros.
   assert (HH: exists P', beta_par M P' /\ eta_par P' y).
   apply bred_imp_beta_par in H.
-  apply postpone_comm with x; assumption.
+  apply postpone_par with x; assumption.
   destruct HH. destruct H0.
   exists x0. split. constructor. assumption. assumption.
 
@@ -315,6 +354,9 @@ Proof.
   split. apply t_trans with x0; assumption. assumption.
 Qed.
 
+(** We now combine all the previous lemmas to prove a simplified version of the
+    eta-postponement where we consider separate [eta_star] and [bstar] reductions,
+    rather than a single reduction of their union. **)
 Theorem eta_postponement_basic:
   forall M N P,
     eta_star M P -> bstar P N -> (exists P', bstar M P' /\ eta_star P' N).
@@ -355,8 +397,10 @@ Proof.
   split. apply t_trans with x0; assumption. assumption.
 Qed.
 
-
-(** Main theorem **)
+(** * The eta postponement theorem **)
+(** Finally, we prove the full eta-postponement theorem using the
+    separate reduction version in [eta_postponement_basic].
+**)
 Theorem eta_postponement:
   forall M N,
     beta_eta_star M N -> (exists P, bstar M P /\ eta_star P N).
