@@ -9,19 +9,6 @@ Inductive lterm : Type :=
   | Lam : lterm -> lterm
   | App : lterm -> lterm -> lterm.
 
-(** Helper for lamfold below **)
-Fixpoint lamfold' (f: nat -> nat -> nat) (l: nat) (t: lterm) : lterm :=
-  match t with
-      | Var i => Var (f l i)
-      | Lam t => Lam (lamfold' f (l+1) t)
-      | App m n => App (lamfold' f l m) (lamfold' f l n)
-  end.
-
-(** This is like a (f)map, except that it has an accumulator which denotes
-    the current binder level **)
-Definition lamfold (f: nat -> nat -> nat) (t: lterm) : lterm :=
-    lamfold' f 0 t.
-
 End DeBruijn.
 
 Module PrettyTerm.
