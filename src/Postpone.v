@@ -191,7 +191,7 @@ Proof.
       apply lam_k_beta_subst. assumption. assumption.
 
       apply lam_k_eta_red.
-      apply eta_par_substitutive.
+      apply eta_par_subst_closed.
       assumption.
       assumption.
 Qed.
