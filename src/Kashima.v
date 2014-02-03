@@ -41,13 +41,13 @@ Inductive nthred : nat -> lterm -> lterm -> Prop :=
   | nthred_prim : forall t1 t2,
       nthred 1 (App (Lam t1) t2) (subst 0 t2 t1)
   | nthred_concr : forall n t1 t2 t3,
-      ~ abstr t1 /\ nthred n t1 t2 -> nthred n (App t1 t3) (App t2 t3)
+      ~ abstr t1 -> nthred n t1 t2 -> nthred n (App t1 t3) (App t2 t3)
   | nthred_concrplus : forall n t1 t2 t3,
-      abstr t1 /\ nthred n t1 t2 -> nthred (n+1) (App t1 t3) (App t2 t3)
+      abstr t1 -> nthred n t1 t2 -> nthred (n+1) (App t1 t3) (App t2 t3)
   | nthred_concl : forall n t1 t2 t3,
-      ~ abstr t3 /\ nthred n t1 t2 -> nthred (n + redcount t3) (App t3 t1) (App t3 t2)
+      ~ abstr t3 -> nthred n t1 t2 -> nthred (n + redcount t3) (App t3 t1) (App t3 t2)
   | nthred_conclplus : forall n t1 t2 t3,
-      abstr t3 /\ nthred n t1 t2 -> nthred (n + (redcount t3) + 1) (App t3 t1) (App t3 t2)
+      abstr t3 -> nthred n t1 t2 -> nthred (n + (redcount t3) + 1) (App t3 t1) (App t3 t2)
   | nthred_abst : forall n t1 t2,
       nthred n t1 t2 -> nthred n (Lam t1) (Lam t2).
 
@@ -57,16 +57,15 @@ Proof. apply nthred_prim. Qed.
 Example concr : nthred 1 ((\"x" ~> `"x") $ `"y" $ `"z") (`"y" $ `"z").
 Proof.
   apply nthred_concr.
-  split.
-    unfold not. intro. inversion H.
-    apply nthred_prim.
+  unfold not. intro. inversion H.
+  apply nthred_prim.
 Qed.
 
 Example concrplus :
   nthred 2 ((\"y" ~> (\"x" ~> `"x") $ `"y") $ `"z") ((\"y" ~> `"y") $ `"z").
 Proof.
   assert (M: 2 = 1 + 1). reflexivity. rewrite M.
-  apply nthred_concrplus. split.
+  apply nthred_concrplus.
     apply islam.
     apply nthred_abst. apply nthred_prim.
 Qed.
@@ -75,18 +74,18 @@ Example concl :
   nthred 2 (((\"x" ~> `"x") $ `"z") $ ((\"x" ~> `"x") $ `"z")) (((\"x" ~> `"x") $ `"z") $ `"z").
 Proof.
   assert (M: 2 = 1 + redcount ((\"x" ~> `"x") $ `"z")). simpl. reflexivity. rewrite M.
-  apply nthred_concl. split.
-    unfold not. intro. inversion H.
-    apply nthred_prim.
+  apply nthred_concl.
+  unfold not. intro. inversion H.
+  apply nthred_prim.
 Qed.
 
 Example conclplus :
   nthred 3 ((\"y" ~> ((\"x" ~> `"x") $ `"z")) $ ((\"x" ~> `"x") $ `"z")) ((\"y" ~> ((\"x" ~> `"x") $ `"z")) $ `"z").
 Proof.
   assert (M: 3 = 1 + redcount (\"y" ~> (\"x" ~> `"x") $ `"z") + 1). simpl. reflexivity. rewrite M.
-  apply nthred_conclplus. split.
-    apply islam.
-    apply nthred_prim.
+  apply nthred_conclplus.
+  apply islam.
+  apply nthred_prim.
 Qed.
 
 (** Beta-reduction and left-most reduction (Definition 2.2) **)
@@ -142,7 +141,7 @@ Proof.
     (* hap_hred *)
     apply lstar_step. unfold lmost. induction H.
       apply nthred_prim.
-      apply nthred_concr. split. unfold not. intro. induction H. inversion H0. inversion H0. assumption.
+      apply nthred_concr. unfold not. intro. induction H. inversion H0. inversion H0. assumption.
     (* hap_trans *)
     apply lstar_trans with (y := t2). apply IHhap1. apply IHhap2.
 Qed.
@@ -302,7 +301,9 @@ Proof.
   intros. simpl. rewrite Compare_dec.nat_compare_gt in H. rewrite H. reflexivity.
 Qed.
 
-(* TODO Do I still need the following? *)
+(* We need to establish that abstractions can appear on the left side of hap
+   only due to the reflexive rule.
+*)
 
 Lemma not_hap'_lam_var : forall t i, ~ hap' (Lam t) i.
 Proof. unfold not. intros. dependent induction H. Qed.
@@ -383,3 +384,72 @@ Proof.
     assumption.
     apply (IHHMN (n+1)).
 Qed.
+
+(* Lemma 3.5 *)
+
+Lemma st_app__st_subst : forall L M N,
+  st L (App (Lam M) N) -> st L (subst 0 N M).
+Proof.
+  intros. inversion H as [ | X P N' |]. inversion H4 as [ | | X' M' ].
+  apply hap_st__st with (t2 := subst 0 N' M').
+  apply hap_trans with (t2 := App (Lam M') N').
+  apply hap_trans with (t2 := App P N').
+    assumption.
+    apply hap__app_hap. apply H7.
+    apply hap_hred. apply hap'_hred.
+  apply st_st__st_subst; assumption.
+Qed.
+
+(* Lemma 3.6 *)
+
+Lemma st_nthred__st : forall M N i,
+  nthred i M N -> forall L, st L M -> st L N.
+Proof.
+  intros M N i Hbet.
+  induction Hbet as [A B | n A B C | n A B C | n A B C | n A B C | n A B].
+    (* 2.1 (1) *)
+    intros L Hst.
+    apply st_app__st_subst. assumption.
+    (* 2.1 (2) *)
+    intros L Hst.
+    inversion Hst as [| X A' C' |].
+    apply st_hap_st_st with (t1 := A') (t2 := C').
+      assumption.
+      apply IHHbet. assumption.
+      assumption.
+    (* 2.1 (3) *)
+    intros L Hst.
+    inversion Hst as [| X A' C' |].
+    apply st_hap_st_st with (t1 := A') (t2 := C').
+      assumption.
+      apply (IHHbet A'); assumption.
+      assumption.
+    (* 2.1 (4) *)
+    intros L Hst.
+    inversion Hst as [| X A' C' |].
+    apply st_hap_st_st with (t1 := A') (t2 := C').
+      assumption.
+      assumption.
+      apply (IHHbet C'); assumption.
+    (* 2.1 (5) *)
+    intros L Hst.
+    inversion Hst as [| X A' C' |].
+    apply st_hap_st_st with (t1 := A') (t2 := C').
+      assumption.
+      assumption.
+      apply (IHHbet C'); assumption.
+    (* 2.1 (6) *)
+    intros L Hst.
+    inversion Hst as [| | X A'].
+    apply st_haplam_st with (t1 := A').
+      assumption.
+      apply (IHHbet A'). assumption.
+Qed.
+
+Lemma st_bred__st : forall L M N,
+  bet M N -> st L M -> st L N.
+Proof.
+  intros. unfold bet in H. inversion H.
+  apply st_nthred__st with (M := M) (i := x); assumption.
+Qed.
+    
