@@ -19,7 +19,7 @@
 <h1 class="libtitle">Library Rels</h1>
 
 <div class="code">
-<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Definitions.html#"><span class="id" type="library">Relation_Definitions</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Definitions.html#"><span class="id" type="library">Relation_Definitions</span></a>.<br/>
 <span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Untyped.html#"><span class="id" type="library">Untyped</span></a>.<br/>
 
 <br/>
@@ -35,21 +35,18 @@ Some generic relation things
 
 <br/>
 <span class="id" type="keyword">Section</span> <a name="Rels.CompatClosure"><span class="id" type="section">CompatClosure</span></a>.<br/>
+<span class="id" type="keyword">Variable</span> <a name="Rels.CompatClosure.rel"><span class="id" type="variable">rel</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Definitions.html#relation"><span class="id" type="definition">relation</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>.<br/>
 
 <br/>
-<span class="id" type="keyword">Variable</span> <a name="Rels.CompatClosure.rel"><span class="id" type="variable">rel</span></a>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Definitions.html#relation"><span class="id" type="definition">relation</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>.<br/>
 </div>
 
 <div class="doc">
-Variable x y: lterm. 
-<div class="paragraph"> </div>
-
- Compatible closure of a relation on lterms 
+Compatible closure (as defined in Barendregt) of a relation on <span class="inlinecode"><a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a></span>s 
 </div>
 <div class="code">
 
 <br/>
-<span class="id" type="keyword">Inductive</span> <a name="Rels.clos_compat"><span class="id" type="inductive">clos_compat</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Definitions.html#relation"><span class="id" type="definition">relation</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> :=<br/>
+<span class="id" type="keyword">Inductive</span> <a name="Rels.clos_compat"><span class="id" type="inductive">clos_compat</span></a> : <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Definitions.html#relation"><span class="id" type="definition">relation</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> :=<br/>
 &nbsp;&nbsp;| <a name="Rels.clos_base"><span class="id" type="constructor">clos_base</span></a> (<span class="id" type="var">x</span> <span class="id" type="var">y</span>: <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>): <a class="idref" href="Rels.html#Rels.CompatClosure.rel"><span class="id" type="variable">rel</span></a> <a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a> <a class="idref" href="Rels.html#y"><span class="id" type="variable">y</span></a> → <a class="idref" href="Rels.html#clos_compat"><span class="id" type="inductive">clos_compat</span></a> <a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a> <a class="idref" href="Rels.html#y"><span class="id" type="variable">y</span></a><br/>
 &nbsp;&nbsp;| <a name="Rels.clos_lam"><span class="id" type="constructor">clos_lam</span></a>  (<span class="id" type="var">x</span> <span class="id" type="var">y</span>: <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>): <a class="idref" href="Rels.html#clos_compat"><span class="id" type="inductive">clos_compat</span></a> <a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a> <a class="idref" href="Rels.html#y"><span class="id" type="variable">y</span></a> → <a class="idref" href="Rels.html#clos_compat"><span class="id" type="inductive">clos_compat</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Rels.html#y"><span class="id" type="variable">y</span></a>)<br/>
 &nbsp;&nbsp;| <a name="Rels.clos_appl"><span class="id" type="constructor">clos_appl</span></a> (<span class="id" type="var">x</span> <span class="id" type="var">f</span> <span class="id" type="var">f'</span>: <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>): <a class="idref" href="Rels.html#clos_compat"><span class="id" type="inductive">clos_compat</span></a> <a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a> <a class="idref" href="Rels.html#f'"><span class="id" type="variable">f'</span></a> → <a class="idref" href="Rels.html#clos_compat"><span class="id" type="inductive">clos_compat</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a> <a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Rels.html#f'"><span class="id" type="variable">f'</span></a> <a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a>)<br/>

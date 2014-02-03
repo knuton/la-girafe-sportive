@@ -19,14 +19,14 @@
 <h1 class="libtitle">Library Postpone</h1>
 
 <div class="code">
-<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#"><span class="id" type="library">Relation_Operators</span></a>.<br/>
-<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Definitions.html#"><span class="id" type="library">Relation_Definitions</span></a>.<br/>
-<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Structures.Equalities.html#"><span class="id" type="library">Coq.Structures.Equalities</span></a>.<br/>
-<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Program.Equality.html#"><span class="id" type="library">Coq.Program.Equality</span></a>.<br/>
-<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Arith.Compare_dec.html#"><span class="id" type="library">Coq.Arith.Compare_dec</span></a>.<br/>
-<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Arith.Plus.html#"><span class="id" type="library">Coq.Arith.Plus</span></a>.<br/>
-<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Arith.Lt.html#"><span class="id" type="library">Coq.Arith.Lt</span></a>.<br/>
-<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.omega.Omega.html#"><span class="id" type="library">Omega</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#"><span class="id" type="library">Relation_Operators</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Definitions.html#"><span class="id" type="library">Relation_Definitions</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Structures.Equalities.html#"><span class="id" type="library">Coq.Structures.Equalities</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Program.Equality.html#"><span class="id" type="library">Coq.Program.Equality</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Arith.Compare_dec.html#"><span class="id" type="library">Coq.Arith.Compare_dec</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Arith.Plus.html#"><span class="id" type="library">Coq.Arith.Plus</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Arith.Lt.html#"><span class="id" type="library">Coq.Arith.Lt</span></a>.<br/>
+<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.omega.Omega.html#"><span class="id" type="library">Omega</span></a>.<br/>
 
 <br/>
 <span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Untyped.html#"><span class="id" type="library">Untyped</span></a>.<br/>
@@ -34,29 +34,50 @@
 <span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Rels.html#"><span class="id" type="library">Rels</span></a>.<br/>
 <span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Beta.html#"><span class="id" type="library">Beta</span></a>.<br/>
 <span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Eta.html#"><span class="id" type="library">Eta</span></a>.<br/>
+
+<br/>
 <span class="id" type="keyword">Module</span> <span class="id" type="keyword">Export</span> <a name="Postpone"><span class="id" type="module">Postpone</span></a>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+In this module, we prove the eta postponement theorem.
+
+<div class="paragraph"> </div>
+
+    We (continue to) follow the proof of Masako Takahashi from
+    "Parallel Reductions in Lambda-calculus" (1995).
+
+<div class="paragraph"> </div>
+
+ We now prove various properties about the relation between <span class="inlinecode"><a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a></span>
+    and the eta-expansion <span class="inlinecode"><a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a></span>. (This is Lemma 3.3 in Takahashi).
+
+<div class="paragraph"> </div>
+
+    We however do it in in a slightly different order than in the paper,
+    because the cases of the lemma actually depend on each other in a slightly
+    differently order than the one stated in the paper.
+
+<div class="paragraph"> </div>
+
+ Firstly, an application of a <span class="inlinecode"><a class="idref" href="Subst.html#k"><span class="id" type="variable">k</span></a></span>-fold eta-expansion of a lambda
+    abstraction can be reduced simply to a substitution via
+    parallel beta.
+
+</div>
+<div class="code">
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.lam_k_beta_subst"><span class="id" type="lemma">lam_k_beta_subst</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Postpone.html#N'"><span class="id" type="variable">N'</span></a> →<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> <a class="idref" href="Postpone.html#k"><span class="id" type="variable">k</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a>)) <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> 0 <a class="idref" href="Postpone.html#N'"><span class="id" type="variable">N'</span></a> <a class="idref" href="Postpone.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">k</span>.<br/>
-</div>
-
-<div class="doc">
-k := 0 
-</div>
-<div class="code">
+&nbsp;&nbsp;<span class="comment">(*&nbsp;k&nbsp;:=&nbsp;0&nbsp;*)</span><br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_base"><span class="id" type="constructor">beta_par_base</span></a>; <span class="id" type="tactic">assumption</span>.<br/>
-</div>
-
-<div class="doc">
-k := (S k) 
-</div>
-<div class="code">
+&nbsp;&nbsp;<span class="comment">(*&nbsp;k&nbsp;:=&nbsp;(S&nbsp;k)&nbsp;*)</span><br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_base"><span class="id" type="constructor">beta_par_base</span></a>. <span class="id" type="tactic">rewrite</span> <a class="idref" href="Eta.html#Eta.shift_0_lam_commute"><span class="id" type="lemma">shift_0_lam_commute</span></a>.<br/>
@@ -68,6 +89,13 @@ k := (S k)
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+Similarly, a <span class="inlinecode"><a class="idref" href="Subst.html#k"><span class="id" type="variable">k</span></a></span>-fold eta-expansion of a lambda abstraction can be reduced
+    to a single lambda abstraction via parallel beta reduction. 
+</div>
+<div class="code">
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.lam_k_beta_lam"><span class="id" type="lemma">lam_k_beta_lam</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> <a class="idref" href="Postpone.html#k"><span class="id" type="variable">k</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a>)) (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Postpone.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
@@ -76,8 +104,6 @@ k := (S k)
 &nbsp;&nbsp;<span class="comment">(*&nbsp;k&nbsp;:=&nbsp;0&nbsp;*)</span><br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_lam"><span class="id" type="constructor">beta_par_lam</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;<span class="comment">(*&nbsp;k&nbsp;:=&nbsp;(S&nbsp;k)&nbsp;*)</span><br/>
-
-<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="var">remember</span> <span class="id" type="var">H</span> <span class="id" type="keyword">as</span> <span class="id" type="var">HH</span>. <span class="id" type="tactic">clear</span> <span class="id" type="var">HeqHH</span>. <span class="id" type="tactic">apply</span> <span class="id" type="var">IHk</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">simpl</span>.<br/>
@@ -92,25 +118,22 @@ k := (S k)
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+In case of an application, we can also contract the whole eta-expansion of
+    the applied term via parallel beta reduction 
+</div>
+<div class="code">
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.lam_k_beta_app"><span class="id" type="lemma">lam_k_beta_app</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Postpone.html#N'"><span class="id" type="variable">N'</span></a> →<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> <a class="idref" href="Postpone.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a>) <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <a class="idref" href="Postpone.html#M'"><span class="id" type="variable">M'</span></a> <a class="idref" href="Postpone.html#N'"><span class="id" type="variable">N'</span></a>).<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">k</span>.<br/>
-</div>
-
-<div class="doc">
-k := 0 
-</div>
-<div class="code">
+&nbsp;&nbsp;<span class="comment">(*&nbsp;k&nbsp;:=&nbsp;0&nbsp;*)</span><br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_app"><span class="id" type="constructor">beta_par_app</span></a>. <span class="id" type="tactic">assumption</span>. <span class="id" type="tactic">assumption</span>.<br/>
-</div>
-
-<div class="doc">
-k := (S k) 
-</div>
-<div class="code">
+&nbsp;&nbsp;<span class="comment">(*&nbsp;k&nbsp;:=&nbsp;(S&nbsp;k)&nbsp;*)</span><br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">rewrite</span> <a class="idref" href="Eta.html#Eta.lam_k_alt"><span class="id" type="lemma">lam_k_alt</span></a>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">replace</span> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> <span class="id" type="var">M'</span> <span class="id" type="var">N'</span>) <span class="id" type="keyword">with</span> (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> 0 <span class="id" type="var">N'</span> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a> 0 <span class="id" type="var">M'</span>) (<a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> 0))).<br/>
@@ -121,27 +144,24 @@ k := (S k)
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+Finally, <span class="inlinecode"><a class="idref" href="Subst.html#k"><span class="id" type="variable">k</span></a>+1</span> eta-expansions can always be contracted to only one
+    eta-expansion via parallel beta reduction. 
+</div>
+<div class="code">
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.lam_S_k_beta"><span class="id" type="lemma">lam_S_k_beta</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#M'"><span class="id" type="variable">M'</span></a> →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Datatypes.html#S"><span class="id" type="constructor">S</span></a> <a class="idref" href="Postpone.html#k"><span class="id" type="variable">k</span></a>) <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> 1 <a class="idref" href="Postpone.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Datatypes.html#S"><span class="id" type="constructor">S</span></a> <a class="idref" href="Postpone.html#k"><span class="id" type="variable">k</span></a>) <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> 1 <a class="idref" href="Postpone.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">k</span>.<br/>
-</div>
-
-<div class="doc">
-k := 0 
-</div>
-<div class="code">
+&nbsp;&nbsp;<span class="comment">(*&nbsp;k&nbsp;:=&nbsp;0&nbsp;*)</span><br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">simpl</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_shift"><span class="id" type="lemma">beta_par_shift</span></a>. <span class="id" type="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_refl"><span class="id" type="lemma">beta_par_refl</span></a>.<br/>
-</div>
-
-<div class="doc">
-k := (S k) 
-</div>
-<div class="code">
+&nbsp;&nbsp;<span class="comment">(*&nbsp;k&nbsp;:=&nbsp;(S&nbsp;k)&nbsp;*)</span><br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">rewrite</span> <a class="idref" href="Eta.html#Eta.lam_k_alt"><span class="id" type="lemma">lam_k_alt</span></a>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Postpone.html#Postpone.lam_k_beta_lam"><span class="id" type="lemma">lam_k_beta_lam</span></a>.<br/>
@@ -149,6 +169,21 @@ k := (S k)
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+It now remains to prove the crucial Lemma 3.4 from Takahashi, stating that
+    postponement holds for the case of parallel beta and eta reductions.
+
+<div class="paragraph"> </div>
+
+    Before we can do that, we need one auxiliary fact:
+
+<div class="paragraph"> </div>
+
+ Parallel beta is closed under eta-expansion. 
+</div>
+<div class="code">
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.beta_par_lam_k_closed"><span class="id" type="lemma">beta_par_lam_k_closed</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> <a class="idref" href="Postpone.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> <a class="idref" href="Postpone.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
@@ -162,28 +197,17 @@ k := (S k)
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" type="keyword">Lemma</span> <a name="Postpone.lam_k_eta_red"><span class="id" type="lemma">lam_k_eta_red</span></a>:<br/>
-&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> <a class="idref" href="Postpone.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a>) <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>.<br/>
-<span class="id" type="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">induction</span> <span class="id" type="var">k</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
+</div>
 
-<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">assumption</span>.<br/>
-
-<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">simpl</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="Eta.html#Eta.eta_par_base"><span class="id" type="constructor">eta_par_base</span></a> <span class="id" type="keyword">with</span> (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> <span class="id" type="var">k</span> <span class="id" type="var">M</span>).<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">reflexivity</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHk</span>. <span class="id" type="tactic">assumption</span>.<br/>
-<span class="id" type="keyword">Qed</span>.<br/>
-
-<br/>
-<span class="id" type="keyword">Lemma</span> <a name="Postpone.postpone_comm"><span class="id" type="lemma">postpone_comm</span></a>:<br/>
+<div class="doc">
+We can now prove the postponement theorem for the specific case of parallel
+    reductions. This is Lemma 3.4 in Takahashi. 
+</div>
+<div class="code">
+<span class="id" type="keyword">Lemma</span> <a name="Postpone.postpone_par"><span class="id" type="lemma">postpone_par</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">P</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">generalize</span> <span class="id" type="tactic">dependent</span> <span class="id" type="var">M</span>.<br/>
@@ -254,22 +278,48 @@ k := (S k)
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Postpone.html#Postpone.lam_k_beta_subst"><span class="id" type="lemma">lam_k_beta_subst</span></a>. <span class="id" type="tactic">assumption</span>. <span class="id" type="tactic">assumption</span>.<br/>
 
 <br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Postpone.html#Postpone.lam_k_eta_red"><span class="id" type="lemma">lam_k_eta_red</span></a>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Eta.html#Eta.eta_par_substitutive"><span class="id" type="lemma">eta_par_substitutive</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Eta.html#Eta.lam_k_eta_red"><span class="id" type="lemma">lam_k_eta_red</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Eta.html#Eta.eta_par_subst_closed"><span class="id" type="lemma">eta_par_subst_closed</span></a>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>.<br/>
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="comment">(*&nbsp;is&nbsp;this&nbsp;definition&nbsp;wrong?&nbsp;*)</span><br/>
-<span class="id" type="keyword">Definition</span> <a name="Postpone.beta_eta"><span class="id" type="definition">beta_eta</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#union"><span class="id" type="definition">union</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a> <a class="idref" href="Eta.html#Eta.eta"><span class="id" type="definition">eta</span></a>.<br/>
-<span class="id" type="keyword">Definition</span> <a name="Postpone.beta_eta_star"><span class="id" type="definition">beta_eta_star</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#clos_refl_trans"><span class="id" type="inductive">clos_refl_trans</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Postpone.html#Postpone.beta_eta"><span class="id" type="definition">beta_eta</span></a>.<br/>
+</div>
+
+<div class="doc">
+We now define the beta-eta relation and its reflexive-transitive closure
+
+</div>
+<div class="code">
+<span class="id" type="keyword">Definition</span> <a name="Postpone.beta_eta"><span class="id" type="definition">beta_eta</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#union"><span class="id" type="definition">union</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a> <a class="idref" href="Eta.html#Eta.eta"><span class="id" type="definition">eta</span></a>.<br/>
+<span class="id" type="keyword">Definition</span> <a name="Postpone.beta_eta_star"><span class="id" type="definition">beta_eta_star</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#clos_refl_trans"><span class="id" type="inductive">clos_refl_trans</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Postpone.html#Postpone.beta_eta"><span class="id" type="definition">beta_eta</span></a>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+We need a couple of auxiliary statements about the relationships
+    between the parallel and reflexive-transitive versions of
+    beta and eta reductions which appear in the conclusions of the
+    postponement theorem.
+
+<div class="paragraph"> </div>
+
+    They make it more convenient to do the rewriting while proving the main
+    result.
+
+<div class="paragraph"> </div>
+
+ Firstly, since the reflexive-transitive closures are equivalent
+    to the transitive closures of the parallel relations, the following holds:
+
+</div>
+<div class="code">
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.star_exists_iff_par_exists"><span class="id" type="lemma">star_exists_iff_par_exists</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
-&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">↔</span></a><br/>
-&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par_trans"><span class="id" type="definition">beta_par_trans</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par_trans"><span class="id" type="definition">eta_par_trans</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">↔</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par_trans"><span class="id" type="definition">beta_par_trans</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par_trans"><span class="id" type="definition">eta_par_trans</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a>.<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">split</span>; <span class="id" type="tactic">intros</span>;<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">do</span> 2 <span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span>;<br/>
@@ -281,10 +331,17 @@ k := (S k)
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+Also, it is obviously sufficient to show this to hold for parallel beta,
+    in order for it to also hold for the transitive closure: 
+</div>
+<div class="code">
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.par_impl_par_trans"><span class="id" type="lemma">par_impl_par_trans</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>) →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par_trans"><span class="id" type="definition">beta_par_trans</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par_trans"><span class="id" type="definition">eta_par_trans</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>) →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par_trans"><span class="id" type="definition">beta_par_trans</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par_trans"><span class="id" type="definition">eta_par_trans</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>. <span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span>. <span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">H1</span> <span class="id" type="var">H2</span>].<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x</span>.<br/>
@@ -292,10 +349,17 @@ k := (S k)
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+Finally, a couple of "one-sided" rewrites for convenience within the proof.
+
+</div>
+<div class="code">
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.rewrite_existential_eta"><span class="id" type="lemma">rewrite_existential_eta</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
-&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">↔</span></a><br/>
-&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par_trans"><span class="id" type="definition">eta_par_trans</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a>.<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">↔</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par_trans"><span class="id" type="definition">eta_par_trans</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a>.<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">split</span>; <span class="id" type="tactic">intros</span>;<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">do</span> 2 <span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span>;<br/>
@@ -307,19 +371,45 @@ k := (S k)
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
+<span class="id" type="keyword">Lemma</span> <a name="Postpone.rewrite_existential_beta"><span class="id" type="lemma">rewrite_existential_beta</span></a>:<br/>
+&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">↔</span></a><br/>
+&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par_trans"><span class="id" type="definition">beta_par_trans</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a>.<br/>
+<span class="id" type="keyword">Proof</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>; <span class="id" type="tactic">intros</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">do</span> 2 <span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x</span>; <span class="id" type="tactic">split</span>;<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">do</span> 2 (<span class="id" type="tactic">try</span><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_eq_closure_of_beta_par"><span class="id" type="lemma">bstar_eq_closure_of_beta_par</span></a> ||<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Eta.html#Eta.eta_star_eq_closure_of_eta_par"><span class="id" type="lemma">eta_star_eq_closure_of_eta_par</span></a>;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>).<br/>
+<span class="id" type="keyword">Qed</span>.<br/>
+
+<br/>
+</div>
+
+<div class="doc">
+We now build up to the full postponement lemma by proving a series of
+    simpler lemmas 
+<div class="paragraph"> </div>
+
+ Here we consider the case where we postpone <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a></span> in the presence
+    of only a parallel beta. 
+</div>
+<div class="code">
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.eta_baby_postpone_eta"><span class="id" type="lemma">eta_baby_postpone_eta</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">P</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span> ? ? ? <span class="id" type="var">H1</span> <span class="id" type="var">H2</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Postpone.html#Postpone.rewrite_existential_eta"><span class="id" type="lemma">rewrite_existential_eta</span></a>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">generalize</span> <span class="id" type="tactic">dependent</span> <span class="id" type="var">N</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H1</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">HH</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <span class="id" type="var">x</span> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <span class="id" type="var">N</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">HH</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <span class="id" type="var">x</span> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <span class="id" type="var">N</span>).<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Eta.html#Eta.eta_imp_eta_par"><span class="id" type="lemma">eta_imp_eta_par</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Postpone.html#Postpone.postpone_comm"><span class="id" type="lemma">postpone_comm</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">y</span>; <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Postpone.html#Postpone.postpone_par"><span class="id" type="lemma">postpone_par</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">y</span>; <span class="id" type="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">HH</span>. <span class="id" type="tactic">destruct</span> <span class="id" type="var">H0</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x0</span>. <span class="id" type="tactic">split</span>. <span class="id" type="tactic">assumption</span>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">assumption</span>.<br/>
 
@@ -338,38 +428,30 @@ k := (S k)
 &nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span>. <span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x1</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">split</span>. <span class="id" type="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#t_trans"><span class="id" type="constructor">t_trans</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">x0</span>; <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#t_trans"><span class="id" type="constructor">t_trans</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">x0</span>; <span class="id" type="tactic">assumption</span>.<br/>
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
-<span class="id" type="keyword">Lemma</span> <a name="Postpone.rewrite_existential_beta"><span class="id" type="lemma">rewrite_existential_beta</span></a>:<br/>
-&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
-&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">↔</span></a><br/>
-&nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par_trans"><span class="id" type="definition">beta_par_trans</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a>.<br/>
-<span class="id" type="keyword">Proof</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">split</span>; <span class="id" type="tactic">intros</span>;<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">do</span> 2 <span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span>;<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x</span>; <span class="id" type="tactic">split</span>;<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">do</span> 2 (<span class="id" type="tactic">try</span><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bstar_eq_closure_of_beta_par"><span class="id" type="lemma">bstar_eq_closure_of_beta_par</span></a> ||<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Eta.html#Eta.eta_star_eq_closure_of_eta_par"><span class="id" type="lemma">eta_star_eq_closure_of_eta_par</span></a>;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">assumption</span>).<br/>
-<span class="id" type="keyword">Qed</span>.<br/>
+</div>
 
-<br/>
+<div class="doc">
+Similarly, here we consider only the postponement of <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a></span> in the
+    presence <span class="inlinecode"><a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a></span>: 
+</div>
+<div class="code">
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.eta_baby_postpone_beta"><span class="id" type="lemma">eta_baby_postpone_beta</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">P</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span> ? ? ? <span class="id" type="var">H1</span> <span class="id" type="var">H2</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Postpone.html#Postpone.rewrite_existential_beta"><span class="id" type="lemma">rewrite_existential_beta</span></a>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">generalize</span> <span class="id" type="tactic">dependent</span> <span class="id" type="var">M</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H2</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">HH</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <span class="id" type="var">M</span> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <span class="id" type="var">y</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">HH</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <span class="id" type="var">M</span> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <span class="id" type="var">y</span>).<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.bred_imp_beta_par"><span class="id" type="lemma">bred_imp_beta_par</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Postpone.html#Postpone.postpone_comm"><span class="id" type="lemma">postpone_comm</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">x</span>; <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Postpone.html#Postpone.postpone_par"><span class="id" type="lemma">postpone_par</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">x</span>; <span class="id" type="tactic">assumption</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">HH</span>. <span class="id" type="tactic">destruct</span> <span class="id" type="var">H0</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x0</span>. <span class="id" type="tactic">split</span>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">assumption</span>. <span class="id" type="tactic">assumption</span>.<br/>
 
@@ -387,13 +469,21 @@ k := (S k)
 &nbsp;&nbsp;<span class="id" type="tactic">apply</span> <span class="id" type="var">IHclos_refl_trans2</span> <span class="id" type="keyword">in</span> <span class="id" type="var">H0</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">H0</span>. <span class="id" type="tactic">destruct</span> <span class="id" type="var">H0</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x1</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">split</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#t_trans"><span class="id" type="constructor">t_trans</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">x0</span>; <span class="id" type="tactic">assumption</span>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#t_trans"><span class="id" type="constructor">t_trans</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">x0</span>; <span class="id" type="tactic">assumption</span>. <span class="id" type="tactic">assumption</span>.<br/>
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+We now combine all the previous lemmas to prove a simplified version of the
+    eta-postponement where we consider separate <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a></span> and <span class="inlinecode"><a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a></span> reductions,
+    rather than a single reduction of their union. 
+</div>
+<div class="code">
 <span class="id" type="keyword">Theorem</span> <a name="Postpone.eta_postponement_basic"><span class="id" type="lemma">eta_postponement_basic</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span> <span class="id" type="var">P</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> → (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> → (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">rewrite</span> <a class="idref" href="Eta.html#Eta.eta_star_eq_closure_of_eta_par"><span class="id" type="lemma">eta_star_eq_closure_of_eta_par</span></a> <span class="id" type="keyword">in</span> ×.<br/>
@@ -403,8 +493,8 @@ k := (S k)
 &nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H0</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">HH</span>:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <span class="id" type="var">M</span> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <span class="id" type="var">y</span>) →<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par_trans"><span class="id" type="definition">beta_par_trans</span></a> <span class="id" type="var">M</span> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par_trans"><span class="id" type="definition">eta_par_trans</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <span class="id" type="var">y</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <span class="id" type="var">M</span> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <span class="id" type="var">y</span>) →<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par_trans"><span class="id" type="definition">beta_par_trans</span></a> <span class="id" type="var">M</span> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par_trans"><span class="id" type="definition">eta_par_trans</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <span class="id" type="var">y</span>)).<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">H1</span>. <span class="id" type="tactic">destruct</span> <span class="id" type="var">H1</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Beta.html#Beta.beta_par_imp_bstar"><span class="id" type="lemma">beta_par_imp_bstar</span></a> <span class="id" type="keyword">in</span> <span class="id" type="var">H1</span>.<br/>
@@ -415,7 +505,7 @@ k := (S k)
 
 <br/>
 &nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">HH2</span>:<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <span class="id" type="var">M</span> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <span class="id" type="var">y</span>)).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <span class="id" type="var">M</span> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <span class="id" type="var">y</span>)).<br/>
 
 <br/>
 &nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Postpone.html#Postpone.eta_baby_postpone_eta"><span class="id" type="lemma">eta_baby_postpone_eta</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">x</span>.<br/>
@@ -432,30 +522,33 @@ k := (S k)
 
 <br/>
 &nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x1</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">split</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#t_trans"><span class="id" type="constructor">t_trans</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">x0</span>; <span class="id" type="tactic">assumption</span>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#t_trans"><span class="id" type="constructor">t_trans</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">x0</span>; <span class="id" type="tactic">assumption</span>. <span class="id" type="tactic">assumption</span>.<br/>
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-Main theorem 
+<a name="lab7"></a><h1 class="section">The eta postponement theorem</h1>
+ Finally, we prove the full eta-postponement theorem using the
+    separate reduction version in <span class="inlinecode"><a class="idref" href="Postpone.html#Postpone.eta_postponement_basic"><span class="id" type="lemma">eta_postponement_basic</span></a></span>.
+
 </div>
 <div class="code">
 <span class="id" type="keyword">Theorem</span> <a name="Postpone.eta_postponement"><span class="id" type="lemma">eta_postponement</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Postpone.html#Postpone.beta_eta_star"><span class="id" type="definition">beta_eta_star</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> → (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Postpone.html#Postpone.beta_eta_star"><span class="id" type="definition">beta_eta_star</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> → (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">intros</span>.<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">dependent</span> <span class="id" type="tactic">induction</span> <span class="id" type="var">H</span>.<br/>
 
 <br/>
 &nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">y</span>. <span class="id" type="tactic">split</span>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">assumption</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x</span>. <span class="id" type="tactic">split</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">y</span>. <span class="id" type="tactic">split</span>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">assumption</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x</span>. <span class="id" type="tactic">split</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>. <span class="id" type="tactic">constructor</span>. <span class="id" type="tactic">assumption</span>.<br/>
 
 <br/>
-&nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x</span>. <span class="id" type="tactic">split</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x</span>. <span class="id" type="tactic">split</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#rt_refl"><span class="id" type="constructor">rt_refl</span></a>.<br/>
 
 <br/>
 &nbsp;&nbsp;<span class="id" type="tactic">rename</span> <span class="id" type="var">H</span> <span class="id" type="var">into</span> <span class="id" type="var">H1</span>. <span class="id" type="tactic">rename</span> <span class="id" type="var">H0</span> <span class="id" type="var">into</span> <span class="id" type="var">H2</span>.<br/>
@@ -466,7 +559,7 @@ Main theorem
 &nbsp;&nbsp;<span class="id" type="tactic">destruct</span> <span class="id" type="var">IHclos_refl_trans2</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">yz</span>]. <span class="id" type="tactic">destruct</span> <span class="id" type="var">H</span> <span class="id" type="keyword">as</span> [<span class="id" type="var">B1</span> <span class="id" type="var">B2</span>].<br/>
 
 <br/>
-&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">H</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">xyz</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <span class="id" type="var">xy</span> <a class="idref" href="Postpone.html#xyz"><span class="id" type="variable">xyz</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#xyz"><span class="id" type="variable">xyz</span></a> <span class="id" type="var">yz</span>).<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">assert</span> (<span class="id" type="var">H</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">xyz</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <span class="id" type="var">xy</span> <a class="idref" href="Postpone.html#xyz"><span class="id" type="variable">xyz</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#xyz"><span class="id" type="variable">xyz</span></a> <span class="id" type="var">yz</span>).<br/>
 &nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="Postpone.html#Postpone.eta_postponement_basic"><span class="id" type="lemma">eta_postponement_basic</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">y</span>; <span class="id" type="tactic">assumption</span>.<br/>
 
 <br/>
@@ -474,8 +567,8 @@ Main theorem
 &nbsp;&nbsp;<span class="id" type="tactic">∃</span> <span class="id" type="var">x0</span>.<br/>
 
 <br/>
-&nbsp;&nbsp;<span class="id" type="tactic">split</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">xy</span>; <span class="id" type="tactic">assumption</span>.<br/>
-&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl2/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">yz</span>; <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">split</span>. <span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">xy</span>; <span class="id" type="tactic">assumption</span>.<br/>
+&nbsp;&nbsp;<span class="id" type="tactic">apply</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#rt_trans"><span class="id" type="constructor">rt_trans</span></a> <span class="id" type="keyword">with</span> <span class="id" type="var">yz</span>; <span class="id" type="tactic">assumption</span>.<br/>
 <span class="id" type="keyword">Qed</span>.<br/>
 
 <br/>
