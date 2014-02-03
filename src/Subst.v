@@ -16,7 +16,7 @@ Fixpoint lift (l: nat) (b: nat) (t: lterm) : lterm :=
 Definition shift (b: nat) (t: lterm) : lterm :=
   lift 1 b t.
 
-(** Substitute the variable with index `v` by `r` in the term `t` **)
+(** Substitute the variable with index [[v]] by [[r]] in the term [[t]] **)
 Fixpoint subst (v: nat) (r: lterm) (t: lterm) : lterm :=
   match t with
       | Var i =>  match (nat_compare i v) with
@@ -162,6 +162,9 @@ Proof.
   auto. auto.
 Qed.
 
+(** We now proceed to prove the substitution lemma **)
+
+(* variable case of the substitution lemma *)
 Lemma var_subst_lemma: forall (i j n: nat), forall (N L: lterm),
    (i <= j) ->
        subst j L (subst i N (Var n)) =
@@ -212,9 +215,11 @@ Proof.
 Qed.
 
 
-(** The named version looks like this:
-   x =/= y and x not free in L implies:
-       M[x/N][y/L] = M[y/L][x/(N[y/L])]
+(** The substitution lemma.
+    The named version looks like this:
+
+       [[x =/= y]] and [[x]] not free in [[L]] implies:
+           [M[x/N][y/L] = M[y/L][x/(N[y/L])]]
 **)
 Lemma subst_lemma: forall (M N L: lterm), forall (i j: nat),
    (i <= j) ->
@@ -229,8 +234,10 @@ Proof.
   auto. auto.
 Qed.
 
-(** A few other useful lemmas about [lift] and [subst] **)
+(** A few other useful lemmas about [lift] and [subst]. **)
 
+(** Attempting to substitute a variable with index [k] in a term which is
+    already shifted by [k] simply un-shifts the term: **)
 Lemma subst_shift_ident:
     forall t, forall k v,
     subst k v (shift k t) =  t.
@@ -252,6 +259,8 @@ Proof.
   intros. simpl. f_equal. apply IHt1. apply IHt2.
 Qed.
 
+(** Similarly, if the variable we're substituting in is [Var 0], then
+    it gets unshifted even more: **)
 Lemma subst_k_shift_S_k:
     forall t, forall k,
     subst k (Var 0) (shift (S k) t) = t.
@@ -300,6 +309,8 @@ Proof.
   intros. simpl. f_equal. apply IHt1. apply IHt2.
 Qed.
 
+(** Given compatible bounds, a sequence of [lift]s commutes in a very specific
+    way: **)
 Lemma lift_lift:
     forall M, forall b1 b2 k1 k2,
       b1 <= b2 ->
@@ -342,6 +353,7 @@ Proof.
   apply IHM2. omega.
 Qed.
 
+(** This is a reverse statement of [lift_lift]: **)
 Lemma lift_lift_rev:
   forall wk k ws s t,
   k >= s + ws ->
@@ -354,6 +366,7 @@ Proof.
   reflexivity.
 Qed.
 
+(** [lift] distributes over [subst], also in a specific way: **)
 Lemma lift_distr_subst:
   forall M N, forall v, forall i b,
     v <= b ->
@@ -439,7 +452,7 @@ Proof.
   apply IHM2. omega.
 Qed.
 
-(** Some trivialities for convenient rewriting. **)
+(** Finally, some trivialities for convenient rewriting. **)
 
 Lemma subst_app : forall t1 t2 t3, forall n,
   subst n t3 (App t1 t2) = App (subst n t3 t1) (subst n t3 t2).

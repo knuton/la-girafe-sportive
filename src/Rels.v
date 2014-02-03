@@ -6,11 +6,9 @@ Module Export Rels.
 (** Some generic relation things **)
 
 Section CompatClosure.
-
 Variable rel: relation lterm.
-(** Variable x y: lterm. **)
 
-(** Compatible closure of a relation on lterms **)
+(** Compatible closure (as defined in Barendregt) of a relation on [lterm]s **)
 
 Inductive clos_compat : relation lterm :=
   | clos_base (x y: lterm): rel x y -> clos_compat x y

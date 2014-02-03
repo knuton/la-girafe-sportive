@@ -29,6 +29,7 @@ Example inner_bred :
   bred ((\"x" ~> (\"y" ~> `"x" $ `"y") $ `"z") $ `"y") ((\"x" ~> `"x" $ `"z") $ `"y").
 Proof. apply bred_appl. apply bred_lam. apply bred_base. Qed.
 
+(** [bred] is closed under applications of [lift] **)
 Lemma bred_lift_closed:
   forall M N, forall b k,
     bred M N -> bred (lift k b M) (lift k b N).
@@ -72,11 +73,17 @@ Proof.
   apply bstar_step. apply bred_base.
 Qed.
 
+
+(** Some general properties of [bstar] *)
+
 Lemma bstar_reflexive:
   forall M, bstar M M.
 Proof.
   apply rt_refl.
 Qed.
+
+
+(** We now prove [bstar] is closed under all lambda terms **)
 
 Lemma bstar_lam_closed:
   forall M N,
@@ -121,7 +128,8 @@ Proof.
   apply bstar_app_closed_l. assumption.
 Qed.
 
-Lemma bstar_subst_closed_l:
+(** [bstar] is closed under the basic beta reduction **)
+Lemma bstar_bred_closed:
   forall M M' N,
          bstar M M' -> bstar (App (Lam M) N) (subst 0 N M').
 Proof.
@@ -136,6 +144,8 @@ Proof.
   apply rt_refl.
   assumption.
 Qed.
+
+(** [bstar] is also closed under applications of [lift], like [bred] **)
 
 Lemma bstar_lift_closed:
   forall M N, forall b k,
@@ -152,7 +162,8 @@ Proof.
   apply rt_trans with (lift k b y); assumption.
 Qed.
 
-
+(** [bstar] is closed under variable substitution, like all compatible
+    relations **)
 Lemma bstar_weak_subst:
   forall M, forall k, forall N N',
     bstar N N' -> bstar (subst k N M) (subst k N' M).
@@ -175,28 +186,8 @@ Proof.
   simpl. apply bstar_app_closed; auto.
 Qed.
 
-
-Lemma bstar_subst_closed_r:
-  forall M N N',
-         bstar N N' -> bstar (App (Lam M) N) (subst 0 N' M).
-Proof.
-  intros.
-  dependent induction H.
-  apply rt_trans with (subst 0 x M).
-  apply rt_step. apply bred_base.
-  apply bstar_weak_subst. constructor. assumption.
-
-  apply rt_step. constructor.
-  apply rt_trans with (App (Lam M) y).
-  apply bstar_app_closed.
-  apply bstar_lam_closed.
-  apply bstar_reflexive.
-  assumption.
-
-  assumption.
-Qed.
-
-
+(** The is the most useful statement: [bstar] is also substitutive, giving
+    complete (parallel) closure under [subst] **)
 Lemma bstar_subst_closed:
   forall M M' N N',
    bstar M M' -> bstar N N' -> bstar (App (Lam M) N) (subst 0 N' M').
@@ -204,7 +195,7 @@ Proof.
   intros.
   apply rt_trans with (App (Lam M) N').
   apply bstar_app_closed. apply bstar_lam_closed. apply rt_refl. assumption.
-  apply bstar_subst_closed_l. assumption.
+  apply bstar_bred_closed. assumption.
 Qed.
 
 
@@ -221,7 +212,7 @@ Inductive beta_par : lterm -> lterm -> Prop :=
         beta_par N N' ->
         beta_par (App (Lam M) N) (subst 0 N' M').
 
-(** A couple of useful results about [beta_par] **)
+(** Again, we prove a couple of useful results about [beta_par] **)
 
 (** Parallel beta reduction is reflexive on all [lterm]'s **)
 Lemma beta_par_refl:
@@ -236,7 +227,7 @@ Proof.
   assumption.
 Qed.
 
-(** Parallel beta subsumes beta **)
+(** Parallel beta subsumes [bred] **)
 Lemma bred_imp_beta_par:
   forall M N,
     bred M N -> beta_par M N.
@@ -246,6 +237,7 @@ Proof.
   constructor; try apply beta_par_refl; try assumption.
 Qed.
 
+(** [beta_par] implies [bstar] **)
 Lemma beta_par_imp_bstar:
   forall M N,
     beta_par M N -> bstar M N.
@@ -282,7 +274,11 @@ Proof.
   omega.
 Qed.
 
+(** Transitive closure of [beta_par] **)
 Definition beta_par_trans := clos_trans lterm beta_par.
+
+(** We now show the equivalence between [bstar] and the transitive closure of
+    [beta_par] **)
 
 Lemma bstar_eq_closure_of_beta_par:
   forall M N,
