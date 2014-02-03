@@ -3,6 +3,7 @@ Require Import Subst.
 Require Import Beta.
 Require Import Relation_Operators.
 Require Import Coq.Program.Equality.
+Require Import Coq.Logic.Classical_Prop.
 
 (** Reduction Numbering (Definition 2.1) **)
 
@@ -301,64 +302,31 @@ Proof.
   intros. simpl. rewrite Compare_dec.nat_compare_gt in H. rewrite H. reflexivity.
 Qed.
 
-(* This lemma is not yet fully established, there are two [admit]s.
-   The first [admit] should be straightforward to eliminate (intuitively).
-   Somehow the transitive evidence rule for [hap] makes it hard to show
-   that [hap] does not hold between any two terms if the first is an
-   abstraction, however.
-*)
+(* TODO Do I still need the following? *)
+
+Lemma not_hap'_lam_var : forall t i, ~ hap' (Lam t) i.
+Proof. unfold not. intros. dependent induction H. Qed.
+
+Lemma not_hap_lam : forall t t', t' <> Lam t -> ~ hap (Lam t) t'.
+Proof.
+  unfold not. intros.
+  dependent induction H0.
+    assert (ID: Lam t = Lam t) by reflexivity. apply H in ID. assumption.
+    contradict H0. apply not_hap'_lam_var.
+    apply IHhap2 in H. assumption. apply NNPP in IHhap1. assumption.
+Qed.
 
 Lemma lift_first_hap : forall t n i k,
   hap t (Var i) -> i < k -> hap (lift n k t) (Var i).
 Proof.
-  intros t n i k H iLTk. dependent induction t.
-  (* Var *)
-  apply hap_lefthandside_var in H. rewrite <- H. simpl.
-  case_eq (Compare_dec.lt_dec i k).
-    intros. apply hap_refl.
-    intros. contradiction.
-  (* Lam *)
-  inversion H. inversion H0. (* TODO how to handle these transitive cases? *) admit.
-  (* App *)
-  simpl. dependent induction H.
-    dependent induction H.
-      apply hap_hred. simpl.
-      rewrite <- x.
-      case (subst_to_var t0 t2 i). assumption.
-        (* t2 = Var i *)
-        intro HC. inversion HC as [Ht0 Ht2]. rewrite Ht2.
-        assert (LFT: Var i = lift n k (Var i)). simpl. case_eq (Compare_dec.lt_dec i k).
-          (* i < k *)
-          intros. reflexivity.
-          (* ~ i < k *)
-          intros. contradiction.
-        rewrite <- LFT.
-        assert (IGN: t0 = lift n (k + 1) t0).
-          rewrite Ht0. simpl. case_eq (Compare_dec.lt_dec 0 (k + 1)).
-            (* 0 < k + 1 *)
-            intros. reflexivity.
-            (* ~ 0 < k + 1 *)
-            intros. contradict iLTk. omega.
-        rewrite <- IGN. apply hap'_hred.
-        (* t0 = Var (i + 1) *)
-        intro Hti1. rewrite Hti1.
-        assert (INDIST: subst 0 t2 (Var (i+1)) = subst 0 (lift n k t2) (Var (i+1))).
-          apply subst_indist. omega.
-        rewrite INDIST.
-        assert (IGN: lift n (k+1) (Var (i+1)) = Var (i+1)).
-          simpl. case_eq (Compare_dec.lt_dec (i + 1) (k + 1)).
-            (* i + 1 < k + 1 *)
-            intros. reflexivity.
-            (* ~ i + 1 < k + 1 *)
-            intros FLS. contradict FLS. omega.
-        rewrite IGN. apply hap'_hred.
-      rewrite <- lift_app.
-      apply IHhap1.
-        apply IHt2.
-        apply IHt1.
-        admit. (* TODO this one is weird *)
-        assumption.
- Qed.
+  intros t n i k H iLTk.
+  assert (Var i = lift n k (Var i)). simpl. case_eq (Compare_dec.lt_dec i k).
+    (* i < k *)
+    intros. reflexivity.
+    (* ~ i < k *)
+    intros. contradict iLTk. assumption.
+  rewrite H0. apply lift_hap. assumption.
+Qed.
 
 Lemma lift_st : forall t t',
   st t t' -> forall n k, st (lift n k t) (lift n k t').
