@@ -3,6 +3,7 @@ Require Import Subst.
 Require Import Beta.
 Require Import Relation_Operators.
 Require Import Coq.Program.Equality.
+Require Import Coq.Logic.Classical_Prop.
 
 (** Reduction Numbering (Definition 2.1) **)
 
@@ -308,6 +309,20 @@ Qed.
    abstraction, however.
 *)
 
+Lemma not_hap'_lam_var : forall t i, ~ hap' (Lam t) i.
+Proof. unfold not. intros. dependent induction H. Qed.
+
+
+Lemma not_hap_lam : forall t t', t' <> Lam t -> ~ hap (Lam t) t'.
+Proof.
+  unfold not. intros.
+  dependent induction H0.
+    assert (ID: Lam t = Lam t) by reflexivity. apply H in ID. assumption.
+    contradict H0. apply not_hap'_lam_var.
+    apply IHhap2 in H. assumption. apply NNPP in IHhap1. assumption.
+Qed.
+    
+
 Lemma lift_first_hap : forall t n i k,
   hap t (Var i) -> i < k -> hap (lift n k t) (Var i).
 Proof.
@@ -318,7 +333,7 @@ Proof.
     intros. apply hap_refl.
     intros. contradiction.
   (* Lam *)
-  inversion H. inversion H0. (* TODO how to handle these transitive cases? *) admit.
+  contradict H. apply not_hap_lam. unfold not. intro. inversion H.
   (* App *)
   simpl. dependent induction H.
     dependent induction H.
