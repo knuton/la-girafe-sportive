@@ -452,4 +452,22 @@ Proof.
   intros. unfold bet in H. inversion H.
   apply st_nthred__st with (M := M) (i := x); assumption.
 Qed.
-    
+
+(* Lemma 3.7 *)
+
+Lemma betstar_st : forall M N,
+  betstar M N -> st M N.
+Proof.
+  intros M N Hstar. induction Hstar.
+    (* step *)
+    intros.
+    apply (st_bred__st x x y). assumption. apply st_refl.
+    (* refl *)
+    apply st_refl.
+    SearchAbout clos_refl_trans.
+    (* trans *)
+    apply (Operators_Properties.clos_refl_trans_ind_left lterm bet y).
+      assumption.
+      intros. apply (st_bred__st x y0 z0); assumption.
+      assumption.
+Qed.
