@@ -18,7 +18,7 @@ Module Export Eta.
 
     Using de Bruijn indices this corresponds to ensuring that
     [[f]] contains no references to the variable with index [0] (or any of it's
-    lifted occurances), which can be expressed by the condition
+    lifted occurrences), which can be expressed by the condition
         [f = shift 0 g]
     Ensuring that *all* variables in [[g]] are of higher binding level.
 
@@ -29,10 +29,11 @@ Module Export Eta.
 Inductive eta_prim : lterm -> lterm -> Prop :=
    eta_base (f g: lterm): (f = shift 0 g) -> eta_prim (Lam (App f (Var 0))) g.
 
+(** We defined [eta] as the compatible closure of the primitive relation. **)
 Definition eta := clos_compat eta_prim.
 
 (** A couple of examples to make sure our definition works with at least
-    the basic cases **)
+    the basic cases: **)
 
 Example ex1_eta : eta (\"x" ~> ((\"y" ~> `"y") $ `"x")) (\"x" ~> `"x").
   apply clos_base. apply eta_base. unfold shift. auto.
@@ -50,47 +51,42 @@ Proof.
   inversion H2. inversion H3.
 Qed.
 
-(** * Reflexive-transitive closure of η-conversion *)
+(** We prove a couple of substitution lemmas regarding [eta]. **)
 
-Definition eta_star := clos_refl_trans lterm eta.
-Definition eta_star_step := rt_step lterm eta.
-Definition eta_star_refl := rt_refl lterm eta.
-Definition eta_star_trans := rt_trans lterm eta.
-
-(** We prove a couple of substitution lemmas, again, just to exercise the
-    definition of [eta], they are not needed for the main result. **)
-
-Lemma eta_prim_subst_closed:
+(** [eta_prim] is substitutive (as per Barendregt's definition) **)
+Lemma eta_prim_substitutive:
   forall (M N L: lterm) (n: nat),
     eta_prim M N -> eta_prim (subst n L M) (subst n L N).
 Proof.
   intros.
-  assert (What: n + 1 = S n). omega.
+  assert (Sn_eq: n + 1 = S n). omega.
   destruct H.
-  assert (Hmm: subst n L (Lam (App f (Var 0))) =
+  assert (HH: subst n L (Lam (App f (Var 0))) =
                Lam (App (subst (S n) L f) (Var 0))).
   simpl.
-  rewrite What. auto.
-  rewrite Hmm.
+  rewrite Sn_eq. auto.
+  rewrite HH.
   apply eta_base.
   unfold shift.
-  rewrite lift_lem2. simpl. rewrite H. rewrite What.
+  rewrite lift_lem2. simpl. rewrite H. rewrite Sn_eq.
   unfold shift.
   reflexivity. omega.
 Qed.
 
-Lemma eta_subst_closed:
+Lemma eta_substitutive:
   forall (M N L: lterm) (n: nat),
   eta M N -> eta (subst n L M) (subst n L N).
 Proof.
   intros. generalize dependent n. generalize dependent L.
   unfold eta.
   induction H.
-  intros. apply clos_base. apply eta_prim_subst_closed. assumption.
+  intros. apply clos_base. apply eta_prim_substitutive. assumption.
   intros. apply clos_lam. apply IHclos_compat.
   intros. apply clos_appl. apply IHclos_compat.
   intros. apply clos_appr. apply IHclos_compat.
 Qed.
+
+(** We now show that [eta] is closed under [lift] **)
 
 Lemma eta_prim_lift_closed:
   forall M N, forall b k,
@@ -132,74 +128,14 @@ Proof.
   simpl. apply clos_appr. apply IHM2. assumption.
 Qed.
 
+(** * Reflexive-transitive closure of η-conversion *)
 
-(** * Parallel [eta] conversion *)
+Definition eta_star := clos_refl_trans lterm eta.
+Definition eta_star_step := rt_step lterm eta.
+Definition eta_star_refl := rt_refl lterm eta.
+Definition eta_star_trans := rt_trans lterm eta.
 
-(** We now define parallel eta conversion [eta_par],
-    it is a trivial translation from the one in the paper, except for the case
-    [eta_par_base], in which one needs to do the same translation as for
-    [eta_prim].
-**)
-
-Inductive eta_par : lterm -> lterm -> Prop :=
-  | eta_par_var: forall n,
-        eta_par (Var n) (Var n)
-  | eta_par_lam: forall M M',
-        eta_par M M' -> eta_par (Lam M) (Lam M')
-  | eta_par_app: forall M M' N N',
-        eta_par M M' -> eta_par N N' -> eta_par (App M N) (App M' N')
-  | eta_par_base: forall M N N',
-        (M = shift 0 N) -> eta_par N N' ->
-          eta_par (Lam (App M (Var 0))) N'.
-
-
-(** Parallel eta is reflexive on all [lterm]s **)
-
-Lemma eta_par_refl:
-  forall t, eta_par t t.
-Proof.
-  induction t.
-  constructor.
-  apply eta_par_lam.
-  assumption.
-  apply eta_par_app.
-  assumption. assumption.
-Qed.
-
-Lemma eta_imp_eta_par:
-  forall M N, eta M N -> eta_par M N.
-Proof.
-  intros.
-  dependent induction H.
-  destruct H. apply eta_par_base with g. assumption.
-  apply eta_par_refl.
-  constructor. assumption.
-  constructor. assumption. apply eta_par_refl.
-  constructor. apply eta_par_refl. assumption.
-Qed.
-
-Lemma eta_par_lift_closed:
-  forall M N, forall k b,
-    eta_par M N -> eta_par (lift k b M) (lift k b N).
-Proof.
-  intros.
-  generalize dependent k.
-  generalize dependent b.
-  dependent induction H.
-  intros. apply eta_par_refl.
-  simpl. intros. constructor. apply IHeta_par.
-  simpl. intros. constructor. apply IHeta_par1. apply IHeta_par2.
-
-  simpl. intros.
-  replace (b +1) with (S b) by omega. simpl.
-  unfold shift. replace (S b) with (b+1) by omega.
-  rewrite H.
-  apply eta_par_base with (lift k b N).
-  unfold shift. replace (S b) with (b+1) by omega.
-  rewrite lift_lift_rev. replace (b+1-1) with b by omega.
-  reflexivity. omega.
-  apply IHeta_par.
-Qed.
+(** We now show [eta_star] is closed under all [lterm]s **)
 
 Lemma eta_star_lam_closed:
   forall M N,
@@ -244,6 +180,7 @@ Proof.
   apply eta_star_app_closed_l. assumption.
 Qed.
 
+(** Additionally, [eta_star] is closed under lifting **)
 Lemma eta_star_lift_closed:
   forall M N, forall k b,
     eta_star M N -> eta_star (lift k b M) (lift k b N).
@@ -256,6 +193,8 @@ Proof.
   assumption. assumption.
 Qed.
 
+(** Finally, we show that [eta_star] is closed under the same primitive
+    relation as [eta] **)
 
 Lemma eta_star_base_closed:
   forall M N N',
@@ -278,7 +217,125 @@ Proof.
   assumption.
 Qed.
 
+(** * Parallel [eta] conversion *)
 
+(** We now define parallel eta conversion [eta_par],
+    it is a trivial translation from the one in the paper, except for the case
+    [eta_par_base], in which one needs to do the same translation as for
+    [eta_prim].
+**)
+
+Inductive eta_par : lterm -> lterm -> Prop :=
+  | eta_par_var: forall n,
+        eta_par (Var n) (Var n)
+  | eta_par_lam: forall M M',
+        eta_par M M' -> eta_par (Lam M) (Lam M')
+  | eta_par_app: forall M M' N N',
+        eta_par M M' -> eta_par N N' -> eta_par (App M N) (App M' N')
+  | eta_par_base: forall M N N',
+        (M = shift 0 N) -> eta_par N N' ->
+          eta_par (Lam (App M (Var 0))) N'.
+
+
+(** Some general properties about [eta_par] **)
+
+(** Parallel eta is reflexive on all [lterm]s **)
+Lemma eta_par_refl:
+  forall t, eta_par t t.
+Proof.
+  induction t.
+  constructor.
+  apply eta_par_lam.
+  assumption.
+  apply eta_par_app.
+  assumption. assumption.
+Qed.
+
+(** Parallel eta is closed under lifting **)
+Lemma eta_par_lift_closed:
+  forall M N, forall k b,
+    eta_par M N -> eta_par (lift k b M) (lift k b N).
+Proof.
+  intros.
+  generalize dependent k.
+  generalize dependent b.
+  dependent induction H.
+  intros. apply eta_par_refl.
+  simpl. intros. constructor. apply IHeta_par.
+  simpl. intros. constructor. apply IHeta_par1. apply IHeta_par2.
+
+  simpl. intros.
+  replace (b +1) with (S b) by omega. simpl.
+  unfold shift. replace (S b) with (b+1) by omega.
+  rewrite H.
+  apply eta_par_base with (lift k b N).
+  unfold shift. replace (S b) with (b+1) by omega.
+  rewrite lift_lift_rev. replace (b+1-1) with b by omega.
+  reflexivity. omega.
+  apply IHeta_par.
+Qed.
+
+(** [eta_par] is substitutive **)
+Lemma eta_par_substitutive:
+  forall (M N L: lterm) (n: nat),
+  eta_par M N -> eta_par (subst n L M) (subst n L N).
+Proof.
+  intros. generalize dependent n.
+  dependent induction H.
+  intros. apply eta_par_refl.
+  simpl. constructor. apply IHeta_par.
+  simpl. constructor. apply IHeta_par1. apply IHeta_par2.
+  intros.
+  simpl. replace (n+1) with (S n) by omega.
+  rewrite H. replace (S n) with (n+1) by omega.
+  rewrite <- lift_lem2.
+  apply eta_par_base with (subst n L N). reflexivity.
+  apply IHeta_par. omega.
+Qed.
+
+(** [eta_par] is fully closed under parallel substitution **)
+Lemma eta_par_subst_closed:
+  forall (M M' N N': lterm), forall n,
+    eta_par M M' -> eta_par N N' -> eta_par (subst n N M) (subst n N' M').
+Proof.
+  intros. generalize dependent n.
+  dependent induction H. intros. simpl.
+  case_eq (nat_compare n n0).
+  intros.
+  apply eta_par_lift_closed. assumption.
+  intros. apply eta_par_refl.
+  intros. apply eta_par_refl.
+
+  intros. simpl. apply eta_par_lam. apply IHeta_par. assumption.
+  intros. simpl. apply eta_par_app. apply IHeta_par1. assumption.
+                                    apply IHeta_par2. assumption.
+
+  intros.
+  simpl. replace (n+1) with (S n) by omega. simpl.
+  rewrite H. simpl.
+  apply eta_par_base with (subst n N N0).
+  unfold shift. replace (S n) with (n+1) by omega.
+  rewrite lift_lem2. reflexivity.
+  omega.
+  apply IHeta_par. assumption.
+Qed.
+
+(** We now describe the relationships between [eta], [eta_par] and [eta_star] **)
+
+(** [eta] implies [eta_par] **)
+Lemma eta_imp_eta_par:
+  forall M N, eta M N -> eta_par M N.
+Proof.
+  intros.
+  dependent induction H.
+  destruct H. apply eta_par_base with g. assumption.
+  apply eta_par_refl.
+  constructor. assumption.
+  constructor. assumption. apply eta_par_refl.
+  constructor. apply eta_par_refl. assumption.
+Qed.
+
+(** [eta_par] implies [eta_star] **)
 Lemma eta_par_imp_eta_star:
   forall M N,
     eta_par M N -> eta_star M N.
@@ -291,8 +348,11 @@ Proof.
   apply eta_star_base_closed with N; assumption.
 Qed.
 
+(** The transitive closure of [eta_par] **)
 Definition eta_par_trans := clos_trans lterm eta_par.
 
+(** Finally, we show that [eta_star] is equivalent to the transitive closure of
+    [eta_par] **)
 Lemma eta_star_eq_closure_of_eta_par:
   forall M N,
     eta_star M N <-> eta_par_trans M N.
@@ -312,9 +372,9 @@ Proof.
   apply rt_trans with y; assumption.
 Qed.
 
+
 (** We now define a function for expressing a [k]-fold [eta] expansion of
     an [lterm]. **)
-
 Fixpoint lam_k (k: nat) (M: lterm) : lterm :=
   match k with
     | 0 => M
@@ -349,8 +409,7 @@ Proof.
   auto.
 Qed.
 
-
-(** Morever we prove this commutativity lemma which will be useful later. **)
+(** This commutativity lemma which will be useful later. **)
 Lemma shift_0_lam_commute:
     forall n, forall t,
       shift 0 (lam_k n t) = (lam_k n (shift 0 t)).
@@ -366,49 +425,6 @@ Proof.
         reflexivity. simpl. auto. simpl. auto.
 Qed.
 
-Lemma eta_par_subst_closed:
-  forall (M N L: lterm) (n: nat),
-  eta_par M N -> eta_par (subst n L M) (subst n L N).
-Proof.
-  intros. generalize dependent n.
-  dependent induction H.
-  intros. apply eta_par_refl.
-  simpl. constructor. apply IHeta_par.
-  simpl. constructor. apply IHeta_par1. apply IHeta_par2.
-  intros.
-  simpl. replace (n+1) with (S n) by omega.
-  rewrite H. replace (S n) with (n+1) by omega.
-  rewrite <- lift_lem2.
-  apply eta_par_base with (subst n L N). reflexivity.
-  apply IHeta_par. omega.
-Qed.
-
-
-Lemma eta_par_substitutive:
-  forall (M M' N N': lterm), forall n,
-    eta_par M M' -> eta_par N N' -> eta_par (subst n N M) (subst n N' M').
-Proof.
-  intros. generalize dependent n.
-  dependent induction H. intros. simpl.
-  case_eq (nat_compare n n0).
-  intros.
-  apply eta_par_lift_closed. assumption.
-  intros. apply eta_par_refl.
-  intros. apply eta_par_refl.
-
-  intros. simpl. apply eta_par_lam. apply IHeta_par. assumption.
-  intros. simpl. apply eta_par_app. apply IHeta_par1. assumption.
-                                    apply IHeta_par2. assumption.
-
-  intros.
-  simpl. replace (n+1) with (S n) by omega. simpl.
-  rewrite H. simpl.
-  apply eta_par_base with (subst n N N0).
-  unfold shift. replace (S n) with (n+1) by omega.
-  rewrite lift_lem2. reflexivity.
-  omega.
-  apply IHeta_par. assumption.
-Qed.
 
 (** We now prove some basic properties about the relationship between [[eta]]
     and [[lam_k]]. (This is Lemma 3.2 in the Takahashi paper.) **)
@@ -566,6 +582,24 @@ Proof.
         exists M'.
         split. assumption.
         reflexivity.
+Qed.
+
+(** Finally, we include this simple lemma which will be useful later. **)
+
+(* Parallel eta is closed under eta-expansion in the co-domain *)
+Lemma lam_k_eta_red:
+  forall k, forall M N,
+    eta_par M N -> eta_par (lam_k k M) N.
+Proof.
+  induction k.
+  intros.
+
+  simpl. assumption.
+
+  intros.
+  simpl. apply eta_par_base with (lam_k k M).
+  reflexivity.
+  apply IHk. assumption.
 Qed.
 
 End Eta.
