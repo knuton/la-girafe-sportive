@@ -4,6 +4,7 @@ Require Import Beta.
 Require Import Relation_Operators.
 Require Import Coq.Program.Equality.
 Require Import Coq.Logic.Classical_Prop.
+Require Import Coq.Lists.List.
 
 (** Reduction Numbering (Definition 2.1) **)
 
@@ -110,6 +111,203 @@ Definition lstar_step := rt_step lterm lmost.
 Definition lstar_refl := rt_refl lterm lmost.
 Definition lstar_trans := rt_trans lterm lmost.
 
+(** Standard reduction sequence (Definition 2.3) **)
+
+Inductive seq : Type :=
+  | seq_unit : lterm -> seq
+  | seq_cons : seq -> nat -> lterm -> seq.
+
+Fixpoint seqhead (s : seq) : lterm :=
+  match s with
+  | seq_unit A => A
+  | seq_cons s _ _ => seqhead s
+  end.
+
+Fixpoint seqlast (s : seq) : lterm :=
+  match s with
+  | seq_unit B => B
+  | seq_cons _ _ B => B
+  end.
+
+Fixpoint leftexpand (M : lterm) (n : nat) (s : seq) : seq :=
+  match s with
+  | seq_unit B => seq_cons (seq_unit M) n B
+  | seq_cons s' m N => seq_cons (leftexpand M n s') m N
+  end.
+
+Definition seqn (s: seq) : nat :=
+  match s with
+  (* TODO Error, this case should not happen *)
+  | seq_unit A => 1
+  | seq_cons _ n _ => n
+  end.
+
+Inductive redseq : seq -> Prop :=
+  | redseq_unit : forall A, redseq (seq_unit A)
+  | redseq_cons : forall s n A,
+                    nthred n (seqlast s) A ->
+                    redseq s ->
+                    redseq (seq_cons s n A).
+
+Example lmost_redseq : forall A B,
+  redseq (seq_cons (seq_unit (App (Lam A) B)) 1 (subst 0 B A)).
+Proof. intros. apply redseq_cons. simpl. apply nthred_prim. apply redseq_unit. Qed.
+
+Inductive monotone : seq -> Prop :=
+  | monotone_unit : forall A, monotone (seq_unit A)
+  | monotone_cons : forall n A s, monotone s -> n >= seqn s -> monotone (seq_cons s n A).
+
+Definition stseq (s : seq) : Prop := redseq s /\ monotone s.
+
+Lemma stseq_backwards : forall M n s, stseq (seq_cons s n M) -> stseq s.
+Proof.
+  intros. unfold stseq in H. inversion H. inversion H0. inversion H1.
+  unfold stseq. split; assumption.
+Qed.
+
+Lemma leftexpand_seqhead : forall M n s, seqhead (leftexpand M n s) = M.
+Proof. intros. induction s. reflexivity. simpl. apply IHs. Qed.
+
+Lemma leftexpand_seqlast : forall M n s, seqlast (leftexpand M n s) = seqlast s.
+Proof. intros. induction s. reflexivity. reflexivity. Qed.
+
+Lemma leftexpand_bound : forall M s, seqn (leftexpand M 1 s) = seqn s.
+Proof. intros. induction s. simpl. omega. simpl. omega. Qed.
+
+Lemma leftexpand_monotone : forall M s, monotone s -> monotone (leftexpand M 1 s).
+Proof.
+  intros. induction s.
+    (* seq_unit *)
+    simpl. apply monotone_cons. apply monotone_unit. simpl. omega.
+    (* seq_cons *)
+    simpl. apply monotone_cons. apply IHs. inversion H. assumption.
+    rewrite leftexpand_bound. inversion H. assumption.
+Qed.
+
+Lemma stseq_leftexpand : forall M s,
+  stseq s -> lmost M (seqhead s) -> stseq (leftexpand M 1 s).
+Proof.
+  intros M s Hstseq Hlmost. induction s.
+    simpl. unfold stseq.
+    split.
+      apply redseq_cons. unfold lmost in Hlmost. simpl in Hlmost. simpl. assumption.
+      apply redseq_unit.
+    inversion Hstseq. apply monotone_cons. apply monotone_unit. simpl. omega.
+    simpl. unfold stseq.
+    split.
+      apply redseq_cons. unfold lmost in Hlmost. rewrite leftexpand_seqlast.
+        unfold stseq in Hstseq. inversion Hstseq. inversion H. assumption.
+      apply IHs.
+        apply (stseq_backwards l n s). assumption.
+        simpl in Hlmost. assumption. apply monotone_cons.
+          apply leftexpand_monotone. inversion Hstseq.
+          apply stseq_backwards in Hstseq. unfold stseq in Hstseq. inversion Hstseq. assumption.
+        rewrite (leftexpand_bound M s). unfold stseq in Hstseq. inversion Hstseq.
+          inversion H0. assumption.
+Qed.
+
+Lemma stseq_parallel : forall A B C D,
+  (exists s : seq, seqhead s = A /\ seqlast s = C /\ stseq s)
+  -> (exists s : seq, seqhead s = B /\ seqlast s = D /\ stseq s)
+  -> exists s : seq, seqhead s = App A B /\ seqlast s = App C D /\ stseq s.
+Proof.
+  intros. inversion H. inversion H0.
+  induction x; induction x0.
+    inversion H1. inversion H4.
+    inversion H2. inversion H8.
+    assert (HAC: A = C). rewrite <- H5. rewrite <- H3. reflexivity.
+    assert (HBD: B = D). rewrite <- H7. rewrite <- H9. reflexivity.
+    rewrite HAC. rewrite HBD.
+    exists (seq_unit (App C D)).
+    split.
+      reflexivity.
+      split.
+        reflexivity.
+        unfold stseq. split. apply redseq_unit. apply monotone_unit.
+    (* first step for x0 *)
+    apply IHx0.
+    simpl in H2. inversion H2. inversion H4.
+    split.
+      assumption.
+      split.
+        (* TODO ???*) admit.
+      apply stseq_backwards in H6. assumption.
+    (* second step for IHx *)
+    apply IHx. inversion H1. inversion H4. simpl in H3.
+    split.
+      assumption.
+      split.
+        simpl in H5.
+        admit.
+      apply (stseq_backwards l n x). assumption.
+    (* last thingy *)
+    apply IHx. inversion H1. inversion H4. simpl in H3. simpl in H5.
+      split.
+        assumption.
+        split.
+          admit.
+        apply (stseq_backwards l n x). assumption.
+Admitted.
+
+Lemma stseq_unit : forall M, stseq (seq_unit M).
+Proof. intros. unfold stseq. split. apply redseq_unit. apply monotone_unit. Qed.
+
+Fixpoint lambdize (s : seq) : seq :=
+  match s with
+  | seq_unit A => seq_unit (Lam A)
+  | seq_cons s n B => seq_cons (lambdize s) n (Lam B)
+  end.
+
+Lemma seqhead_lambdize : forall s, seqhead (lambdize s) = Lam (seqhead s).
+Proof. intros. induction s. reflexivity. simpl. apply IHs. Qed.
+
+Lemma seqlast_lambdize : forall s, seqlast (lambdize s) = Lam (seqlast s).
+Proof. intros. induction s; reflexivity. Qed.
+
+Lemma seqn_lambdize : forall s, seqn (lambdize s) = seqn s.
+Proof. intros. induction s; reflexivity. Qed.
+
+Lemma stseq_lambdize : forall s, stseq s -> stseq (lambdize s).
+Proof.
+  intros. inversion H. induction s.
+    (* seq_unit *)
+    simpl. apply stseq_unit.
+    (* seq_cons *)
+    simpl. unfold stseq.
+    split.
+      apply redseq_cons. inversion H0. rewrite seqlast_lambdize.
+        apply nthred_abst. assumption.
+        inversion H0. apply stseq_backwards in H. apply IHs in H.
+        inversion H. assumption. assumption. inversion H. assumption.
+      apply monotone_cons. inversion H. inversion H3. apply stseq_backwards in H.
+        apply IHs in H. inversion H. assumption. inversion H. assumption. assumption.
+      rewrite seqn_lambdize. inversion H1. assumption.
+Qed.
+
+Lemma stseq_lambda : forall A B,
+  (exists s : seq, seqhead s = A /\ seqlast s = B /\ stseq s) ->
+   exists s : seq, seqhead s = (Lam A) /\ seqlast s = (Lam B) /\ stseq s.
+Proof.
+  intros. inversion H. induction x.
+    (* seq_unit *)
+    inversion H0. inversion H2. simpl in H1. simpl in H3. rewrite <- H1. rewrite <- H3.
+    exists (seq_unit (Lam l)).
+    split.
+      reflexivity.
+      split.
+        reflexivity.
+        unfold stseq.
+        split. apply redseq_unit. apply monotone_unit.
+    (* seq_cons *)
+    inversion H.
+    exists (lambdize x0). inversion H1. inversion H3.
+    split.
+      rewrite seqhead_lambdize. f_equal. assumption.
+      split.
+        rewrite seqlast_lambdize. f_equal. assumption.
+        apply stseq_lambdize. assumption.
+Qed.
+
 (** Head-reduction in application (Definition 3.1) **)
 
 Inductive hap' : lterm -> lterm -> Prop :=
@@ -146,7 +344,122 @@ Proof.
     apply lstar_trans with (y := t2). apply IHhap1. apply IHhap2.
 Qed.
 
-(* (2) needs definition not yet introduced *)
+(* (2) *)
+
+Lemma st_stseq : forall M N, st M N ->
+  exists s, seqhead s = M /\ seqlast s = N /\ stseq s.
+Proof.
+  intros M N Hst. induction Hst.
+  (* st_hap *)
+  apply hap_lstar in H. unfold lstar in H.
+  apply Operators_Properties.clos_refl_trans_ind_right with (A := lterm) (R := lmost) (x := L) (z := (Var x)).
+  exists (seq_unit (Var x)).
+  split.
+    reflexivity.
+    split. reflexivity. unfold stseq. split. apply redseq_unit. apply monotone_unit.
+  intros.
+  inversion H1. inversion H3. inversion H5. inversion H7.
+  exists (leftexpand x0 1 x1).
+  split.
+    apply leftexpand_seqhead.
+    split.
+      rewrite <- H6. apply leftexpand_seqlast.
+      apply stseq_leftexpand. assumption. rewrite H4. assumption.
+  assumption.
+  (* st_hap_st_st *)
+  apply hap_lstar in H. unfold lstar in H.
+  apply Operators_Properties.clos_refl_trans_ind_right
+    with (A := lterm) (R := lmost) (x := L) (z := (App A B)).
+    (* step *)
+    apply stseq_parallel; assumption.
+    (* refl *)
+    intros.
+    inversion H1. inversion H3. inversion H5. inversion H7.
+    exists (leftexpand x 1 x0).
+    split.
+      apply leftexpand_seqhead.
+      split.
+        rewrite <- H6. apply leftexpand_seqlast.
+        apply stseq_leftexpand. assumption. rewrite H4. assumption.
+    (* trans *)
+    assumption.
+  (* st_haplam_st *)
+  apply hap_lstar in H. unfold lstar in H.
+  apply Operators_Properties.clos_refl_trans_ind_right
+    with (A := lterm) (R := lmost) (x := L) (z := (Lam A)).
+    (* step *)
+    apply stseq_lambda; assumption.
+    (* refl *)
+    intros.
+    inversion H1. inversion H3. inversion H5. inversion H7.
+    exists (leftexpand x 1 x0).
+    split.
+      apply leftexpand_seqhead.
+      split.
+        rewrite <- H6. apply leftexpand_seqlast.
+        apply stseq_leftexpand. assumption. rewrite H4. assumption.
+    (* trans *)
+    assumption.
+Qed.
+    
+  
+(***)
+  exists (seq_cons x1 1 (Var x)).
+  split.
+    simpl. assumption.
+    simpl. split.
+      reflexivity.
+      unfold stseq. split.
+        apply redseq_cons. rewrite H6. apply H2. assumption.
+        apply monotone_cons.
+(***********)
+  intros M N Hst. dependent induction Hst.
+  (* st_hap *)
+  apply hap_lstar in H. unfold lstar in H.
+  induction H. unfold lmost in H.
+    (* rt_step *)
+    exists (seq_cons (seq_unit x0) 1 y). split.
+      reflexivity.
+      split. reflexivity. unfold stseq. split. apply redseq_cons. simpl. assumption.
+      apply redseq_unit. apply monotone_cons. simpl. omega.
+    (* rt_refl *)
+    exists (seq_unit x0).
+    split.
+      reflexivity.
+      split. reflexivity. unfold stseq. split. apply redseq_unit. apply monotone_unit.
+    (* rt_trans *) (* Was x:= y *)
+    apply Operators_Properties.clos_refl_trans_ind_left with (A := lterm) (R := lmost) (x := x0) (z := z).
+    (* refl *)
+    exists (seq_unit x0).
+    split.
+      reflexivity.
+      split. reflexivity. unfold stseq. split. apply redseq_unit. apply monotone_unit.
+    (* step or sthg *)
+    intros.
+    (* trans *)
+    assert (clos_refl_trans lterm lmost x0 z). apply rt_trans with (y := y); assumption.
+(* --- *)
+    assumption.
+    intros. unfold lmost in H3. inversion H2. inversion H4. inversion H6.
+    exists (seq_cons x1 1 z0).
+    split.
+      simpl. assumption.
+      split.
+        reflexivity.
+        unfold stseq. split.
+          apply redseq_cons. rewrite H7. assumption.
+        unfold stseq in H8. inversion H8. assumption.
+        unfold stseq in H8. inversion H8. apply monotone_cons. (* TODO ??? *)
+    assumption.
+  (* st_hap_st_st *)
+  apply hap_lstar in H. unfold lstar in H.
+  inversion H.
+Admitted.
+
+(* apply (Operators_Properties.clos_refl_trans_ind_left lterm bet y) *)
+      
+    
+    
 
 (** Lemma 3.4 **)
 
