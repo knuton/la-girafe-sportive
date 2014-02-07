@@ -54,6 +54,8 @@ Inductive nthred : nat -> lterm -> lterm -> Prop :=
   | nthred_abst : forall n A B,
       nthred n A B -> nthred n (Lam A) (Lam B).
 
+Section Nth_Reductions.
+
 Example prim : nthred 0 ((\"x" ~> `"x") $ `"y") (`"y").
 Proof. apply nthred_prim. Qed.
 
@@ -91,6 +93,8 @@ Proof.
   apply nthred_prim.
 Qed.
 
+End Nth_Reductions.
+
 (** Beta-reduction and left-most reduction (Definition 2.2) **)
 
 (* The paper defines beta-reduction in terms of the [nthred] relation.
@@ -115,9 +119,14 @@ Definition lstar_trans := rt_trans lterm lmost.
 
 (** Standard reduction sequence (Definition 2.3) **)
 
+(* A lambda sequence, [seq], is a lambda term or a lambda sequence together
+   with a number and a lambda term. *)
+
 Inductive seq : Type :=
   | seq_unit : lterm -> seq
   | seq_cons : seq -> nat -> lterm -> seq.
+
+(* [seqhead] gives the leftmost (first) lambda term in a lambda sequence. *)
 
 Fixpoint seqhead (s : seq) : lterm :=
   match s with
@@ -125,11 +134,16 @@ Fixpoint seqhead (s : seq) : lterm :=
   | seq_cons s _ _ => seqhead s
   end.
 
+(* [seqlast] gives the rightmost (right) lambda term in a lambda sequence. *)
+
 Fixpoint seqlast (s : seq) : lterm :=
   match s with
   | seq_unit B => B
   | seq_cons _ _ B => B
   end.
+
+(* Any lambda sequence [s] can be extended to the left by providing a number
+   and a lambda term to be prepended to the first term. *)
 
 Fixpoint leftexpand (M : lterm) (n : nat) (s : seq) : seq :=
   match s with
@@ -151,9 +165,9 @@ Fixpoint seqnrev (s: seq) : nat :=
   | seq_cons (seq_unit M) n N => n
   | seq_cons s' _ _ => seqnrev s'
   end.
-(*
-Lemma seqn_one
-*)
+
+(* [seqcat] is concatenation for lambda sequences, requiring a natural number
+   as a "connective" in addition to two lambda sequences. *)
 
 Fixpoint seqcat (s1 : seq) (n : nat) (s2 : seq) : seq :=
   match s2 with
@@ -161,9 +175,17 @@ Fixpoint seqcat (s1 : seq) (n : nat) (s2 : seq) : seq :=
   | seq_cons s2' m B => seq_cons (seqcat s1 n s2') m B
   end.
 
+(* A simple result about sequence concatenation: Concatenating a simplex sequence
+   [s1] with any sequence [s2] is equivalent to doing a left expansion with [s1]'s
+   constituent lambda term. *)
+
 Lemma seqcat_leftexpand : forall M n s,
   seqcat (seq_unit M) n s = leftexpand M n s.
 Proof. intros. induction s. reflexivity. simpl. rewrite IHs. reflexivity. Qed.
+
+(* A reduction sequence, [redseq], is a lambda sequence [s] in which for every cons
+   cell consisting of [s'], [n] and [M], the last term [L] of [s'] yields [M] by
+   reducing its [n]-th redex, i.e. [nthred n L M]. *)
 
 Inductive redseq : seq -> Prop :=
   | redseq_unit : forall A, redseq (seq_unit A)
@@ -172,15 +194,20 @@ Inductive redseq : seq -> Prop :=
                     redseq s ->
                     redseq (seq_cons s n A).
 
-Example lmost_redseq : forall A B,
-  redseq (seq_cons (seq_unit (App (Lam A) B)) 0 (subst 0 B A)).
-Proof. intros. apply redseq_cons. simpl. apply nthred_prim. apply redseq_unit. Qed.
+(* A monotone sequence, [monotone], is a lambda sequence [s] in which connective
+   numbers increase non-strictly from left to right. *)
 
 Inductive monotone : seq -> Prop :=
   | monotone_unit : forall A, monotone (seq_unit A)
   | monotone_cons : forall n A s, monotone s -> n >= seqn s -> monotone (seq_cons s n A).
 
+(* A standard reduction sequence, [stseq], is a lambda sequence [s] which is a
+   monotone reduction sequence. *)
+
 Definition stseq (s : seq) : Prop := redseq s /\ monotone s.
+
+(* A reusable proof of the simple fact that subsequences of standard reduction
+   sequences are standard reduction sequences. *)
 
 Lemma stseq_backwards : forall M n s, stseq (seq_cons s n M) -> stseq s.
 Proof.
@@ -188,14 +215,21 @@ Proof.
   unfold stseq. split; assumption.
 Qed.
 
+(* Interaction of left expansion with extractors for first and last sequence
+   members. *)
+
 Lemma leftexpand_seqhead : forall M n s, seqhead (leftexpand M n s) = M.
 Proof. intros. induction s. reflexivity. simpl. apply IHs. Qed.
 
 Lemma leftexpand_seqlast : forall M n s, seqlast (leftexpand M n s) = seqlast s.
 Proof. intros. induction s. reflexivity. reflexivity. Qed.
 
+(* Interaction of left expansion with redex number extraction. *)
+
 Lemma leftexpand_bound : forall M s, seqn (leftexpand M 0 s) = seqn s.
 Proof. intros. induction s. simpl. omega. simpl. omega. Qed.
+
+(* Left-expansion with adequate term preserves reduction sequences. *)
 
 Lemma leftexpand_redseq : forall M n s,
   redseq s -> nthred n M (seqhead s) -> redseq (leftexpand M n s).
@@ -217,20 +251,6 @@ Proof.
       simpl. omega.
       unfold seqnrev. fold seqnrev. apply H4.
 Qed.
-
-Example seqnrev_sanity1 : forall A B C D i j k,
-  seqnrev (seq_cons (seq_cons (seq_cons (seq_unit A) i B) j C) k D) = i.
-Proof. reflexivity. Qed.
-
-Example seqnrev_sanity2 : forall A, seqnrev (seq_unit A) = 0.
-Proof. reflexivity. Qed.
-
-Example seqnrev_sanity3 : forall A B i, seqnrev (seq_cons (seq_unit A) i B) = i.
-Proof. reflexivity. Qed.
-
-Example seqnrev_sanity4 : forall A B C i j,
-  seqnrev (seq_cons (seq_cons (seq_unit A) i B) j C) = i.
-Proof. reflexivity. Qed.
 
 Lemma seqnrev_seq_cons : forall s n M,
   seqnrev (seq_cons s n M) >= seqnrev s.
@@ -401,10 +421,21 @@ Fixpoint appl (M : lterm) (s : seq) : seq :=
   | _, seq_cons s n B => seq_cons (appl M s) (n + redcount M) (App M B)
   end.
 
+(* This will be needed later, but we need a result about it already. *)
+
+(* TODO Reposition *)
+
+Definition zipadj (M : lterm) (n : nat) :=
+  match M with
+  | Var _ => n
+  | Lam _ => n + 1
+  | App _ _ => n
+  end.
+
 Fixpoint appr (M : lterm) (s : seq) : seq :=
   match s with
   | seq_unit A => seq_unit (App A M)
-  | seq_cons s n B => seq_cons (appr M s) n (App B M)
+  | seq_cons s n B => seq_cons (appr M s) (zipadj (seqlast s) n) (App B M)
   end.
 
 Lemma seqhead_appl : forall s M, seqhead (appl M s) = App M (seqhead s).
@@ -427,9 +458,21 @@ Lemma seqn_appl_app : forall s M M',
   seqn s + redcount (App M M') >= seqn (appl (App M M') s).
 Proof. intros. induction s; induction M; induction M'; simpl; omega. Qed.
 
-Lemma seqn_appr : forall s M, seqn s = seqn (appr M s).
-Proof. intros. induction s; induction M; simpl; omega. Qed.
+(* TODO [appr] was defined wrong. Now need cases like for [appl]. *)
 
+(*
+Lemma seqn_appr : forall s M, seqn s <= seqn (appr M s).
+Proof.
+  intros. induction s; induction M.
+    simpl. omega. simpl. omega. simpl. omega.
+    
+Qed.
+
+*)
+
+Lemma appr_cons : forall s n M N,
+  appr N (seq_cons s n M) = seq_cons (appr N s) (zipadj (seqlast s) n) (App M N).
+Proof. intros. induction s; induction l; reflexivity. Qed.
 
 Lemma appl_cons_var : forall s n M x,
   appl (Var x) (seq_cons s n M) = seq_cons (appl (Var x) s) n (App (Var x) M).
@@ -500,8 +543,11 @@ Proof.
         apply seqn_appl_app. omega.
 Qed.
 
+(* TODO This requires fixing because it relies on faulty seqn_appr *)
+
 Lemma monotone_appr : forall s M, monotone s -> monotone (appr M s).
 Proof.
+(*
   intros. induction s; induction M.
     apply monotone_unit. apply monotone_unit. apply monotone_unit.
     simpl. apply monotone_cons.
@@ -513,7 +559,8 @@ Proof.
     simpl. apply monotone_cons.
       apply IHs. inversion H. assumption.
       inversion H. rewrite <- (seqn_appr s (App M1 M2)). assumption.
-Qed.
+*)
+Admitted.
 
 Lemma stseq_appl : forall s M, stseq s -> stseq (appl M s).
 Proof.
@@ -564,13 +611,6 @@ Qed.
 
 Lemma stseq_appr : forall s M, stseq s -> stseq (appr M s).
 Proof. Admitted.
-
-Definition zipadj (M : lterm) (n : nat) :=
-  match M with
-  | Var _ => n
-  | Lam _ => n + 1
-  | App _ _ => n
-  end.
 
 Definition zip (s1 : seq) (s2 : seq) : seq :=
   match s1, s2 with
@@ -632,6 +672,8 @@ Lemma monotone_zip : forall s1 s2,
   monotone s1 -> monotone s2 -> monotone (zip s1 s2).
 Proof.
 (* --- *)
+(* Needs fixing because of reliance on faulty [seqn_appr]. *)
+(*
   intros. induction s1; induction s2.
     induction l; induction l0.
       apply monotone_unit. apply monotone_unit. apply monotone_unit.
@@ -696,6 +738,54 @@ Proof.
         intros.
           rewrite <- seqn_appr. split. omega. destruct l.
           rewrite <- seqnrev_appl_var.
+*)
+Admitted.
+
+
+Lemma zip_appr : forall s M,
+  zip s (seq_unit M) = appr M s.
+Proof. intros. induction s; induction M; induction l; reflexivity. Qed.
+
+Lemma zip_appl : forall s M,
+  zip (seq_unit M) s = appl M s.
+Proof. intros. induction s; induction M; induction l; reflexivity. Qed.
+
+Lemma zip_seqhead_right : forall s s' n M,
+  seqhead (zip s (seq_cons s' n M)) = seqhead (zip s s').
+Proof.
+  intros. induction s; induction s'; induction M; induction l; reflexivity.
+Qed.
+
+Lemma zip_seqhead : forall s1 s2,
+  seqhead (zip s1 s2) = App (seqhead s1) (seqhead s2).
+Proof.
+  intros. induction s1; induction s2.
+    (* seq_unit x seq_unit *)
+    induction l; induction l0; reflexivity.
+    (* seq_unit x seq_cons *)
+    induction l; induction l0;
+      unfold seqhead; fold seqhead; unfold seqhead in IHs2; fold seqhead in IHs2;
+        rewrite <- IHs2; reflexivity.
+    (* seq_cons x seq_unit *)
+    induction l; induction l0;
+      unfold seqhead; fold seqhead; unfold seqhead in IHs1; fold seqhead in IHs1;
+        rewrite <- IHs1; simpl; rewrite zip_appr; reflexivity.
+    (* seq_cons x seq_cons *)
+    unfold seqhead. fold seqhead. unfold seqhead in IHs1. fold seqhead in IHs1.
+    unfold seqhead in IHs2. fold seqhead in IHs2.
+    rewrite zip_seqhead_right in IHs1. apply IHs2 in IHs1.
+    rewrite <- zip_seqhead_right with (n := n0) (M := l0) in IHs1.
+    assumption.
+Qed.
+
+Lemma zip_seqlast : forall s1 s2,
+  seqlast (zip s1 s2) = App (seqlast s1) (seqlast s2).
+Proof.
+  intros. induction s1; induction s2;
+    induction l; induction l0;
+    unfold seqlast; fold seqlast;
+    reflexivity.
+Qed.
 
 Lemma zip_stseq : forall s1 s2,
   stseq s1 -> stseq s2 -> stseq (zip s1 s2).
@@ -726,6 +816,7 @@ Proof.
            inversion H0. inversion H1. assumption.
            inversion H0. inversion H2. assumption.
        simpl. apply monotone_cons. apply monotone_appl.
+Admitted.
          
          
 
@@ -835,7 +926,7 @@ Proof.
     split. reflexivity. unfold stseq. split. apply redseq_unit. apply monotone_unit.
   intros.
   inversion H1. inversion H3. inversion H5. inversion H7.
-  exists (leftexpand x0 1 x1).
+  exists (leftexpand x0 0 x1).
   split.
     apply leftexpand_seqhead.
     split.
@@ -847,11 +938,18 @@ Proof.
   apply Operators_Properties.clos_refl_trans_ind_right
     with (A := lterm) (R := lmost) (x := L) (z := (App A B)).
     (* step *)
-    apply stseq_parallel; assumption.
+    inversion IHHst1. inversion H0. inversion H2.
+    inversion IHHst2. inversion H5. inversion H7.
+    exists (zip x x0).
+    split.
+      rewrite <- H1. rewrite <- H6. apply zip_seqhead.
+      split.
+        rewrite <- H3. rewrite <- H8. apply zip_seqlast.
+        apply zip_stseq; assumption.
     (* refl *)
     intros.
     inversion H1. inversion H3. inversion H5. inversion H7.
-    exists (leftexpand x 1 x0).
+    exists (leftexpand x 0 x0).
     split.
       apply leftexpand_seqhead.
       split.
@@ -868,7 +966,7 @@ Proof.
     (* refl *)
     intros.
     inversion H1. inversion H3. inversion H5. inversion H7.
-    exists (leftexpand x 1 x0).
+    exists (leftexpand x 0 x0).
     split.
       apply leftexpand_seqhead.
       split.
