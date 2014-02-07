@@ -3,18 +3,8 @@ Require Import Subst.
 Require Import Beta.
 Require Import Relation_Operators.
 Require Import Coq.Program.Equality.
-Require Import Coq.Logic.Classical_Prop.
-Require Import Coq.Lists.List.
 
 (** Reduction Numbering (Definition 2.1) **)
-
-(* Predicate characterising abstractions. *)
-
-Inductive abstr : lterm -> Prop :=
-  | islam : forall M, abstr (Lam M).
-
-Example notabstr : ~ abstr (`"x").
-Proof. unfold not. intro. inversion H. Qed.
 
 (* Count the total number of redexes in a term. *)
 
@@ -40,17 +30,27 @@ Qed.
    In order to simplify working with this definition, we start counting from zero.
 *)
 
+Definition ladjust (M : lterm) (n : nat) :=
+  match M with
+  | Var _ => n
+  | Lam _ => n + redcount M + 1
+  | App _ _ => n + redcount M
+  end.
+
+Definition radjust (M : lterm) (n : nat) :=
+  match M with
+  | Var _ => n
+  | Lam _ => n + 1
+  | App _ _ => n
+  end.
+
 Inductive nthred : nat -> lterm -> lterm -> Prop :=
   | nthred_prim : forall A B,
       nthred 0 (App (Lam A) B) (subst 0 B A)
   | nthred_concr : forall n A B C,
-      ~ abstr A -> nthred n A B -> nthred n (App A C) (App B C)
-  | nthred_concrplus : forall n A B C,
-      abstr A -> nthred n A B -> nthred (n+1) (App A C) (App B C)
+      nthred n A B -> nthred (radjust A n) (App A C) (App B C)
   | nthred_concl : forall n A B C,
-      ~ abstr C -> nthred n A B -> nthred (n + redcount C) (App C A) (App C B)
-  | nthred_conclplus : forall n A B C,
-      abstr C -> nthred n A B -> nthred (n + (redcount C) + 1) (App C A) (App C B)
+      nthred n A B -> nthred (ladjust C n) (App C A) (App C B)
   | nthred_abst : forall n A B,
       nthred n A B -> nthred n (Lam A) (Lam B).
 
@@ -61,36 +61,29 @@ Proof. apply nthred_prim. Qed.
 
 Example concr : nthred 0 ((\"x" ~> `"x") $ `"y" $ `"z") (`"y" $ `"z").
 Proof.
-  apply nthred_concr.
-  unfold not. intro. inversion H.
-  apply nthred_prim.
+  assert (HADJ: 0 = radjust ((\"x" ~> `"x") $ `"y") 0) by reflexivity. rewrite HADJ.
+  apply nthred_concr. apply nthred_prim.
 Qed.
 
-Example concrplus :
+Example concr_adjusted :
   nthred 1 ((\"y" ~> (\"x" ~> `"x") $ `"y") $ `"z") ((\"y" ~> `"y") $ `"z").
 Proof.
-  assert (M: 1 = 0 + 1) by reflexivity. rewrite M.
-  apply nthred_concrplus.
-    apply islam.
-    apply nthred_abst. apply nthred_prim.
+  assert (M: 1 = radjust (\"y" ~> (\"x" ~> `"x") $ `"y") 0) by reflexivity. rewrite M.
+  apply nthred_concr. apply nthred_abst. apply nthred_prim.
 Qed.
 
 Example concl :
   nthred 1 (((\"x" ~> `"x") $ `"z") $ ((\"x" ~> `"x") $ `"z")) (((\"x" ~> `"x") $ `"z") $ `"z").
 Proof.
-  assert (M: 1 = 0 + redcount ((\"x" ~> `"x") $ `"z")) by reflexivity. rewrite M.
-  apply nthred_concl.
-  unfold not. intro. inversion H.
-  apply nthred_prim.
+  assert (M: 1 = ladjust ((\"x" ~> `"x") $ `"z") 0) by reflexivity. rewrite M.
+  apply nthred_concl. apply nthred_prim.
 Qed.
 
-Example conclplus :
+Example concl_adjusted :
   nthred 2 ((\"y" ~> ((\"x" ~> `"x") $ `"z")) $ ((\"x" ~> `"x") $ `"z")) ((\"y" ~> ((\"x" ~> `"x") $ `"z")) $ `"z").
 Proof.
-  assert (M: 2 = 0 + redcount (\"y" ~> (\"x" ~> `"x") $ `"z") + 1) by reflexivity. rewrite M.
-  apply nthred_conclplus.
-  apply islam.
-  apply nthred_prim.
+  assert (M: 2 = ladjust (\"y" ~> (\"x" ~> `"x") $ `"z") 0) by reflexivity. rewrite M.
+  apply nthred_concl. apply nthred_prim.
 Qed.
 
 End Nth_Reductions.
@@ -199,7 +192,8 @@ Inductive redseq : seq -> Prop :=
 
 Inductive monotone : seq -> Prop :=
   | monotone_unit : forall A, monotone (seq_unit A)
-  | monotone_cons : forall n A s, monotone s -> n >= seqn s -> monotone (seq_cons s n A).
+  | monotone_cons : forall n A s,
+      monotone s -> (n >= seqn s \/ exists M, s = seq_unit M) -> monotone (seq_cons s n A).
 
 (* A standard reduction sequence, [stseq], is a lambda sequence [s] which is a
    monotone reduction sequence. *)
@@ -272,32 +266,35 @@ Qed.
 
 Lemma monotone_seqn : forall s n M,
   monotone s -> seqn (leftexpand M n s) = seqn s \/ exists N, s = seq_unit N.
-Proof. Admitted.
-
-Lemma leftexpand_monotone_gen : forall M n s,
-  monotone s -> (n <= (seqnrev s) \/ exists N, s = seq_unit N) -> monotone (leftexpand M n s).
 Proof.
   intros. induction s.
-  (* seq_unit *)
-  simpl. apply monotone_cons. apply monotone_unit. simpl. omega.
-  (* seq_cons *)
-  simpl. apply monotone_cons. apply IHs.
-    inversion H. assumption.
-    inversion H0. destruct s.
-      right. exists l0. reflexivity.
-      left. unfold seqnrev in H1. unfold seqnrev. assumption.
-      inversion H1. inversion H2. inversion H.
-      assert (HE: seqn (leftexpand M n s) = seqn s \/ exists N, s = seq_unit N).
-        apply monotone_seqn. assumption.
-      inversion HE.
-        rewrite H6. assumption.
-        inversion H6. rewrite H7. simpl. rewrite H7 in H0. simpl in H0. inversion H0.
-          omega.
-          inversion H8. inversion H9.
+    (* seq_unit *)
+    right. exists l. reflexivity.
+    (* seq_cons *)
+    inversion H. apply IHs in H2. inversion H2.
+    left. reflexivity.
+    inversion H5. rewrite H6. simpl. left. reflexivity.
 Qed.
 
 Lemma leftexpand_monotone : forall M s, monotone s -> monotone (leftexpand M 0 s).
-Proof. intros. apply leftexpand_monotone_gen. assumption. left. omega. Qed.
+Proof.
+  intros. induction s.
+    (* seq_unit *)
+    simpl. apply monotone_cons. apply monotone_unit. simpl. left. omega.
+    (* seq_cons *)
+    simpl. apply monotone_cons. apply IHs. inversion H. assumption.
+    inversion H.
+    assert (seqn (leftexpand M 0 s) = seqn s \/ exists N, s = seq_unit N).
+      apply monotone_seqn. assumption.
+    inversion H5.
+    left.
+      inversion H4.
+        rewrite H6. assumption.
+        inversion H7. rewrite H8. simpl. omega.
+    rewrite leftexpand_bound. inversion H4.
+      left. assumption.
+      left. inversion H6. rewrite H8. simpl. omega.
+Qed.
 
 Lemma stseq_leftexpand : forall M s,
   stseq s -> lmost M (seqhead s) -> stseq (leftexpand M 0 s).
@@ -307,7 +304,7 @@ Proof.
     split.
       apply redseq_cons. unfold lmost in Hlmost. simpl in Hlmost. simpl. assumption.
       apply redseq_unit.
-    inversion Hstseq. apply monotone_cons. apply monotone_unit. simpl. omega.
+    inversion Hstseq. apply monotone_cons. apply monotone_unit. simpl. left. omega.
     simpl. unfold stseq.
     split.
       apply redseq_cons. unfold lmost in Hlmost. rewrite leftexpand_seqlast.
@@ -316,89 +313,16 @@ Proof.
         apply (stseq_backwards l n s). assumption.
         simpl in Hlmost. assumption. apply monotone_cons.
           apply leftexpand_monotone. inversion Hstseq.
-          apply stseq_backwards in Hstseq. unfold stseq in Hstseq. inversion Hstseq. assumption. inversion Hstseq. inversion H0. rewrite leftexpand_bound. omega.
+          apply stseq_backwards in Hstseq. unfold stseq in Hstseq. inversion Hstseq.
+            assumption. inversion Hstseq. inversion H0. rewrite leftexpand_bound.
+              inversion H5.
+                left. assumption.
+                left. inversion H6. rewrite H7. simpl. omega.
 Qed.
 
 Lemma seqlast_seqcat : forall s1 s2 n,
   seqlast (seqcat s1 n s2) = seqlast s2.
 Proof. intros. induction s1; induction s2; reflexivity. Qed.
-
-Lemma stseq_seqcat : forall s1 s2 n,
-  nthred n (seqlast s1) (seqhead s2) ->
-  n >= seqn s1 ->
-  n <= seqnrev s2 ->
-  stseq s1 ->
-  stseq s2 ->
-  stseq (seqcat s1 n s2).
-Proof.
-  intros. induction s1; induction s2.
-    (* seq_unit, seq_unit *)
-    simpl. unfold stseq.
-    split.
-      apply redseq_cons. simpl in H. simpl. assumption.
-      inversion H2. assumption.
-      apply monotone_cons. inversion H2. assumption. assumption.
-    (* seq_unit, seq_cons *)
-    simpl. unfold stseq.
-      split.
-        apply redseq_cons. rewrite seqlast_seqcat.
-          inversion H3. inversion H4. assumption.
-        rewrite seqcat_leftexpand. simpl in H. apply leftexpand_redseq.
-          inversion H3. inversion H4. assumption.
-          assumption.
-        apply monotone_cons. rewrite seqcat_leftexpand.
-          (* --- *)
-          destruct s2.
-            simpl. apply monotone_cons. apply monotone_unit. assumption.
-            simpl. apply monotone_cons. inversion H3.
-              inversion H5. inversion H8. simpl in H. simpl in H0.
-              apply leftexpand_monotone_gen. assumption. (* TODO Not quite yet *)
-Admitted.
-
-(*
-Lemma stseq_parallel : forall A B C D,
-  (exists s : seq, seqhead s = A /\ seqlast s = C /\ stseq s)
-  -> (exists s : seq, seqhead s = B /\ seqlast s = D /\ stseq s)
-  -> exists s : seq, seqhead s = App A B /\ seqlast s = App C D /\ stseq s.
-Proof.
-  intros. inversion H. inversion H0.
-  induction x; induction x0.
-    inversion H1. inversion H4.
-    inversion H2. inversion H8.
-    assert (HAC: A = C). rewrite <- H5. rewrite <- H3. reflexivity.
-    assert (HBD: B = D). rewrite <- H7. rewrite <- H9. reflexivity.
-    rewrite HAC. rewrite HBD.
-    exists (seq_unit (App C D)).
-    split.
-      reflexivity.
-      split.
-        reflexivity.
-        unfold stseq. split. apply redseq_unit. apply monotone_unit.
-    (* first step for x0 *)
-    apply IHx0.
-    simpl in H2. inversion H2. inversion H4.
-    split.
-      assumption.
-      split.
-        (* TODO ???*) admit.
-      apply stseq_backwards in H6. assumption.
-    (* second step for IHx *)
-    apply IHx. inversion H1. inversion H4. simpl in H3.
-    split.
-      assumption.
-      split.
-        simpl in H5.
-        admit.
-      apply (stseq_backwards l n x). assumption.
-    (* last thingy *)
-    apply IHx. inversion H1. inversion H4. simpl in H3. simpl in H5.
-      split.
-        assumption.
-        split.
-          admit.
-        apply (stseq_backwards l n x). assumption.
-Admitted.
-*)
 
 (* This lemma helps concisely eliminating the common goal of a one-term
    reduction sequence being standard. *)
@@ -415,37 +339,35 @@ Fixpoint lambdize (s : seq) : seq :=
   end.
 
 Fixpoint appl (M : lterm) (s : seq) : seq :=
-  match M, s with
-  | _, seq_unit A => seq_unit (App M A)
-  | Lam M', seq_cons s n B => seq_cons (appl M s) (n + redcount M + 1) (App M B)
-  | _, seq_cons s n B => seq_cons (appl M s) (n + redcount M) (App M B)
-  end.
-
-(* This will be needed later, but we need a result about it already. *)
-
-(* TODO Reposition *)
-
-Definition zipadj (M : lterm) (n : nat) :=
-  match M with
-  | Var _ => n
-  | Lam _ => n + 1
-  | App _ _ => n
+  match s with
+  | seq_unit A => seq_unit (App M A)
+  | seq_cons s n B => seq_cons (appl M s) (ladjust M n) (App M B)
   end.
 
 Fixpoint appr (M : lterm) (s : seq) : seq :=
   match s with
   | seq_unit A => seq_unit (App A M)
-  | seq_cons s n B => seq_cons (appr M s) (zipadj (seqlast s) n) (App B M)
+  | seq_cons s n B => seq_cons (appr M s) (radjust (seqlast s) n) (App B M)
   end.
 
 Lemma seqhead_appl : forall s M, seqhead (appl M s) = App M (seqhead s).
 Proof.
-  intros. induction s; induction M.
-    reflexivity. reflexivity. reflexivity.
-    simpl. apply IHs. simpl. apply IHs. simpl. apply IHs.
+  intros. induction s.
+    induction M; reflexivity.
+    induction M; simpl; apply IHs.
 Qed.
 
 Lemma seqlast_appl : forall s M, seqlast (appl M s) = App M (seqlast s).
+Proof. intros. induction s; induction M; reflexivity. Qed.
+
+Lemma seqhead_appr : forall s M, seqhead (appr M s) = App (seqhead s) M.
+Proof.
+  intros. induction s.
+  induction M; reflexivity.
+  induction M; simpl; apply IHs.
+Qed.
+
+Lemma seqlast_appr : forall s M, seqlast (appr M s) = App (seqlast s) M.
 Proof. intros. induction s; induction M; reflexivity. Qed.
 
 Lemma seqn_appl_var : forall s x, seqn (appl (Var x) s) = seqn s.
@@ -458,25 +380,23 @@ Lemma seqn_appl_app : forall s M M',
   seqn s + redcount (App M M') >= seqn (appl (App M M') s).
 Proof. intros. induction s; induction M; induction M'; simpl; omega. Qed.
 
-(* TODO [appr] was defined wrong. Now need cases like for [appl]. *)
+Lemma appr_cons : forall s n M N,
+  appr N (seq_cons s n M) = seq_cons (appr N s) (radjust (seqlast s) n) (App M N).
+Proof. intros. induction s; induction l; reflexivity. Qed.
 
 (*
-Lemma seqn_appr : forall s M, seqn s <= seqn (appr M s).
+Lemma seqn_appr_cons : forall s n M N, seqn (appr M (seq_cons s n N)) = radjust N n.
 Proof.
-  intros. induction s; induction M.
+  intros. rewrite appr_cons. simpl.
     simpl. omega. simpl. omega. simpl. omega.
     
 Qed.
 
 *)
 
-Lemma appr_cons : forall s n M N,
-  appr N (seq_cons s n M) = seq_cons (appr N s) (zipadj (seqlast s) n) (App M N).
-Proof. intros. induction s; induction l; reflexivity. Qed.
-
 Lemma appl_cons_var : forall s n M x,
   appl (Var x) (seq_cons s n M) = seq_cons (appl (Var x) s) n (App (Var x) M).
-Proof. intros. simpl. assert (P0: n = n + 0) by omega. rewrite <- P0. reflexivity. Qed.
+Proof. intros. simpl. reflexivity. Qed.
 
 Lemma seqnrev_appl_var : forall s x, seqnrev s = seqnrev (appl (Var x) s).
 Proof.
@@ -488,12 +408,53 @@ Proof.
     case (s). simpl. reflexivity. simpl. reflexivity.
 Qed.
 
+Lemma appl_cons_lam : forall s n M N,
+  appl (Lam M) (seq_cons s n N) =
+  seq_cons (appl (Lam M) s) (ladjust (Lam M) n) (App (Lam M) N).
+Proof. intros. unfold appl. fold appl. reflexivity. Qed.
+
+Lemma seqnrev_cons_cons : forall s m M n N,
+  seqnrev (seq_cons (seq_cons s m M) n N) = seqnrev (seq_cons s m M).
+Proof. reflexivity. Qed.
+
+Lemma seqnrev_appl_lam : forall s M,
+  seqnrev (appl (Lam M) s) <= seqnrev s + redcount M + 1.
+Proof.
+  intros. induction s.
+    simpl. omega.
+    destruct s.
+      simpl. omega.
+      do 2 rewrite appl_cons_lam.
+      do 2 rewrite seqnrev_cons_cons.
+      rewrite <- appl_cons_lam.
+      assumption.
+Qed.
+
+Lemma appl_cons_app : forall s n A B M,
+  appl (App A B) (seq_cons s n M) =
+  seq_cons (appl (App A B) s) (ladjust (App A B) n) (App (App A B) M).
+Proof. intros. unfold appl. fold appl. reflexivity. Qed.
+
+Lemma seqnrev_appl_app : forall s A B,
+  seqnrev (appl (App A B) s) <= seqnrev s + redcount (App A B)  + 1.
+Proof.
+  intros. induction s.
+    simpl. omega.
+    destruct s.
+      simpl. omega.
+      do 2 rewrite appl_cons_app.
+      do 2 rewrite seqnrev_cons_cons.
+      rewrite <- appl_cons_app.
+      assumption.
+Qed.
+
 Lemma seqnrev_ge_zero : forall s, seqnrev s >= 0.
 Proof. intros. induction s; induction l; omega. Qed.
 
 Lemma seqn_ge_zero : forall s, seqn s >= 0.
 Proof. intros. induction s; induction l; omega. Qed.
 
+(*
 Lemma monotone_seqcat : forall s1 s2 n,
   monotone s1 -> monotone s2 -> seqn s1 <= n <= seqnrev s2 -> monotone (seqcat s1 n s2).
 Proof.
@@ -508,8 +469,10 @@ Proof.
             apply monotone_seqnrev. inversion H0. assumption.
           inversion HE.
             inversion H4. rewrite H5. simpl. rewrite H5 in H3. simpl in H3.
-Admitted.
+Abort.
+*)
 
+(* TODO This could maybe be simplified now. *)
 
 Lemma monotone_appl : forall s M, monotone s -> monotone (appl M s).
 Proof.
@@ -517,11 +480,15 @@ Proof.
     apply monotone_unit. apply monotone_unit. apply monotone_unit.
     simpl. apply monotone_cons.
       apply IHs. inversion H. assumption.
-      inversion H. rewrite seqn_appl_var. omega.
+      inversion H. rewrite seqn_appl_var. inversion H4.
+        left. assumption.
+        left. inversion H5. rewrite H6. simpl. omega.
     simpl. apply monotone_cons.
       apply IHs. inversion H. assumption.
       inversion H. assert (seqn s + redcount M + 1 >= seqn (appl (Lam M) s)).
-        apply seqn_appl_lam. omega.
+        apply seqn_appl_lam. inversion H4.
+         left. omega.
+         left. inversion H6. rewrite H7. simpl. omega.
     simpl. apply monotone_cons.
       apply IHs. inversion H. assumption. simpl. fold redcount. case_eq (M1).
         (* Var *)
@@ -529,38 +496,72 @@ Proof.
         assert (E: redcount (Var n0) + redcount M2 = redcount (App (Var n0) M2)).
         reflexivity. rewrite E. inversion H.
         assert (seqn s + redcount (App (Var n0) M2) >= seqn (appl (App (Var n0) M2) s)).
-        apply seqn_appl_app. omega.
+        apply seqn_appl_app. inversion H5.
+          left. omega.
+          left. inversion H7. rewrite H8. simpl. omega.
         (* Lam *)
         intros.
         assert (E: redcount l0 + redcount M2 + 1 = redcount (App (Lam l0) M2)).
         reflexivity. rewrite E. inversion H.
         assert (seqn s + redcount (App (Lam l0) M2) >= seqn (appl (App (Lam l0) M2) s)).
-        apply seqn_appl_app. omega.
+        apply seqn_appl_app. inversion H5.
+          left. omega.
+          left. inversion H7. rewrite H8. simpl. omega.
         (* App *)
         intros.
         assert (E: redcount (App l0 l1) + redcount M2 = redcount (App (App l0 l1) M2)).            reflexivity. rewrite E. inversion H.
         assert (seqn s + redcount (App (App l0 l1) M2) >= seqn (appl (App (App l0 l1) M2) s)).
-        apply seqn_appl_app. omega.
+        apply seqn_appl_app. inversion H5.
+          left. omega.
+          left. inversion H7. rewrite H8. simpl. omega.
 Qed.
 
-(* TODO This requires fixing because it relies on faulty seqn_appr *)
-
-Lemma monotone_appr : forall s M, monotone s -> monotone (appr M s).
+Lemma nthred_outer_lam : forall M N n,
+  nthred n M N -> (exists M', M = Lam M') -> exists N', N = Lam N'.
 Proof.
-(*
-  intros. induction s; induction M.
-    apply monotone_unit. apply monotone_unit. apply monotone_unit.
+  intros. inversion H0. inversion H.
+    rewrite H1 in H3. inversion H3.
+    rewrite H1 in H4. inversion H4.
+    rewrite H1 in H4. inversion H4.
+    exists B. reflexivity.
+Qed.
+
+Lemma nthred_radjust : forall M N n k l,
+  nthred n M N -> k >= l -> radjust N k >= radjust M l.
+Proof.
+  intros. destruct M; destruct N.
+    simpl. omega. simpl. omega. simpl. omega.
+    simpl. apply nthred_outer_lam in H.
+      inversion H. inversion H1. exists M. reflexivity.
+    simpl. omega.
+    simpl. apply nthred_outer_lam in H.
+      inversion H. inversion H1. exists M. reflexivity.
+    simpl. assumption.
+    simpl. omega.
+    simpl. assumption.
+Qed.
+
+Lemma monotone_appr : forall s M, stseq s -> monotone (appr M s).
+Proof.
+  intros. inversion H. induction s.
+    (* seq_unit *)
+    induction M; apply monotone_unit.
+    (* seq_cons *)
     simpl. apply monotone_cons.
-      apply IHs. inversion H. assumption.
-      inversion H. rewrite <- (seqn_appr s (Var n0)). assumption.
-    simpl. apply monotone_cons.
-      apply IHs. inversion H. assumption.
-      inversion H. rewrite <- (seqn_appr s (Lam M)). assumption.
-    simpl. apply monotone_cons.
-      apply IHs. inversion H. assumption.
-      inversion H. rewrite <- (seqn_appr s (App M1 M2)). assumption.
-*)
-Admitted.
+      apply IHs.
+        apply stseq_backwards in H. assumption.
+        inversion H0. assumption.
+        inversion H1. assumption.
+      destruct s.
+        destruct l0; simpl; left; omega.
+        rewrite appr_cons. simpl. inversion H0.
+          inversion H6.
+          left. apply nthred_radjust with (n := n0).
+            assumption.
+            inversion H1. simpl in H16. inversion H16.
+              assumption.
+              inversion H17. inversion H18.
+Qed.
 
 Lemma stseq_appl : forall s M, stseq s -> stseq (appl M s).
 Proof.
@@ -574,11 +575,9 @@ Proof.
     split.
       simpl. apply redseq_cons.
         rewrite seqlast_appl.
-        assert (R0: 0 = redcount (Var n0)) by reflexivity. rewrite R0.
+        assert (Hadj: n = ladjust (Var n0) n) by reflexivity. rewrite Hadj.
         inversion H0.
-        apply nthred_concl.
-          unfold not. intro. inversion H7.
-          assumption.
+        apply nthred_concl. assumption.
         apply IHs. apply (stseq_backwards l n s). assumption.
         inversion H0. assumption.
         inversion H1. assumption.
@@ -589,8 +588,8 @@ Proof.
       apply redseq_cons.
         rewrite seqlast_appl.
         inversion H0.
-        assert (HC: redcount M = redcount (Lam M)) by reflexivity.
-        rewrite HC. apply nthred_conclplus. apply islam. assumption.
+        assert (Hadj: n + redcount M + 1 = ladjust (Lam M) n) by reflexivity.
+        rewrite Hadj. apply nthred_concl. assumption.
         apply IHs. apply (stseq_backwards l n s). assumption.
         inversion H0. assumption.
         inversion H1. assumption.
@@ -601,22 +600,23 @@ Proof.
       unfold appl. apply redseq_cons.
         rewrite seqlast_appl.
         inversion H0.
-        apply nthred_concl. unfold not. intro. inversion H7.
+        apply nthred_concl.
         assumption.
         apply IHs. apply (stseq_backwards l n s). assumption.
         inversion H0. assumption.
         inversion H1. assumption.
       apply monotone_appl. assumption.
 Qed.
+  
 
 Lemma stseq_appr : forall s M, stseq s -> stseq (appr M s).
-Proof. Admitted.
+Proof. Abort.
 
 Definition zip (s1 : seq) (s2 : seq) : seq :=
   match s1, s2 with
   | seq_unit M, _ => appl M s2
   | seq_cons s1' m M, _ =>
-      seqcat (appr (seqhead s2) s1') (zipadj (seqlast s1') m) (appl M s2)
+      seqcat (appr (seqhead s2) s1') (radjust (seqlast s1') m) (appl M s2)
   end.
 
 Section Zipping.
@@ -635,7 +635,7 @@ Proof.
   split.
     apply redseq_cons. simpl. apply nthred_prim.
     apply redseq_unit.
-  apply monotone_cons. apply monotone_unit. simpl. omega.
+  apply monotone_cons. apply monotone_unit. simpl. left. omega.
 Qed.
 
 Example foobar : stseq (zip (seq_cons (seq_unit (App (Lam (Var 0)) (Lam (Var 0)))) 0 (Lam (Var 0))) (seq_unit (Lam (Var 0)))).
@@ -643,13 +643,13 @@ Proof.
   simpl. unfold stseq.
   split.
     apply redseq_cons. simpl.
-      apply nthred_concr.
-        unfold not. intro. inversion H.
-        simpl. apply nthred_prim.
+      assert (Hadj: 0 = radjust (App (Lam (Var 0)) (Lam (Var 0))) 0) by reflexivity.
+      rewrite Hadj.
+      apply nthred_concr. simpl. apply nthred_prim.
       apply redseq_unit.
     apply monotone_cons.
       apply monotone_unit.
-      simpl. omega.
+      simpl. left. omega.
 Qed.
 
 Example barfoo : stseq (zip (seq_unit (Lam (Var 0))) (seq_cons (seq_unit (App (Lam (Var 0)) (Lam (Var 0)))) 0 (Lam (Var 0)))).
@@ -657,90 +657,407 @@ Proof.
   simpl. unfold stseq.
   split.
     apply redseq_cons. simpl.
-      assert (0 + redcount (Lam (Var 0)) + 1 = 1). reflexivity.
-      rewrite <- H. apply nthred_conclplus. apply islam.
+      assert (ladjust (Lam (Var 0)) 0 = 1) by reflexivity.
+      rewrite <- H. apply nthred_concl.
       apply nthred_prim.
       apply redseq_unit.
     apply monotone_cons.
       apply monotone_unit.
-      simpl. omega.
+      simpl. left. omega.
 Qed.
 
 End Zipping.
 
-Lemma monotone_zip : forall s1 s2,
-  monotone s1 -> monotone s2 -> monotone (zip s1 s2).
-Proof.
-(* --- *)
-(* Needs fixing because of reliance on faulty [seqn_appr]. *)
-(*
-  intros. induction s1; induction s2.
-    induction l; induction l0.
-      apply monotone_unit. apply monotone_unit. apply monotone_unit.
-      apply monotone_unit. apply monotone_unit. apply monotone_unit.
-      apply monotone_unit. apply monotone_unit. apply monotone_unit.
-    unfold zip. apply monotone_appl. assumption.
-    induction l; induction l0.
-      simpl. apply monotone_cons.
-        apply monotone_appr. inversion H. assumption.
-        inversion H. rewrite <- seqn_appr. unfold zipadj.
-        case_eq (seqlast s1).
-          intros. assumption. intros. omega. intros. assumption.
-      simpl. apply monotone_cons.
-        apply monotone_appr. inversion H. assumption.
-        inversion H. rewrite <- seqn_appr. unfold zipadj.
-        case_eq (seqlast s1).
-          intros. assumption. intros. omega. intros. assumption.
-      simpl. apply monotone_cons.
-        apply monotone_appr. inversion H. assumption.
-        inversion H. rewrite <- seqn_appr. unfold zipadj.
-        case_eq (seqlast s1).
-          intros. assumption. intros. omega. intros. assumption.
-      simpl. apply monotone_cons.
-        apply monotone_appr. inversion H. assumption.
-        inversion H. rewrite <- seqn_appr. unfold zipadj.
-        case_eq (seqlast s1).
-          intros. assumption. intros. omega. intros. assumption.
-      simpl. apply monotone_cons.
-        apply monotone_appr. inversion H. assumption.
-        inversion H. rewrite <- seqn_appr. unfold zipadj.
-        case_eq (seqlast s1).
-          intros. assumption. intros. omega. intros. assumption.
-      simpl. apply monotone_cons.
-        apply monotone_appr. inversion H. assumption.
-        inversion H. rewrite <- seqn_appr. unfold zipadj.
-        case_eq (seqlast s1).
-          intros. assumption. intros. omega. intros. assumption.
-      simpl. apply monotone_cons.
-        apply monotone_appr. inversion H. assumption.
-        inversion H. rewrite <- seqn_appr. unfold zipadj.
-        case_eq (seqlast s1).
-          intros. assumption. intros. omega. intros. assumption.
-      simpl. apply monotone_cons.
-        apply monotone_appr. inversion H. assumption.
-        inversion H. rewrite <- seqn_appr. unfold zipadj.
-        case_eq (seqlast s1).
-          intros. assumption. intros. omega. intros. assumption.
-      simpl. apply monotone_cons.
-        apply monotone_appr. inversion H. assumption.
-        inversion H. rewrite <- seqn_appr. unfold zipadj.
-        case_eq (seqlast s1).
-          intros. assumption. intros. omega. intros. assumption.
-      unfold zip.
-      apply monotone_seqcat.
-      apply monotone_appr.
-        inversion H. assumption.
-      apply monotone_appl. assumption.
-      inversion H. inversion H0.
-      (* Can we somehow get n0 into the mix? *)
-      unfold seqhead. fold seqhead. unfold zipadj.
-      case_eq (seqlast s1).
-        intros.
-          rewrite <- seqn_appr. split. omega. destruct l.
-          rewrite <- seqnrev_appl_var.
-*)
-Admitted.
+(* We establish that zipping preserves reduction sequences. *)
 
+Lemma redseq_appl : forall s M, redseq s -> redseq (appl M s).
+Proof.
+  intros. induction s.
+    (* seq_unit *)
+    induction M; simpl; apply redseq_unit.
+    (* seq_cons *)
+    induction M; unfold appl; fold appl; apply redseq_cons.
+      (* Var *)
+      rewrite seqlast_appl. apply nthred_concl. inversion H. assumption.
+      apply IHs. inversion H. assumption.
+      (* Lam *)
+      rewrite seqlast_appl. apply nthred_concl. inversion H. assumption.
+      apply IHs. inversion H. assumption.
+      (* App *)
+      rewrite seqlast_appl. apply nthred_concl. inversion H. assumption.
+      apply IHs. inversion H. assumption.
+Qed.
+
+Lemma redseq_appr : forall s M, redseq s -> redseq (appr M s).
+Proof.
+  intros. induction s.
+  (* seq_unit *)
+  induction M; simpl; apply redseq_unit.
+  (* seq_cons *)
+  induction M; unfold appr; fold appr; apply redseq_cons.
+      (* Var *)
+      rewrite seqlast_appr. apply nthred_concr. inversion H. assumption.
+      apply IHs. inversion H. assumption.
+      (* Lam *)
+      rewrite seqlast_appr. apply nthred_concr. inversion H. assumption.
+      apply IHs. inversion H. assumption.
+      (* App *)
+      rewrite seqlast_appr. apply nthred_concr. inversion H. assumption.
+      apply IHs. inversion H. assumption.
+Qed.
+
+Lemma stseq_appr : forall s M, stseq s -> stseq (appr M s).
+Proof.
+  intros. unfold stseq. split.
+    apply redseq_appr. inversion H. assumption.
+    apply monotone_appr. assumption.
+Qed.
+
+Lemma redseq_seqcat : forall s1 s2 n,
+  nthred n (seqlast s1) (seqhead s2) ->
+  redseq s1 -> redseq s2 -> redseq (seqcat s1 n s2).
+Proof.
+  intros. dependent induction s1; dependent induction s2.
+    simpl. apply redseq_cons. simpl. simpl in H. assumption. assumption.
+    simpl. apply redseq_cons. inversion H1. rewrite seqlast_seqcat. assumption.
+    apply IHs2. simpl. simpl in H. assumption. inversion H1. assumption.
+    inversion H1. assumption.
+    simpl. apply redseq_cons. simpl. simpl in H. assumption. assumption.
+    simpl. apply redseq_cons. rewrite seqlast_seqcat. inversion H1. assumption.
+    simpl in IHs2. inversion H1. apply IHs2 in H; assumption.
+Qed.
+
+Lemma monotone_seqcat : forall s1 s2 n,
+  nthred n (seqlast s1) (seqhead s2) ->
+  seqn s1 <= n /\ (n <= seqnrev s2 \/ exists M, s2 = seq_unit M) ->
+  stseq s1 -> stseq s2 -> monotone (seqcat s1 n s2).
+Proof.
+  intros s1 s2 n Hnth Hbetw Hs1 Hs2. inversion Hs1. inversion Hs2.
+  dependent induction s1; dependent induction s2.
+    simpl. apply monotone_cons. apply monotone_unit. simpl. left. omega.
+    (* seq_unit x seq_cons *)
+    simpl. apply monotone_cons.
+      apply IHs2.
+        simpl in Hnth. simpl. assumption.
+        split.
+          simpl. omega.
+          destruct s2.
+            right. exists l1. reflexivity.
+            left.
+              inversion Hbetw.
+                inversion H4. unfold seqnrev in H5. fold seqnrev in H5. assumption.
+                inversion H5. inversion H6.
+        assumption.
+        apply stseq_backwards in Hs2. assumption.
+        assumption.
+        inversion H2. assumption.
+        inversion H1. assumption.
+        inversion H2. assumption.
+    inversion Hbetw.
+    inversion H4.
+      left. destruct s2.
+        simpl in H5. simpl. assumption.
+        simpl. inversion H2. simpl in H10. inversion H10.
+          assumption.
+          inversion H11. inversion H12.
+      inversion H5. inversion H6.
+    (* seq_cons x seq_unit *)
+    simpl. apply monotone_cons. assumption. inversion Hbetw. left. omega.
+    (* seq_cons x seq_cons *)
+    simpl. apply monotone_cons. apply IHs2.
+      unfold seqhead in Hnth. fold seqhead in Hnth. assumption.
+      inversion Hbetw. split.
+        assumption.
+        inversion H4. destruct s2.
+          right. exists l1. reflexivity.
+          left. unfold seqnrev in H5. fold seqnrev in H5.
+            unfold seqnrev. fold seqnrev. assumption.
+            inversion H5. inversion H6.
+      assumption.
+      apply stseq_backwards in Hs2. assumption.
+      assumption.
+      assumption.
+      inversion H1. assumption.
+      inversion H2. assumption.
+    left. inversion Hbetw. inversion H4.
+      destruct s2.
+        simpl. simpl in H5. omega.
+        simpl. simpl in H5. inversion H2. simpl in H10. inversion H10.
+          assumption.
+          inversion H11. inversion H12.
+          inversion H5. inversion H6.
+Qed.
+
+Lemma redseq_zip : forall s1 s2,
+  redseq s1 -> redseq s2 -> redseq (zip s1 s2).
+Proof.
+  intros. induction s1; induction s2.
+    (* seq_unit x seq_unit *)
+    induction l; induction l0; simpl; apply redseq_unit.
+    (* seq_unit x seq_cons *)
+    induction l; induction l0;
+      unfold zip; fold zip; fold appl; apply redseq_cons.
+      (* Var x Var *)
+      rewrite seqlast_appl.
+      apply nthred_concl. inversion H0. assumption.
+      apply redseq_appl. inversion H0. assumption.
+      (* Var x Lam *)
+      rewrite seqlast_appl.
+      apply nthred_concl. inversion H0. assumption.
+      apply redseq_appl. inversion H0. assumption.
+      (* Var x App *)
+      rewrite seqlast_appl.
+      apply nthred_concl. inversion H0. assumption.
+      apply redseq_appl. inversion H0. assumption.
+      (* Lam x Var *)
+      rewrite seqlast_appl.
+      apply nthred_concl. inversion H0. assumption.
+      apply redseq_appl. inversion H0. assumption.
+      (* Lam x Lam *)
+      rewrite seqlast_appl.
+      apply nthred_concl. inversion H0. assumption.
+      apply redseq_appl. inversion H0. assumption.
+      (* Lam x App *)
+      rewrite seqlast_appl.
+      apply nthred_concl. inversion H0. assumption.
+      apply redseq_appl. inversion H0. assumption.
+      (* App x Var *)
+      rewrite seqlast_appl.
+      apply nthred_concl. inversion H0. assumption.
+      apply redseq_appl. inversion H0. assumption.
+      (* App x Lam *)
+      rewrite seqlast_appl.
+      apply nthred_concl. inversion H0. assumption.
+      apply redseq_appl. inversion H0. assumption.
+      (* App x App *)
+      rewrite seqlast_appl.
+      apply nthred_concl. inversion H0. assumption.
+      apply redseq_appl. inversion H0. assumption.
+    (* seq_cons x seq_unit *)
+    induction l; induction l0; simpl; apply redseq_cons.
+      (* Var x Var *)
+      rewrite seqlast_appr; apply nthred_concr; inversion H; assumption.
+      apply redseq_appr. inversion H. assumption.
+      (* Var x Lam *)
+      rewrite seqlast_appr; apply nthred_concr; inversion H; assumption.
+      apply redseq_appr. inversion H. assumption.
+      (* Var x App *)
+      rewrite seqlast_appr; apply nthred_concr; inversion H; assumption.
+      apply redseq_appr. inversion H. assumption.
+      (* Lam x Var *)
+      rewrite seqlast_appr; apply nthred_concr; inversion H; assumption.
+      apply redseq_appr. inversion H. assumption.
+      (* Lam x App *)
+      rewrite seqlast_appr; apply nthred_concr; inversion H; assumption.
+      apply redseq_appr. inversion H. assumption.
+      (* Lam x Lam *)
+      rewrite seqlast_appr; apply nthred_concr; inversion H; assumption.
+      apply redseq_appr. inversion H. assumption.
+      (* ??? *)
+      rewrite seqlast_appr; apply nthred_concr; inversion H; assumption.
+      apply redseq_appr. inversion H. assumption.
+      (* ??? *)
+      rewrite seqlast_appr; apply nthred_concr; inversion H; assumption.
+      apply redseq_appr. inversion H. assumption.
+      (* ??? *)
+      rewrite seqlast_appr; apply nthred_concr; inversion H; assumption.
+      apply redseq_appr. inversion H. assumption.
+    (* seq_cons x seq_cons *)
+    simpl. apply redseq_cons.
+      rewrite seqlast_seqcat. rewrite seqlast_appl.
+        apply nthred_concl. inversion H0. assumption.
+        apply redseq_seqcat.
+          rewrite seqlast_appr. rewrite seqhead_appl.
+          apply nthred_concr.
+            inversion H. assumption.
+            apply redseq_appr. inversion H. assumption.
+          apply redseq_appl. inversion H0. assumption.
+Qed.
+
+Lemma not_seqcat_seq_unit : forall s1 n s2 M,
+  seqcat s1 n s2 <> seq_unit M.
+Proof. intros. induction s1; induction s2; unfold not; intro HA; inversion HA. Qed.
+
+Lemma radjust_bound : forall n M,
+  radjust M n <= n + 1.
+Proof. induction M; simpl; omega. Qed.
+
+Lemma redcount_app : forall M N,
+  redcount (App M N) >= redcount M + redcount N.
+Proof. induction M; induction N; simpl; omega. Qed.
+
+Lemma nthred_redcount : forall n M N,
+  nthred n M N -> redcount N >= n.
+Proof.
+  intros. induction H.
+    omega.
+    destruct B; destruct A; simpl; simpl in IHnthred;
+      try (omega || inversion H).
+    destruct C; simpl.
+      assumption.
+      omega.
+      destruct C1; simpl; omega.
+    simpl. assumption.
+Qed.    
+
+Lemma redcount_seqn : forall s,
+  stseq s -> redcount (seqlast s) >= seqn s.
+Proof.
+  destruct s.
+    simpl. omega.
+    intro Hstseq. simpl. inversion Hstseq. inversion H.
+      apply nthred_redcount with (M := seqlast s). assumption.
+Qed.
+
+Lemma seqn_seqcat : forall s1 n s2,
+  seqn (seqcat s1 n s2) = n \/ seqn (seqcat s1 n s2) = seqn s2.
+Proof.
+  intros. destruct s1; destruct s2.
+    left. reflexivity.
+    right. reflexivity.
+    left. reflexivity.
+    right. reflexivity.
+Qed.
+
+Lemma monotone_connectives : forall s1 s2 m n M N,
+  monotone (zip (seq_cons s1 m M) (seq_cons s2 n N)) ->
+  radjust (seqlast s1) m <= seqnrev (appl M (seq_cons s2 n N)).
+Proof.
+  intros. dependent induction s2.
+    simpl. simpl in H. inversion H. inversion H2.
+      simpl in H4. inversion H4.
+        omega.
+        inversion H10. inversion H11.
+    simpl in H. inversion H. simpl in IHs2. apply IHs2 in H2.
+    simpl. assumption.
+Qed.
+
+Lemma monotone_zip : forall s1 s2,
+  stseq s1 -> stseq s2 -> monotone (zip s1 s2).
+Proof.
+  intros s1 s2 Hs1 Hs2. inversion Hs1. inversion Hs2.
+  dependent induction s1; dependent induction s2.
+    (* seq_unit x seq_unit *)
+    induction l; induction l0; apply monotone_unit.
+    (* seq_unit x seq_cons *)
+    simpl. apply monotone_cons.
+      apply monotone_appl. inversion H2. assumption.
+      destruct l; try (rewrite seqn_appl_var ||
+                       rewrite seqn_appl_lam ||
+                       rewrite seqn_appl_app);
+                  inversion H2.
+        simpl. inversion H7.
+          left. assumption.
+          left. inversion H8. rewrite H9. simpl. omega.
+        simpl.
+          assert (seqn s2 + redcount l + 1 >= seqn (appl (Lam l) s2)) by
+            apply seqn_appl_lam.
+          left. inversion H7.
+            omega.
+            inversion H9. rewrite H10. simpl. omega.
+        unfold ladjust.
+          assert (seqn s2 + redcount (App l1 l2) >= seqn (appl (App l1 l2) s2)) by
+            apply seqn_appl_app.
+          left. inversion H7.
+            omega.
+            inversion H9. rewrite H10. simpl. omega.
+    (* seq_cons x seq_unit *)
+    simpl. apply monotone_cons.
+      apply monotone_appr. apply stseq_backwards in Hs1. assumption.
+    destruct s1.
+      simpl. left. omega.
+      rewrite appr_cons. simpl.
+        inversion H. inversion H7.
+        inversion H0. simpl in H17.
+        left. simpl. apply nthred_radjust with (n := n0). assumption.
+        inversion H17.
+          assumption.
+          inversion H18. inversion H19.
+    (* seq_cons x seq_cons *)
+    simpl. apply monotone_cons.
+      (* predecessor sequence *)
+      apply monotone_seqcat.
+        rewrite seqlast_appr. rewrite seqhead_appl.
+          apply nthred_concr. inversion Hs1. inversion H3. assumption.
+        split.
+          destruct s1.
+            simpl. omega.
+            simpl. inversion Hs1. inversion H3. inversion H9.
+              apply nthred_radjust with (n := n1).
+                assumption.
+                inversion H4. simpl in H19. inversion H19.
+                  assumption.
+                  inversion H20. inversion H21.
+          apply stseq_appl with (M := l) in Hs1. inversion Hs1. inversion H4.
+            destruct s2. simpl.
+              right. exists (App l l1). reflexivity.
+(* Critical part *)
+              left. apply monotone_connectives.
+                apply IHs2.
+                  unfold stseq. split; assumption.
+                  apply stseq_backwards in Hs2. assumption.
+                  assumption.
+                  assumption.
+                  inversion H1. assumption.
+                  inversion H2. assumption.
+        apply stseq_appr. apply stseq_backwards in Hs1. assumption.
+        apply stseq_appl. apply stseq_backwards in Hs2. assumption.
+      (* inbetween-ness *)
+      left.
+      assert (redcount (seqlast (seq_cons s1 n l)) >= seqn (seq_cons s1 n l)).
+      apply redcount_seqn. assumption. simpl in H3.
+      inversion H0.
+      assert (Hor:
+        seqn (seqcat (appr (seqhead s2) s1) (radjust (seqlast s1) n) (appl l s2)) =
+        radjust (seqlast s1) n \/
+        seqn (seqcat (appr (seqhead s2) s1) (radjust (seqlast s1) n) (appl l s2)) =
+        seqn (appl l s2)).
+      apply seqn_seqcat.
+      inversion Hor.
+        (* left Hor branch *)
+        rewrite H9. case_eq (l); case_eq (seqlast s1).
+        (* l is Var *)
+        intros. simpl. rewrite H11 in H3. simpl in H3. omega.
+        intros. inversion H. rewrite H10 in H14. rewrite H11 in H14. inversion H14.
+        intros. simpl. rewrite H11 in H3. simpl in H3. omega.
+        (* l is Lam *)
+        intros. simpl.
+          assert (HLam: redcount l1 = redcount l) by (rewrite H11; reflexivity).
+          rewrite HLam. omega.
+        intros. simpl.
+          assert (HLam: redcount l2 = redcount l) by (rewrite H11; reflexivity).
+          rewrite HLam. omega.
+        intros. simpl.
+          assert (HLam: redcount l3 = redcount l) by (rewrite H11; reflexivity).
+          rewrite HLam. omega.
+        (* l is App *)
+        intros. unfold ladjust. rewrite <- H11. unfold radjust. omega.
+        intros. inversion H. rewrite H10 in H14. rewrite H11 in H14. inversion H14.
+        intros. unfold ladjust. rewrite <- H11. unfold radjust. omega.
+        (* right Hor branch *)
+        rewrite H9. destruct l.
+          (* l is Var *)
+          simpl. rewrite seqn_appl_var. inversion H2.
+          inversion H14.
+            assumption.
+            inversion H15. rewrite H16. simpl. omega.
+          (* l is Lam *)
+          simpl.
+          assert (seqn s2 + redcount l + 1 >= seqn (appl (Lam l) s2))
+            by (simpl; apply seqn_appl_lam).
+          inversion H2.
+          inversion H15.
+            omega.
+            inversion H16. rewrite H17. simpl. omega.
+          (* l is App *)
+          unfold ladjust.
+          assert (seqn s2 + redcount (App l1 l2) >= seqn (appl (App l1 l2) s2))
+            by apply seqn_appl_app.
+          inversion H2.
+          inversion H15.
+            omega.
+            inversion H16. rewrite H17. simpl. omega.
+Qed.
 
 Lemma zip_appr : forall s M,
   zip s (seq_unit M) = appr M s.
@@ -790,35 +1107,10 @@ Qed.
 Lemma zip_stseq : forall s1 s2,
   stseq s1 -> stseq s2 -> stseq (zip s1 s2).
 Proof.
-  intros. induction s1; induction s2.
-    (* seq_unit, seq_unit *)
-    unfold stseq. induction l; induction l0.
-      split. apply redseq_unit. apply monotone_unit.
-      split. apply redseq_unit. apply monotone_unit.
-      split. apply redseq_unit. apply monotone_unit.
-      split. apply redseq_unit. apply monotone_unit.
-      split. apply redseq_unit. apply monotone_unit.
-      split. apply redseq_unit. apply monotone_unit.
-      split. apply redseq_unit. apply monotone_unit.
-      split. apply redseq_unit. apply monotone_unit.
-      split. apply redseq_unit. apply monotone_unit.
-   (* seq_unit, seq_cons *)
-   unfold stseq. induction l; induction l0.
-     split.
-       simpl. apply redseq_cons.
-         assert (R0: 0 = redcount (Var n0)) by reflexivity. rewrite R0.
-         rewrite seqlast_appl.
-         apply nthred_concl.
-           unfold not. intro A. inversion A.
-           inversion H0. inversion H1. assumption.
-         apply stseq_appl. unfold stseq.
-         split.
-           inversion H0. inversion H1. assumption.
-           inversion H0. inversion H2. assumption.
-       simpl. apply monotone_cons. apply monotone_appl.
-Admitted.
-         
-         
+  intros. inversion H. inversion H0. unfold stseq. split.
+    apply redseq_zip; assumption.
+    apply monotone_zip; assumption.
+Qed.
 
 (* We prove results for some simple interactions of [lambdize] with sequence
    operations. *)
@@ -848,7 +1140,9 @@ Proof.
         inversion H. assumption. assumption. inversion H. assumption.
       apply monotone_cons. inversion H. inversion H3. apply stseq_backwards in H.
         apply IHs in H. inversion H. assumption. inversion H. assumption. assumption.
-      rewrite seqn_lambdize. inversion H1. assumption.
+      rewrite seqn_lambdize. inversion H1. inversion H6.
+        left. assumption.
+        left. inversion H7. rewrite H8. simpl. omega.
 Qed.
 
 Lemma stseq_lambda : forall A B,
@@ -900,18 +1194,21 @@ Inductive st : lterm -> lterm -> Prop :=
 (* (1) *)
 Lemma hap_lstar : forall M N, hap M N -> lstar M N.
 Proof.
-  intros. induction H as [ t | t0 t1 | t1 t2 t3].
+  intros. induction H as [ M | M N | M N P].
     (* hap_refl *)
     apply lstar_refl.
     (* hap_hred *)
     apply lstar_step. unfold lmost. induction H.
       apply nthred_prim.
-      apply nthred_concr. unfold not. intro. induction H. inversion H0. inversion H0. assumption.
+      assert (Hadj: 0 = radjust A 0). inversion H; reflexivity. rewrite Hadj.
+      apply nthred_concr. assumption.
     (* hap_trans *)
-    apply lstar_trans with (y := t2). apply IHhap1. apply IHhap2.
+    apply lstar_trans with (y := N). apply IHhap1. apply IHhap2.
 Qed.
 
 (* (2) *)
+
+SearchAbout seqn.
 
 Lemma st_stseq : forall M N, st M N ->
   exists s, seqhead s = M /\ seqlast s = N /\ stseq s.
@@ -1129,22 +1426,6 @@ Proof.
   intros. simpl. rewrite Compare_dec.nat_compare_gt in H. rewrite H. reflexivity.
 Qed.
 
-(* We need to establish that abstractions can appear on the left side of hap
-   only due to the reflexive rule.
-*)
-
-Lemma not_hap'_lam_var : forall M i, ~ hap' (Lam M) i.
-Proof. unfold not. intros. dependent induction H. Qed.
-
-Lemma not_hap_lam : forall M N, N <> Lam M -> ~ hap (Lam M) N.
-Proof.
-  unfold not. intros.
-  dependent induction H0.
-    assert (ID: Lam M = Lam M) by reflexivity. apply H in ID. assumption.
-    contradict H0. apply not_hap'_lam_var.
-    apply IHhap2 in H. assumption. apply NNPP in IHhap1. assumption.
-Qed.
-
 Lemma lift_first_hap : forall M n i k,
   hap M (Var i) -> i < k -> hap (lift n k M) (Var i).
 Proof.
@@ -1234,7 +1515,7 @@ Lemma st_nthred__st : forall M N i,
   nthred i M N -> forall L, st L M -> st L N.
 Proof.
   intros M N i Hbet.
-  induction Hbet as [A B | n A B C | n A B C | n A B C | n A B C | n A B].
+  induction Hbet as [A B | n A B C | n A B C | n A B].
     (* 2.1 (1) *)
     intros L Hst.
     apply st_app__st_subst. assumption.
@@ -1245,21 +1526,7 @@ Proof.
       assumption.
       apply IHHbet. assumption.
       assumption.
-    (* 2.1 (3) *)
-    intros L Hst.
-    inversion Hst as [| X A' C' |].
-    apply st_hap_st_st with (A := A') (B := C').
-      assumption.
-      apply (IHHbet A'); assumption.
-      assumption.
-    (* 2.1 (4) *)
-    intros L Hst.
-    inversion Hst as [| X A' C' |].
-    apply st_hap_st_st with (A := A') (B := C').
-      assumption.
-      assumption.
-      apply (IHHbet C'); assumption.
-    (* 2.1 (5) *)
+    (* 2.1 (3), (4), (5) *)
     intros L Hst.
     inversion Hst as [| X A' C' |].
     apply st_hap_st_st with (A := A') (B := C').
