@@ -355,51 +355,6 @@ Proof.
               apply leftexpand_monotone_gen. assumption. (* TODO Not quite yet *)
 Admitted.
 
-(*
-Lemma stseq_parallel : forall A B C D,
-  (exists s : seq, seqhead s = A /\ seqlast s = C /\ stseq s)
-  -> (exists s : seq, seqhead s = B /\ seqlast s = D /\ stseq s)
-  -> exists s : seq, seqhead s = App A B /\ seqlast s = App C D /\ stseq s.
-Proof.
-  intros. inversion H. inversion H0.
-  induction x; induction x0.
-    inversion H1. inversion H4.
-    inversion H2. inversion H8.
-    assert (HAC: A = C). rewrite <- H5. rewrite <- H3. reflexivity.
-    assert (HBD: B = D). rewrite <- H7. rewrite <- H9. reflexivity.
-    rewrite HAC. rewrite HBD.
-    exists (seq_unit (App C D)).
-    split.
-      reflexivity.
-      split.
-        reflexivity.
-        unfold stseq. split. apply redseq_unit. apply monotone_unit.
-    (* first step for x0 *)
-    apply IHx0.
-    simpl in H2. inversion H2. inversion H4.
-    split.
-      assumption.
-      split.
-        (* TODO ???*) admit.
-      apply stseq_backwards in H6. assumption.
-    (* second step for IHx *)
-    apply IHx. inversion H1. inversion H4. simpl in H3.
-    split.
-      assumption.
-      split.
-        simpl in H5.
-        admit.
-      apply (stseq_backwards l n x). assumption.
-    (* last thingy *)
-    apply IHx. inversion H1. inversion H4. simpl in H3. simpl in H5.
-      split.
-        assumption.
-        split.
-          admit.
-        apply (stseq_backwards l n x). assumption.
-Admitted.
-*)
-
 (* This lemma helps concisely eliminating the common goal of a one-term
    reduction sequence being standard. *)
 
