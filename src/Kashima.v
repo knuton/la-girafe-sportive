@@ -976,65 +976,6 @@ Proof.
     assumption.
 Qed.
     
-  
-(***)
-  exists (seq_cons x1 1 (Var x)).
-  split.
-    simpl. assumption.
-    simpl. split.
-      reflexivity.
-      unfold stseq. split.
-        apply redseq_cons. rewrite H6. apply H2. assumption.
-        apply monotone_cons.
-(***********)
-  intros M N Hst. dependent induction Hst.
-  (* st_hap *)
-  apply hap_lstar in H. unfold lstar in H.
-  induction H. unfold lmost in H.
-    (* rt_step *)
-    exists (seq_cons (seq_unit x0) 1 y). split.
-      reflexivity.
-      split. reflexivity. unfold stseq. split. apply redseq_cons. simpl. assumption.
-      apply redseq_unit. apply monotone_cons. simpl. omega.
-    (* rt_refl *)
-    exists (seq_unit x0).
-    split.
-      reflexivity.
-      split. reflexivity. unfold stseq. split. apply redseq_unit. apply monotone_unit.
-    (* rt_trans *) (* Was x:= y *)
-    apply Operators_Properties.clos_refl_trans_ind_left with (A := lterm) (R := lmost) (x := x0) (z := z).
-    (* refl *)
-    exists (seq_unit x0).
-    split.
-      reflexivity.
-      split. reflexivity. unfold stseq. split. apply redseq_unit. apply monotone_unit.
-    (* step or sthg *)
-    intros.
-    (* trans *)
-    assert (clos_refl_trans lterm lmost x0 z). apply rt_trans with (y := y); assumption.
-(* --- *)
-    assumption.
-    intros. unfold lmost in H3. inversion H2. inversion H4. inversion H6.
-    exists (seq_cons x1 1 z0).
-    split.
-      simpl. assumption.
-      split.
-        reflexivity.
-        unfold stseq. split.
-          apply redseq_cons. rewrite H7. assumption.
-        unfold stseq in H8. inversion H8. assumption.
-        unfold stseq in H8. inversion H8. apply monotone_cons. (* TODO ??? *)
-    assumption.
-  (* st_hap_st_st *)
-  apply hap_lstar in H. unfold lstar in H.
-  inversion H.
-Admitted.
-
-(* apply (Operators_Properties.clos_refl_trans_ind_left lterm bet y) *)
-      
-    
-    
-
 (** Lemma 3.4 **)
 
 (* (1) *)
@@ -1357,3 +1298,9 @@ Proof.
       intros. apply (st_bred__st x y0 z0); assumption.
       assumption.
 Qed.
+
+(* Standardization Theorem (Theorem 2.4) *)
+
+Theorem betstar_stseq : forall M N,
+  betstar M N -> exists s, seqhead s = M /\ seqlast s = N /\ stseq s.
+Proof. intros. apply st_stseq. apply betstar_st. assumption. Qed.
