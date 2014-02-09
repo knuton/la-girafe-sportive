@@ -1,6 +1,6 @@
 .PHONY: all doc
 
-VERNACS=Untyped.v Subst.v Rels.v Beta.v Eta.v Postpone.v Kashima.v
+VERNACS=Untyped.v Subst.v Rels.v Beta.v Eta.v Postpone.v Standardization.v
 VERNOCS=$(subst .v,.vo,$(VERNACS))
 
 DOCDIR=../doc
