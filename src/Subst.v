@@ -3,7 +3,6 @@ Require Import Omega.
 Require Import Coq.Arith.Compare_dec.
 Require Import Coq.Arith.Plus.
 Require Import Coq.Arith.Lt.
-Require Import Omega.
 
 (** (l)ift (t)erms by some (l)evel if greater or equal the (b)ound **)
 Fixpoint lift (l: nat) (b: nat) (t: lterm) : lterm :=
