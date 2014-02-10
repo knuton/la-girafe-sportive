@@ -93,6 +93,30 @@ Definition betstar_step := rt_step lterm bet.
 Definition betstar_refl := rt_refl lterm bet.
 Definition betstar_trans := rt_trans lterm bet.
 
+(* We prove equivalence of our definition of beta reduction with the
+   regular definition. *)
+
+Lemma bet_bred : forall A B, bet A B <-> bred A B.
+Proof.
+  intros.
+  split.
+  (* bet A B -> bred A B *)
+  intro Hbet. unfold bet in Hbet. inversion Hbet. induction H.
+    apply bred_base.
+    apply bred_appl. apply IHnthred. exists n. assumption.
+    apply bred_appr. apply IHnthred. exists n. assumption.
+    apply bred_lam. apply IHnthred. exists n. assumption.
+  (* bred A B -> bet A B *)
+  intro Hbred. induction Hbred.
+    unfold bet. exists 0. apply nthred_prim.
+    unfold bet. inversion IHHbred.
+      exists x. apply nthred_abst. assumption.
+    unfold bet. inversion IHHbred.
+      exists (radjust t1 x). apply nthred_concr. assumption.
+    unfold bet. inversion IHHbred.
+      exists (ladjust t3 x). apply nthred_concl. assumption.
+Qed.
+
 (* Left-most reduction is simply reduction of the first redex. *)
 
 Definition lmost (A B : lterm) : Prop := nthred 0 A B.
