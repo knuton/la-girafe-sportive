@@ -9,7 +9,7 @@ Require Import Coq.Arith.Compare_dec.
 
 Module Export Eta.
 
-(** * η-conversion *)
+(** * $\eta$#η#-conversion *)
 
 (** We define [eta] conversion as the compatible closure of the [eta_base]
     relation. In literature eta-conversion is usually specified as:
@@ -128,7 +128,7 @@ Proof.
   simpl. apply clos_appr. apply IHM2. assumption.
 Qed.
 
-(** * Reflexive-transitive closure of η-conversion *)
+(** * Reflexive-transitive closure of $\eta$#η#-conversion *)
 
 Definition eta_star := clos_refl_trans lterm eta.
 Definition eta_star_step := rt_step lterm eta.
