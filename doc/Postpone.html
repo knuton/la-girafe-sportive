@@ -36,22 +36,42 @@
 <span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="Eta.html#"><span class="id" type="library">Eta</span></a>.<br/>
 
 <br/>
+</div>
+
+<div class="doc">
+<a name="lab7"></a><h1 class="section">Postponement theorem in Untyped Lambda Calculus</h1>
+
+</div>
+<div class="code">
+
+<br/>
 <span class="id" type="keyword">Module</span> <span class="id" type="keyword">Export</span> <a name="Postpone"><span class="id" type="module">Postpone</span></a>.<br/>
 
 <br/>
 </div>
 
 <div class="doc">
-In this module, we prove the eta postponement theorem.
+This module contains a formalised proof of the (η-)Postponement
+    Theorem for the untyped lambda calculus.
 
 <div class="paragraph"> </div>
 
-    We (continue to) follow the proof of Masako Takahashi from
-    "Parallel Reductions in Lambda-calculus" (1995).
+    The formalisation is based on an ``informal'' proof due to Masako Takahashi
+    in ``Parallel Reductions in Lambda-calculus'' (Information and Computation,
+    Volume 118, 1995).
 
 <div class="paragraph"> </div>
 
- We now prove various properties about the relation between <span class="inlinecode"><a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a></span>
+    Except for the gymnastics related to working with de Bruijn indices, the
+    translation of the Takashi's proof is rather straightforward.
+
+<div class="paragraph"> </div>
+
+<a name="lab8"></a><h2 class="section">Preliminaries</h2>
+
+<div class="paragraph"> </div>
+
+ We at first prove various properties about the relation between <span class="inlinecode"><a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a></span>
     and the eta-expansion <span class="inlinecode"><a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a></span>. (This is Lemma 3.3 in Takahashi).
 
 <div class="paragraph"> </div>
@@ -96,6 +116,8 @@ Similarly, a <span class="inlinecode"><a class="idref" href="Subst.html#k"><span
     to a single lambda abstraction via parallel beta reduction. 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.lam_k_beta_lam"><span class="id" type="lemma">lam_k_beta_lam</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> <a class="idref" href="Postpone.html#k"><span class="id" type="variable">k</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a>)) (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Postpone.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
@@ -125,6 +147,8 @@ In case of an application, we can also contract the whole eta-expansion of
     the applied term via parallel beta reduction 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.lam_k_beta_app"><span class="id" type="lemma">lam_k_beta_app</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Postpone.html#N'"><span class="id" type="variable">N'</span></a> →<br/>
@@ -184,6 +208,8 @@ It now remains to prove the crucial Lemma 3.4 from Takahashi, stating that
  Parallel beta is closed under eta-expansion. 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.beta_par_lam_k_closed"><span class="id" type="lemma">beta_par_lam_k_closed</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> <a class="idref" href="Postpone.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> <a class="idref" href="Postpone.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
@@ -204,6 +230,8 @@ We can now prove the postponement theorem for the specific case of parallel
     reductions. This is Lemma 3.4 in Takahashi. 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.postpone_par"><span class="id" type="lemma">postpone_par</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">P</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> →<br/>
@@ -292,6 +320,8 @@ We now define the beta-eta relation and its reflexive-transitive closure
 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Definition</span> <a name="Postpone.beta_eta"><span class="id" type="definition">beta_eta</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#union"><span class="id" type="definition">union</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a> <a class="idref" href="Eta.html#Eta.eta"><span class="id" type="definition">eta</span></a>.<br/>
 <span class="id" type="keyword">Definition</span> <a name="Postpone.beta_eta_star"><span class="id" type="definition">beta_eta_star</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#clos_refl_trans"><span class="id" type="inductive">clos_refl_trans</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Postpone.html#Postpone.beta_eta"><span class="id" type="definition">beta_eta</span></a>.<br/>
 
@@ -316,6 +346,8 @@ We need a couple of auxiliary statements about the relationships
 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.star_exists_iff_par_exists"><span class="id" type="lemma">star_exists_iff_par_exists</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">↔</span></a><br/>
@@ -338,6 +370,8 @@ Also, it is obviously sufficient to show this to hold for parallel beta,
     in order for it to also hold for the transitive closure: 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.par_impl_par_trans"><span class="id" type="lemma">par_impl_par_trans</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;(<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>) →<br/>
@@ -356,6 +390,8 @@ Finally, a couple of "one-sided" rewrites for convenience within the proof.
 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.rewrite_existential_eta"><span class="id" type="lemma">rewrite_existential_eta</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">(</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">↔</span></a><br/>
@@ -397,6 +433,8 @@ We now build up to the full postponement lemma by proving a series of
     of only a parallel beta. 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.eta_baby_postpone_eta"><span class="id" type="lemma">eta_baby_postpone_eta</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">P</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> →<br/>
@@ -439,6 +477,8 @@ Similarly, here we consider only the postponement of <span class="inlinecode"><a
     presence <span class="inlinecode"><a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a></span>: 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Postpone.eta_baby_postpone_beta"><span class="id" type="lemma">eta_baby_postpone_beta</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">P</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> →<br/>
@@ -481,6 +521,8 @@ We now combine all the previous lemmas to prove a simplified version of the
     rather than a single reduction of their union. 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Theorem</span> <a name="Postpone.eta_postponement_basic"><span class="id" type="lemma">eta_postponement_basic</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span> <span class="id" type="var">P</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> → (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P'</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P'"><span class="id" type="variable">P'</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>
@@ -529,12 +571,14 @@ We now combine all the previous lemmas to prove a simplified version of the
 </div>
 
 <div class="doc">
-<a name="lab7"></a><h1 class="section">The eta postponement theorem</h1>
+<a name="lab9"></a><h1 class="section">The eta postponement theorem</h1>
  Finally, we prove the full eta-postponement theorem using the
     separate reduction version in <span class="inlinecode"><a class="idref" href="Postpone.html#Postpone.eta_postponement_basic"><span class="id" type="lemma">eta_postponement_basic</span></a></span>.
 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Theorem</span> <a name="Postpone.eta_postponement"><span class="id" type="lemma">eta_postponement</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Postpone.html#Postpone.beta_eta_star"><span class="id" type="definition">beta_eta_star</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a> → (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">∃</span></a> <span class="id" type="var">P</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:'exists'_x_'..'_x_','_x"><span class="id" type="notation">,</span></a> <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Postpone.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'/\'_x"><span class="id" type="notation">∧</span></a> <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Postpone.html#P"><span class="id" type="variable">P</span></a> <a class="idref" href="Postpone.html#N"><span class="id" type="variable">N</span></a>).<br/>

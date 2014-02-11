@@ -44,20 +44,26 @@
 
 <div class="paragraph"> </div>
 
-        <span class="inlinecode">[<span class="id" type="var">λx</span>.</span> <span class="inlinecode">(<a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a>)</span> <span class="inlinecode">~&gt;</span> <span class="inlinecode"><a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a>]</span>, if <span class="inlinecode">[<a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a>]</span> is not free in <span class="inlinecode">[<a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a>]</span>
+        <span class="inlinecode"><span class="id" type="var">λx</span>.</span> <span class="inlinecode">(<a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a></span> <span class="inlinecode"><a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a>)</span> <span class="inlinecode">→</span> <span class="inlinecode"><a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a></span>, if <span class="inlinecode"><a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a></span> is not free in <span class="inlinecode"><a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a></span>
 
 <div class="paragraph"> </div>
 
     Using de Bruijn indices this corresponds to ensuring that
-    <span class="inlinecode">[<a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a>]</span> contains no references to the variable with index <span class="inlinecode">0</span> (or any of it's
+    <span class="inlinecode"><a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a></span> contains no references to the variable with index <span class="inlinecode">0</span> (or any of it's
     lifted occurrences), which can be expressed by the condition
+
+<div class="paragraph"> </div>
+
         <span class="inlinecode"><a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a></span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a></span> <span class="inlinecode">0</span> <span class="inlinecode"><a class="idref" href="Eta.html#g"><span class="id" type="variable">g</span></a></span>
-    Ensuring that *all* variables in <span class="inlinecode">[<a class="idref" href="Eta.html#g"><span class="id" type="variable">g</span></a>]</span> are of higher binding level.
+
+<div class="paragraph"> </div>
+
+    ensuring that <i>all</i> variables in <span class="inlinecode"><a class="idref" href="Eta.html#g"><span class="id" type="variable">g</span></a></span> are of higher binding level.
 
 <div class="paragraph"> </div>
 
     Moreover, after the eta-conversion we have lost one λ binder,
-    hence we "un-shift" <span class="inlinecode">[<a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a>]</span> to <span class="inlinecode">[<a class="idref" href="Eta.html#g"><span class="id" type="variable">g</span></a>]</span>.
+    hence we "un-shift" <span class="inlinecode"><a class="idref" href="Rels.html#f"><span class="id" type="variable">f</span></a></span> to <span class="inlinecode"><a class="idref" href="Eta.html#g"><span class="id" type="variable">g</span></a></span>.
 
 </div>
 <div class="code">
@@ -73,6 +79,8 @@
 We defined <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta"><span class="id" type="definition">eta</span></a></span> as the compatible closure of the primitive relation. 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Definition</span> <a name="Eta.eta"><span class="id" type="definition">eta</span></a> := <a class="idref" href="Rels.html#Rels.clos_compat"><span class="id" type="inductive">clos_compat</span></a> <a class="idref" href="Eta.html#Eta.eta_prim"><span class="id" type="inductive">eta_prim</span></a>.<br/>
 
 <br/>
@@ -110,9 +118,12 @@ A couple of examples to make sure our definition works with at least
 We prove a couple of substitution lemmas regarding <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta"><span class="id" type="definition">eta</span></a></span>. 
 <div class="paragraph"> </div>
 
- <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_prim"><span class="id" type="inductive">eta_prim</span></a></span> is substitutive (as per Barendregt's definition) 
+ <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_prim"><span class="id" type="inductive">eta_prim</span></a></span> is substitutive (as per Barendregt's definition)
+
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Eta.eta_prim_substitutive"><span class="id" type="lemma">eta_prim_substitutive</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> (<span class="id" type="var">M</span> <span class="id" type="var">N</span> <span class="id" type="var">L</span>: <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>) (<span class="id" type="var">n</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Datatypes.html#nat"><span class="id" type="inductive">nat</span></a>),<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_prim"><span class="id" type="inductive">eta_prim</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Eta.html#Eta.eta_prim"><span class="id" type="inductive">eta_prim</span></a> (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Eta.html#n"><span class="id" type="variable">n</span></a> <a class="idref" href="Eta.html#L"><span class="id" type="variable">L</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Eta.html#n"><span class="id" type="variable">n</span></a> <a class="idref" href="Eta.html#L"><span class="id" type="variable">L</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a>).<br/>
@@ -275,6 +286,8 @@ We now show <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_sta
 Additionally, <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a></span> is closed under lifting 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Eta.eta_star_lift_closed"><span class="id" type="lemma">eta_star_lift_closed</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">k</span> <span class="id" type="var">b</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> <a class="idref" href="Eta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Eta.html#b"><span class="id" type="variable">b</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> <a class="idref" href="Eta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Eta.html#b"><span class="id" type="variable">b</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a>).<br/>
@@ -357,6 +370,8 @@ Some general properties about <span class="inlinecode"><a class="idref" href="Et
  Parallel eta is reflexive on all <span class="inlinecode"><a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a></span>s 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Eta.eta_par_refl"><span class="id" type="lemma">eta_par_refl</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">t</span>, <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Eta.html#t"><span class="id" type="variable">t</span></a> <a class="idref" href="Eta.html#t"><span class="id" type="variable">t</span></a>.<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
@@ -375,6 +390,8 @@ Some general properties about <span class="inlinecode"><a class="idref" href="Et
 Parallel eta is closed under lifting 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Eta.eta_par_lift_closed"><span class="id" type="lemma">eta_par_lift_closed</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">k</span> <span class="id" type="var">b</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> <a class="idref" href="Eta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Eta.html#b"><span class="id" type="variable">b</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> <a class="idref" href="Eta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Eta.html#b"><span class="id" type="variable">b</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a>).<br/>
@@ -406,6 +423,8 @@ Parallel eta is closed under lifting
 <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a></span> is substitutive 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Eta.eta_par_substitutive"><span class="id" type="lemma">eta_par_substitutive</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> (<span class="id" type="var">M</span> <span class="id" type="var">N</span> <span class="id" type="var">L</span>: <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>) (<span class="id" type="var">n</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Datatypes.html#nat"><span class="id" type="inductive">nat</span></a>),<br/>
 &nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Eta.html#n"><span class="id" type="variable">n</span></a> <a class="idref" href="Eta.html#L"><span class="id" type="variable">L</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Eta.html#n"><span class="id" type="variable">n</span></a> <a class="idref" href="Eta.html#L"><span class="id" type="variable">L</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a>).<br/>
@@ -430,6 +449,8 @@ Parallel eta is closed under lifting
 <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a></span> is fully closed under parallel substitution 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Eta.eta_par_subst_closed"><span class="id" type="lemma">eta_par_subst_closed</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> (<span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>: <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>), <span class="id" type="keyword">∀</span> <span class="id" type="var">n</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Eta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Eta.html#N'"><span class="id" type="variable">N'</span></a> → <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Eta.html#n"><span class="id" type="variable">n</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Eta.html#n"><span class="id" type="variable">n</span></a> <a class="idref" href="Eta.html#N'"><span class="id" type="variable">N'</span></a> <a class="idref" href="Eta.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
@@ -468,6 +489,8 @@ We now describe the relationships between <span class="inlinecode"><a class="idr
  <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta"><span class="id" type="definition">eta</span></a></span> implies <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a></span> 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Eta.eta_imp_eta_par"><span class="id" type="lemma">eta_imp_eta_par</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>, <a class="idref" href="Eta.html#Eta.eta"><span class="id" type="definition">eta</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a>.<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
@@ -487,6 +510,8 @@ We now describe the relationships between <span class="inlinecode"><a class="idr
 <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a></span> implies <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a></span> 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Eta.eta_par_imp_eta_star"><span class="id" type="lemma">eta_par_imp_eta_star</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a>.<br/>
@@ -506,6 +531,8 @@ We now describe the relationships between <span class="inlinecode"><a class="idr
 The transitive closure of <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a></span> 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Definition</span> <a name="Eta.eta_par_trans"><span class="id" type="definition">eta_par_trans</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#clos_trans"><span class="id" type="inductive">clos_trans</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a>.<br/>
 
 <br/>
@@ -516,6 +543,8 @@ Finally, we show that <span class="inlinecode"><a class="idref" href="Eta.html#E
     <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta_par"><span class="id" type="inductive">eta_par</span></a></span> 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Eta.eta_star_eq_closure_of_eta_par"><span class="id" type="lemma">eta_star_eq_closure_of_eta_par</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Eta.html#Eta.eta_star"><span class="id" type="definition">eta_star</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'<->'_x"><span class="id" type="notation">↔</span></a> <a class="idref" href="Eta.html#Eta.eta_par_trans"><span class="id" type="definition">eta_par_trans</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Eta.html#N"><span class="id" type="variable">N</span></a>.<br/>
@@ -546,6 +575,8 @@ We now define a function for expressing a <span class="inlinecode"><a class="idr
     an <span class="inlinecode"><a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a></span>. 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Fixpoint</span> <a name="Eta.lam_k"><span class="id" type="definition">lam_k</span></a> (<span class="id" type="var">k</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Datatypes.html#nat"><span class="id" type="inductive">nat</span></a>) (<span class="id" type="var">M</span>: <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>) : <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> :=<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">match</span> <a class="idref" href="Eta.html#k"><span class="id" type="variable">k</span></a> <span class="id" type="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;| 0 ⇒ <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a><br/>
@@ -581,6 +612,8 @@ We now define a function for expressing a <span class="inlinecode"><a class="idr
 A trivial fact 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Example</span> <a name="Eta.lam_k_zero"><span class="id" type="definition">lam_k_zero</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span>, <a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> 0 <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <a class="idref" href="Eta.html#M"><span class="id" type="variable">M</span></a>.<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
@@ -594,6 +627,8 @@ A trivial fact
 This commutativity lemma which will be useful later. 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Eta.shift_0_lam_commute"><span class="id" type="lemma">shift_0_lam_commute</span></a>:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">n</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">t</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a> 0 (<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> <a class="idref" href="Eta.html#n"><span class="id" type="variable">n</span></a> <a class="idref" href="Eta.html#t"><span class="id" type="variable">t</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a> <a class="idref" href="Eta.html#n"><span class="id" type="variable">n</span></a> (<a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a> 0 <a class="idref" href="Eta.html#t"><span class="id" type="variable">t</span></a>)<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">)</span></a>.<br/>
@@ -613,8 +648,8 @@ This commutativity lemma which will be useful later.
 </div>
 
 <div class="doc">
-We now prove some basic properties about the relationship between <span class="inlinecode">[<a class="idref" href="Eta.html#Eta.eta"><span class="id" type="definition">eta</span></a>]</span>
-    and <span class="inlinecode">[<a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a>]</span>. (This is Lemma 3.2 in the Takahashi paper.) 
+We now prove some basic properties about the relationship between <span class="inlinecode"><a class="idref" href="Eta.html#Eta.eta"><span class="id" type="definition">eta</span></a></span>
+    and <span class="inlinecode"><a class="idref" href="Eta.html#Eta.lam_k"><span class="id" type="definition">lam_k</span></a></span>. (This is Lemma 3.2 in the Takahashi paper.) 
 </div>
 <div class="code">
 

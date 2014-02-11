@@ -75,6 +75,8 @@ Consider the following two examples of one-step beta reduction.
 <span class="inlinecode"><a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a></span> is closed under applications of <span class="inlinecode"><a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a></span> 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Beta.bred_lift_closed"><span class="id" type="lemma">bred_lift_closed</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">b</span> <span class="id" type="var">k</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a> (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#b"><span class="id" type="variable">b</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#b"><span class="id" type="variable">b</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>).<br/>
@@ -214,6 +216,8 @@ We now prove <span class="inlinecode"><a class="idref" href="Beta.html#Beta.bsta
 <span class="inlinecode"><a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a></span> is closed under the basic beta reduction 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_bred_closed"><span class="id" type="lemma">bstar_bred_closed</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> 0 <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
@@ -266,6 +270,8 @@ We now prove <span class="inlinecode"><a class="idref" href="Beta.html#Beta.bsta
     relations 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_weak_subst"><span class="id" type="lemma">bstar_weak_subst</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>).<br/>
@@ -298,6 +304,8 @@ The is the most useful statement: <span class="inlinecode"><a class="idref" href
     complete (parallel) closure under <span class="inlinecode"><span class="id" type="tactic">subst</span></span> 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Beta.bstar_subst_closed"><span class="id" type="lemma">bstar_subst_closed</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span> <span class="id" type="var">N</span> <span class="id" type="var">N'</span>,<br/>
 &nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> (<a class="idref" href="Untyped.html#DeBruijn.App"><span class="id" type="constructor">App</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> 0 <a class="idref" href="Beta.html#N'"><span class="id" type="variable">N'</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
@@ -316,6 +324,8 @@ The is the most useful statement: <span class="inlinecode"><a class="idref" href
 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Inductive</span> <a name="Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> : <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> → <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> → <span class="id" type="keyword">Prop</span> :=<br/>
 &nbsp;&nbsp;| <a name="Beta.beta_par_var"><span class="id" type="constructor">beta_par_var</span></a>: <span class="id" type="keyword">∀</span> <span class="id" type="var">n</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> <a class="idref" href="Beta.html#n"><span class="id" type="variable">n</span></a>) (<a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> <a class="idref" href="Beta.html#n"><span class="id" type="variable">n</span></a>)<br/>
@@ -338,6 +348,8 @@ Again, we prove a couple of useful results about <span class="inlinecode"><a cla
  Parallel beta reduction is reflexive on all <span class="inlinecode"><a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a></span>'s 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Beta.beta_par_refl"><span class="id" type="lemma">beta_par_refl</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">t</span>, <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#t"><span class="id" type="variable">t</span></a> <a class="idref" href="Beta.html#t"><span class="id" type="variable">t</span></a>.<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
@@ -357,6 +369,8 @@ Again, we prove a couple of useful results about <span class="inlinecode"><a cla
 Parallel beta subsumes <span class="inlinecode"><a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a></span> 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Beta.bred_imp_beta_par"><span class="id" type="lemma">bred_imp_beta_par</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.bred"><span class="id" type="inductive">bred</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>.<br/>
@@ -373,6 +387,8 @@ Parallel beta subsumes <span class="inlinecode"><a class="idref" href="Beta.html
 <span class="inlinecode"><a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a></span> implies <span class="inlinecode"><a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a></span> 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Beta.beta_par_imp_bstar"><span class="id" type="lemma">beta_par_imp_bstar</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a> → <a class="idref" href="Beta.html#Beta.bstar"><span class="id" type="definition">bstar</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#N"><span class="id" type="variable">N</span></a>.<br/>
@@ -392,6 +408,8 @@ Parallel beta subsumes <span class="inlinecode"><a class="idref" href="Beta.html
 <span class="inlinecode"><a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a></span> is closed under <span class="inlinecode"><a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a></span> <span class="inlinecode"><a class="idref" href="Subst.html#k"><span class="id" type="variable">k</span></a></span> 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="Beta.beta_par_shift"><span class="id" type="lemma">beta_par_shift</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">M'</span>, <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a> → <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a> (<a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#M"><span class="id" type="variable">M</span></a>) (<a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a> <a class="idref" href="Beta.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Beta.html#M'"><span class="id" type="variable">M'</span></a>).<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
@@ -422,6 +440,8 @@ Parallel beta subsumes <span class="inlinecode"><a class="idref" href="Beta.html
 Transitive closure of <span class="inlinecode"><a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a></span> 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Definition</span> <a name="Beta.beta_par_trans"><span class="id" type="definition">beta_par_trans</span></a> := <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Relations.Relation_Operators.html#clos_trans"><span class="id" type="inductive">clos_trans</span></a> <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> <a class="idref" href="Beta.html#Beta.beta_par"><span class="id" type="inductive">beta_par</span></a>.<br/>
 
 <br/>

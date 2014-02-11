@@ -61,17 +61,6 @@ We introduce some notational conveniences for pretty lambda terms.
 <span class="id" type="keyword">Infix</span> <a name="::x_'$'_x"><span class="id" type="notation">"</span></a>$" := <a class="idref" href="Untyped.html#PrettyTerm.App"><span class="id" type="constructor">PrettyTerm.App</span></a> (<span class="id" type="tactic">at</span> <span class="id" type="keyword">level</span> 25, <span class="id" type="tactic">left</span> <span class="id" type="keyword">associativity</span>).<br/>
 
 <br/>
-<span class="id" type="keyword">Notation</span> <a name="::'ᵥ'_x"><span class="id" type="notation">"</span></a>ᵥ x" := (<a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> <span class="id" type="var">x</span>) (<span class="id" type="tactic">at</span> <span class="id" type="keyword">level</span> 20).<br/>
-<span class="id" type="keyword">Notation</span> <a name="::'λ. '_x"><span class="id" type="notation">"</span></a>λ.  M" := (<a class="idref" href="Untyped.html#DeBruijn.Lam"><span class="id" type="constructor">Lam</span></a> <span class="id" type="var">M</span>) (<span class="id" type="tactic">at</span> <span class="id" type="keyword">level</span> 30).<br/>
-<span class="comment">(*&nbsp;Infix&nbsp;"x&nbsp;&nbsp;y"&nbsp;:=&nbsp;App&nbsp;(at&nbsp;level&nbsp;25,&nbsp;left&nbsp;associativity).&nbsp;*)</span><br/>
-
-<br/>
-</div>
-
-<div class="doc">
-TODO There is some problem with operator precedence with <span class="inlinecode">=</span>. 
-</div>
-<div class="code">
 <span class="id" type="keyword">Example</span> <a name="prettier"><span class="id" type="definition">prettier</span></a> :<br/>
 &nbsp;&nbsp;<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">(</span></a><a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">\</span></a>"f" <a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">~&gt;</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"f" <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">\</span></a>"x" <a class="idref" href="Untyped.html#::'\'_x_'~>'_x"><span class="id" type="notation">~&gt;</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"x" <a class="idref" href="Untyped.html#::x_'$'_x"><span class="id" type="notation">$</span></a> <a class="idref" href="Untyped.html#::'`'_x"><span class="id" type="notation">`</span></a>"y"<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">)</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a><br/>
 &nbsp;&nbsp;<a class="idref" href="Untyped.html#PrettyTerm.Lam"><span class="id" type="constructor">PrettyTerm.Lam</span></a> "f"<br/>

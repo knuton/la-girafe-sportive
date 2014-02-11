@@ -24,7 +24,6 @@
 <span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Arith.Compare_dec.html#"><span class="id" type="library">Coq.Arith.Compare_dec</span></a>.<br/>
 <span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Arith.Plus.html#"><span class="id" type="library">Coq.Arith.Plus</span></a>.<br/>
 <span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Arith.Lt.html#"><span class="id" type="library">Coq.Arith.Lt</span></a>.<br/>
-<span class="id" type="keyword">Require</span> <span class="id" type="keyword">Import</span> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.omega.Omega.html#"><span class="id" type="library">Omega</span></a>.<br/>
 
 <br/>
 </div>
@@ -33,6 +32,8 @@
 (l)ift (t)erms by some (l)evel if greater or equal the (b)ound 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Fixpoint</span> <a name="lift"><span class="id" type="definition">lift</span></a> (<span class="id" type="var">l</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Datatypes.html#nat"><span class="id" type="inductive">nat</span></a>) (<span class="id" type="var">b</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Datatypes.html#nat"><span class="id" type="inductive">nat</span></a>) (<span class="id" type="var">t</span>: <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>) : <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> :=<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">match</span> <a class="idref" href="Subst.html#t"><span class="id" type="variable">t</span></a> <span class="id" type="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> <span class="id" type="var">i</span> <span class="id" type="keyword">as</span> <span class="id" type="var">v</span> ⇒  <span class="id" type="keyword">if</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Arith.Compare_dec.html#lt_dec"><span class="id" type="lemma">lt_dec</span></a> <span class="id" type="var">i</span> <a class="idref" href="Subst.html#b"><span class="id" type="variable">b</span></a>) <span class="id" type="keyword">then</span> <span class="id" type="var">v</span> <span class="id" type="keyword">else</span> <a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> (<span class="id" type="var">i</span><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Peano.html#:nat_scope:x_'+'_x"><span class="id" type="notation">+</span></a><a class="idref" href="Subst.html#l"><span class="id" type="variable">l</span></a>)<br/>
@@ -48,9 +49,11 @@
 </div>
 
 <div class="doc">
-Substitute the variable with index <span class="inlinecode">[<a class="idref" href="Subst.html#v"><span class="id" type="variable">v</span></a>]</span> by <span class="inlinecode">[<a class="idref" href="Subst.html#r"><span class="id" type="variable">r</span></a>]</span> in the term <span class="inlinecode">[<a class="idref" href="Untyped.html#t"><span class="id" type="variable">t</span></a>]</span> 
+Substitute the variable with index <span class="inlinecode"><a class="idref" href="Subst.html#v"><span class="id" type="variable">v</span></a></span> by <span class="inlinecode"><a class="idref" href="Subst.html#r"><span class="id" type="variable">r</span></a></span> in the term <span class="inlinecode"><a class="idref" href="Untyped.html#t"><span class="id" type="variable">t</span></a></span> 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Fixpoint</span> <a name="subst"><span class="id" type="definition">subst</span></a> (<span class="id" type="var">v</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Datatypes.html#nat"><span class="id" type="inductive">nat</span></a>) (<span class="id" type="var">r</span>: <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>) (<span class="id" type="var">t</span>: <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>) : <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a> :=<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">match</span> <a class="idref" href="Subst.html#t"><span class="id" type="variable">t</span></a> <span class="id" type="keyword">with</span><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| <a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> <span class="id" type="var">i</span> ⇒  <span class="id" type="keyword">match</span> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Arith.Compare_dec.html#nat_compare"><span class="id" type="definition">nat_compare</span></a> <span class="id" type="var">i</span> <a class="idref" href="Subst.html#v"><span class="id" type="variable">v</span></a>) <span class="id" type="keyword">with</span><br/>
@@ -275,12 +278,14 @@ The substitution lemma.
 
 <div class="paragraph"> </div>
 
-       <span class="inlinecode">[<a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a></span> <span class="inlinecode">=/=</span> <span class="inlinecode"><a class="idref" href="Rels.html#y"><span class="id" type="variable">y</span></a>]</span> and <span class="inlinecode">[<a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a>]</span> not free in <span class="inlinecode">[<a class="idref" href="Subst.html#L"><span class="id" type="variable">L</span></a>]</span> implies:
+       <span class="inlinecode"><a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a></span> <span class="inlinecode">=/=</span> <span class="inlinecode"><a class="idref" href="Rels.html#y"><span class="id" type="variable">y</span></a></span> and <span class="inlinecode"><a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a></span> not free in <span class="inlinecode"><a class="idref" href="Subst.html#L"><span class="id" type="variable">L</span></a></span> implies:
            <span class="inlinecode"><a class="idref" href="Subst.html#M"><span class="id" type="variable">M</span></a>[<a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a>/<a class="idref" href="Subst.html#N"><span class="id" type="variable">N</span></a>][<a class="idref" href="Rels.html#y"><span class="id" type="variable">y</span></a>/<a class="idref" href="Subst.html#L"><span class="id" type="variable">L</span></a>]</span> <span class="inlinecode">=</span> <span class="inlinecode"><a class="idref" href="Subst.html#M"><span class="id" type="variable">M</span></a>[<a class="idref" href="Rels.html#y"><span class="id" type="variable">y</span></a>/<a class="idref" href="Subst.html#L"><span class="id" type="variable">L</span></a>][<a class="idref" href="Rels.html#x"><span class="id" type="variable">x</span></a>/(<a class="idref" href="Subst.html#N"><span class="id" type="variable">N</span></a>[<a class="idref" href="Rels.html#y"><span class="id" type="variable">y</span></a>/<a class="idref" href="Subst.html#L"><span class="id" type="variable">L</span></a>])]</span>
-
+<span class="inlinecode"></span>
 </div>
 <div class="code">
-<span class="id" type="keyword">Lemma</span> <a name="subst_lemma"><span class="id" type="lemma">subst_lemma</span></a>: <span class="id" type="keyword">∀</span> (<span class="id" type="var">M</span> <span class="id" type="var">N</span> <span class="id" type="var">L</span>: <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>), <span class="id" type="keyword">∀</span> (<span class="id" type="var">i</span> <span class="id" type="var">j</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Datatypes.html#nat"><span class="id" type="inductive">nat</span></a>),<br/>
+
+<br/>
+<span class="id" type="keyword">Lemma</span>× <a name="subst_lemma"><span class="id" type="lemma">subst_lemma</span></a>: <span class="id" type="keyword">∀</span> (<span class="id" type="var">M</span> <span class="id" type="var">N</span> <span class="id" type="var">L</span>: <a class="idref" href="Untyped.html#DeBruijn.lterm"><span class="id" type="inductive">lterm</span></a>), <span class="id" type="keyword">∀</span> (<span class="id" type="var">i</span> <span class="id" type="var">j</span>: <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Datatypes.html#nat"><span class="id" type="inductive">nat</span></a>),<br/>
 &nbsp;&nbsp;&nbsp;(<a class="idref" href="Subst.html#i"><span class="id" type="variable">i</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Peano.html#:nat_scope:x_'<='_x"><span class="id" type="notation">≤</span></a> <a class="idref" href="Subst.html#j"><span class="id" type="variable">j</span></a>) →<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Subst.html#j"><span class="id" type="variable">j</span></a> <a class="idref" href="Subst.html#L"><span class="id" type="variable">L</span></a> (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Subst.html#i"><span class="id" type="variable">i</span></a> <a class="idref" href="Subst.html#N"><span class="id" type="variable">N</span></a> <a class="idref" href="Subst.html#M"><span class="id" type="variable">M</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Subst.html#i"><span class="id" type="variable">i</span></a> (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> (<a class="idref" href="Subst.html#j"><span class="id" type="variable">j</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Peano.html#:nat_scope:x_'-'_x"><span class="id" type="notation">-</span></a><a class="idref" href="Subst.html#i"><span class="id" type="variable">i</span></a>) <a class="idref" href="Subst.html#L"><span class="id" type="variable">L</span></a> <a class="idref" href="Subst.html#N"><span class="id" type="variable">N</span></a>) (<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> (<a class="idref" href="Subst.html#j"><span class="id" type="variable">j</span></a><a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Peano.html#:nat_scope:x_'+'_x"><span class="id" type="notation">+</span></a>1) <a class="idref" href="Subst.html#L"><span class="id" type="variable">L</span></a> <a class="idref" href="Subst.html#M"><span class="id" type="variable">M</span></a>).<br/>
 <span class="id" type="keyword">Proof</span>.<br/>
@@ -304,6 +309,8 @@ A few other useful lemmas about <span class="inlinecode"><a class="idref" href="
     already shifted by <span class="inlinecode"><a class="idref" href="Subst.html#k"><span class="id" type="variable">k</span></a></span> simply un-shifts the term: 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="subst_shift_ident"><span class="id" type="lemma">subst_shift_ident</span></a>:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">t</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">k</span> <span class="id" type="var">v</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Subst.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Subst.html#v"><span class="id" type="variable">v</span></a> (<a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a> <a class="idref" href="Subst.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="Subst.html#t"><span class="id" type="variable">t</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a>  <a class="idref" href="Subst.html#t"><span class="id" type="variable">t</span></a>.<br/>
@@ -335,6 +342,8 @@ Similarly, if the variable we're substituting in is <span class="inlinecode"><a 
     it gets unshifted even more: 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="subst_k_shift_S_k"><span class="id" type="lemma">subst_k_shift_S_k</span></a>:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">t</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">k</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Subst.html#subst"><span class="id" type="definition">subst</span></a> <a class="idref" href="Subst.html#k"><span class="id" type="variable">k</span></a> (<a class="idref" href="Untyped.html#DeBruijn.Var"><span class="id" type="constructor">Var</span></a> 0) (<a class="idref" href="Subst.html#shift"><span class="id" type="definition">shift</span></a> (<a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Datatypes.html#S"><span class="id" type="constructor">S</span></a> <a class="idref" href="Subst.html#k"><span class="id" type="variable">k</span></a>) <a class="idref" href="Subst.html#t"><span class="id" type="variable">t</span></a>) <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Logic.html#:type_scope:x_'='_x"><span class="id" type="notation">=</span></a> <a class="idref" href="Subst.html#t"><span class="id" type="variable">t</span></a>.<br/>
@@ -393,6 +402,8 @@ Given compatible bounds, a sequence of <span class="inlinecode"><a class="idref"
     way: 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="lift_lift"><span class="id" type="lemma">lift_lift</span></a>:<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">b1</span> <span class="id" type="var">b2</span> <span class="id" type="var">k1</span> <span class="id" type="var">k2</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Subst.html#b1"><span class="id" type="variable">b1</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Peano.html#:nat_scope:x_'<='_x"><span class="id" type="notation">≤</span></a> <a class="idref" href="Subst.html#b2"><span class="id" type="variable">b2</span></a> →<br/>
@@ -445,6 +456,8 @@ Given compatible bounds, a sequence of <span class="inlinecode"><a class="idref"
 This is a reverse statement of <span class="inlinecode"><a class="idref" href="Subst.html#lift_lift"><span class="id" type="lemma">lift_lift</span></a></span>: 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="lift_lift_rev"><span class="id" type="lemma">lift_lift_rev</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">wk</span> <span class="id" type="var">k</span> <span class="id" type="var">ws</span> <span class="id" type="var">s</span> <span class="id" type="var">t</span>,<br/>
 &nbsp;&nbsp;<a class="idref" href="Subst.html#k"><span class="id" type="variable">k</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Peano.html#:nat_scope:x_'>='_x"><span class="id" type="notation">≥</span></a> <a class="idref" href="Subst.html#s"><span class="id" type="variable">s</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Peano.html#:nat_scope:x_'+'_x"><span class="id" type="notation">+</span></a> <a class="idref" href="Subst.html#ws"><span class="id" type="variable">ws</span></a> →<br/>
@@ -464,6 +477,8 @@ This is a reverse statement of <span class="inlinecode"><a class="idref" href="S
 <span class="inlinecode"><a class="idref" href="Subst.html#lift"><span class="id" type="definition">lift</span></a></span> distributes over <span class="inlinecode"><span class="id" type="tactic">subst</span></span>, also in a specific way: 
 </div>
 <div class="code">
+
+<br/>
 <span class="id" type="keyword">Lemma</span> <a name="lift_distr_subst"><span class="id" type="lemma">lift_distr_subst</span></a>:<br/>
 &nbsp;&nbsp;<span class="id" type="keyword">∀</span> <span class="id" type="var">M</span> <span class="id" type="var">N</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">v</span>, <span class="id" type="keyword">∀</span> <span class="id" type="var">i</span> <span class="id" type="var">b</span>,<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a class="idref" href="Subst.html#v"><span class="id" type="variable">v</span></a> <a class="idref" href="http://coq.inria.fr/distrib/8.4pl3/stdlib/Coq.Init.Peano.html#:nat_scope:x_'<='_x"><span class="id" type="notation">≤</span></a> <a class="idref" href="Subst.html#b"><span class="id" type="variable">b</span></a> →<br/>
