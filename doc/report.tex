@@ -1,0 +1,77 @@
+%%%% verbatim standard Coq headers with --utf8
+\documentclass[12pt]{report}
+\usepackage[utf8x]{inputenc}
+
+%Warning: tipa declares many non-standard macros used by utf8x to
+%interpret utf8 characters but extra packages might have to be added
+%(e.g. "textgreek" for Greek letters not already in tipa).
+%Use coqdoc's option -p to add new packages.
+\usepackage{tipa}
+
+\usepackage[T1]{fontenc}
+\usepackage{fullpage}
+\usepackage{coqdoc}
+\usepackage{amsmath,amssymb}
+%%%% END Coq headers
+
+\title{Coq formalisation of \\
+    Postponement and Standardization theorems\\
+    in the untyped lambda-calculus}
+\author{
+    Johannes Emerich
+        \href{mailto:johannes@emerich.de}{
+        \normalsize \texttt{(johannes@emerich.de)}}\\
+    Ignas Vyšniauskas
+        \href{mailto:i.vysniauskas@gmail.com}{
+        \normalsize \texttt{(i.vysniauskas@gmail.com)}}\\
+\\
+  ILLC \\
+  Universiteit van Amsterdam
+  \\
+  \\
+  \emph{under the supervision of}\\
+  \\
+    Dimitri Hendriks
+        \href{mailto:diem@cs.vu.nl}{
+        \normalsize \texttt{(diem@cs.vu.nl)}}\\
+    Femke van Raamsdonk
+        \href{mailto:femke@few.vu.nl}{
+        \normalsize \texttt{(femke@few.vu.nl)}}\\
+\\
+  Vrije Universiteit Amsterdam
+}
+
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\begin{abstract}
+We give Coq formalizations of two proofs showing well-known results
+about the untyped lambda calculus.
+
+The main results are complete proofs of the Postponement and
+Standardization theorems, formalizing parts of, respectively:
+\begin{itemize}
+    \item Masako Takahashi. ``Parallel Reductions in Lambda-calculus''
+
+    (Information and Computation, Volume 118, 1995)
+    \item Ryo Kashima. ``A Proof of the Standardization Theorem in
+        Lambda-Calculus''
+
+      Research Reports on Mathematical and Computing Sciences, C-145, (Tokyo
+      Institute of Technology, 2000)
+\end{itemize}
+\end{abstract}
+
+\tableofcontents
+
+\input{Untyped}
+\input{Subst}
+\input{Rels}
+\input{Beta}
+\input{Eta}
+\input{Postpone}
+\input{Standardization}
+
+\end{document}
