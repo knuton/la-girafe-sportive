@@ -30,7 +30,6 @@ Notation "ᵥ x" := (Var x) (at level 20).
 Notation "λ.  M" := (Lam M) (at level 30).
 (* Infix "x  y" := App (at level 25, left associativity). *)
 
-(** TODO There is some problem with operator precedence with [=]. *)
 Example prettier :
   (\"f" ~> `"f" $ \"x" ~> `"x" $ `"y") =
   PrettyTerm.Lam "f"
