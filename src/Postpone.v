@@ -13,15 +13,24 @@ Require Import Rels.
 Require Import Beta.
 Require Import Eta.
 
+(** * Postponement theorem in Untyped Lambda Calculus *)
+
 Module Export Postpone.
 
-(** In this module, we prove the eta postponement theorem.
+(** This module contains a formalised proof of the ($\eta$#η#-)Postponement
+    Theorem for the untyped lambda calculus.
 
-    We (continue to) follow the proof of Masako Takahashi from
-    "Parallel Reductions in Lambda-calculus" (1995).
+    The formalisation is based on an ``informal'' proof due to Masako Takahashi
+    in ``Parallel Reductions in Lambda-calculus'' (Information and Computation,
+    Volume 118, 1995).
+
+    Except for the gymnastics related to working with de Bruijn indices, the
+    translation of the Takashi's proof is rather straightforward.
 **)
 
-(** We now prove various properties about the relation between [beta_par]
+(** ** Preliminaries *)
+
+(** We at first prove various properties about the relation between [beta_par]
     and the eta-expansion [lam_k]. (This is Lemma 3.3 in Takahashi).
 
     We however do it in in a slightly different order than in the paper,
