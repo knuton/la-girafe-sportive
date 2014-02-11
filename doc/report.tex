@@ -1,0 +1,26 @@
+\documentclass[12pt]{report}
+\usepackage[utf8x]{inputenc}
+
+%Warning: tipa declares many non-standard macros used by utf8x to
+%interpret utf8 characters but extra packages might have to be added
+%(e.g. "textgreek" for Greek letters not already in tipa).
+%Use coqdoc's option -p to add new packages.
+\usepackage{tipa}
+
+\usepackage[T1]{fontenc}
+\usepackage{fullpage}
+\usepackage{coqdoc}
+\usepackage{amsmath,amssymb}
+\begin{document}
+
+\tableofcontents
+
+\input{Untyped}
+\input{Subst}
+\input{Rels}
+\input{Beta}
+\input{Eta}
+\input{Standardization}
+\input{Postpone}
+
+\end{document}
