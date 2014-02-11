@@ -10,7 +10,7 @@ Require Import Coq.Program.Equality.
 
 Module Export Standardization.
 
-(* This module contains a proof of the Standardization Theorem for the untyped
+(** This module contains a proof of the Standardization Theorem for the untyped
    lambda calculus, made lückenlos with the help of Coq.
 
    The actual proof is not original, but closely follows that given by Ryo
@@ -22,11 +22,11 @@ Module Export Standardization.
    Minor adaptations were made where prudent to facilitate work with the proof
    assistant. Those differences are pointed out in the comments and it was
    generally attempted to stay close to the paper, allowing the reader to study
-   paper and Coq verbatim side by side. *)
+   paper and Coq verbatim side by side. **)
 
 (** ** Preliminaries *)
 
-(** Reduction Numbering (Definition 2.1) **)
+(** *** Definition 2.1, Reduction Numbering *)
 
 (* Count the total number of redexes in a term. *)
 
@@ -115,7 +115,7 @@ Proof.
     simpl. assumption.
 Qed.
 
-(** Beta-reduction and left-most reduction (Definition 2.2) **)
+(** *** Definition 2.2, Beta-reduction and left-most reduction *)
 
 (* The paper defines beta-reduction in terms of the [nthred] relation.
 
@@ -169,7 +169,7 @@ Definition lstar_trans := rt_trans lterm lmost.
 
 (** *** Definition 2.3, Standard Reduction Sequence *)
 
-(** Preliminaries *)
+(** **** Preliminaries *)
 
 (* A lambda sequence, [seq], is a lambda term or a lambda sequence together
    with a number and a lambda term. *)
@@ -335,7 +335,7 @@ Proof.
       left. inversion H6. rewrite H8. simpl. omega.
 Qed.
 
-(** Standard reduction sequence **)
+(** **** Standard reduction sequence **)
 
 (* A standard reduction sequence, [stseq], is a lambda sequence [s] which is a
    monotone reduction sequence. *)
@@ -390,7 +390,7 @@ Qed.
 Lemma stseq_unit : forall M, stseq (seq_unit M).
 Proof. intros. unfold stseq. split. apply redseq_unit. apply monotone_unit. Qed.
 
-(** A range of respectful operations on reduction sequences. *)
+(** **** A range of respectful operations on reduction sequences. *)
 
 (* Applying each member of a sequence [s] to a lambda term [M]. *)
 
@@ -954,7 +954,7 @@ Inductive st : lterm -> lterm -> Prop :=
 
 (** *** Lemma 3.3 *)
 
-(** (1) **)
+(** **** (1) **)
 Lemma hap_lstar : forall M N, hap M N -> lstar M N.
 Proof.
   intros. induction H as [ M | M N | M N P].
@@ -969,7 +969,7 @@ Proof.
     apply lstar_trans with (y := N). apply IHhap1. apply IHhap2.
 Qed.
 
-(** (2) **)
+(** **** (2) **)
 
 Lemma st_stseq : forall M N, st M N ->
   exists s, seqhead s = M /\ seqlast s = N /\ stseq s.
@@ -1039,7 +1039,7 @@ Qed.
 
 (** *** Lemma 3.4 *)
 
-(** (1) **)
+(** **** (1) **)
 Lemma st_refl : forall M, st M M.
 Proof.
   intros M.
@@ -1054,7 +1054,7 @@ Proof.
       assumption.
 Qed.
 
-(** (2) **)
+(** **** (2) **)
 Lemma hap__app_hap : forall M N P,
   hap M N -> hap (App M P) (App N P).
 Proof.
@@ -1064,7 +1064,7 @@ Proof.
     apply hap_trans with (B := App B P); assumption.
 Qed.
 
-(** (3) **)
+(** **** (3) **)
 Lemma hap_st__st : forall L M N,
   hap L M -> st M N -> st L N.
 Proof.
@@ -1079,7 +1079,7 @@ Proof.
       assumption.
 Qed.
 
-(** (4) **)
+(** **** (4) **)
 
 (* We first prove [subst_hap'], after which the actual lemma is easy to show. *)
 
@@ -1213,7 +1213,7 @@ Proof.
     fold lift. apply IHst.
 Qed.
 
-(** (5) **)
+(** **** (5) **)
 Lemma st_st__st_subst : forall M N P Q,
   st M N -> st P Q -> forall n, st (subst n P M) (subst n Q N).
 Proof.
