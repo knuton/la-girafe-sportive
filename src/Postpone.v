@@ -64,6 +64,7 @@ Qed.
 
 (** Similarly, a [k]-fold eta-expansion of a lambda abstraction can be reduced
     to a single lambda abstraction via parallel beta reduction. **)
+
 Lemma lam_k_beta_lam:
   forall k, forall M M',
     beta_par M M' -> beta_par (lam_k k (Lam M)) (Lam M').
@@ -87,6 +88,7 @@ Qed.
 
 (** In case of an application, we can also contract the whole eta-expansion of
     the applied term via parallel beta reduction *)
+
 Lemma lam_k_beta_app:
   forall k, forall M M' N N',
     beta_par M M' -> beta_par N N' ->
@@ -132,6 +134,7 @@ Qed.
 **)
 
 (** Parallel beta is closed under eta-expansion. **)
+
 Lemma beta_par_lam_k_closed:
   forall k, forall M N,
     beta_par M N -> beta_par (lam_k k M) (lam_k k N).
@@ -146,6 +149,7 @@ Qed.
 
 (** We can now prove the postponement theorem for the specific case of parallel
     reductions. This is Lemma 3.4 in Takahashi. **)
+
 Lemma postpone_par:
   forall M P N,
     eta_par M P -> beta_par P N ->
@@ -224,6 +228,7 @@ Qed.
 
 (** We now define the beta-eta relation and its reflexive-transitive closure
 **)
+
 Definition beta_eta := union lterm bred eta.
 Definition beta_eta_star := clos_refl_trans lterm beta_eta.
 
@@ -239,6 +244,7 @@ Definition beta_eta_star := clos_refl_trans lterm beta_eta.
 (** Firstly, since the reflexive-transitive closures are equivalent
     to the transitive closures of the parallel relations, the following holds:
 **)
+
 Lemma star_exists_iff_par_exists:
   forall M N,
   (exists P, bstar M P /\ eta_star P N) <->
@@ -255,6 +261,7 @@ Qed.
 
 (** Also, it is obviously sufficient to show this to hold for parallel beta,
     in order for it to also hold for the transitive closure: *)
+
 Lemma par_impl_par_trans:
   forall M N,
     (exists P, beta_par M P /\ eta_par P N) ->
@@ -267,6 +274,7 @@ Qed.
 
 (** Finally, a couple of "one-sided" rewrites for convenience within the proof.
 **)
+
 Lemma rewrite_existential_eta:
   forall M N,
   (exists P, beta_par M P /\ eta_star P N) <->
@@ -300,6 +308,7 @@ Qed.
 
 (** Here we consider the case where we postpone [eta_star] in the presence
     of only a parallel beta. **)
+
 Lemma eta_baby_postpone_eta:
   forall M P N,
     eta_star M P -> beta_par P N ->
@@ -333,6 +342,7 @@ Qed.
 
 (** Similarly, here we consider only the postponement of [eta_par] in the
     presence [bstar]: **)
+
 Lemma eta_baby_postpone_beta:
   forall M P N,
     eta_par M P -> bstar P N ->
@@ -366,6 +376,7 @@ Qed.
 (** We now combine all the previous lemmas to prove a simplified version of the
     eta-postponement where we consider separate [eta_star] and [bstar] reductions,
     rather than a single reduction of their union. **)
+
 Theorem eta_postponement_basic:
   forall M N P,
     eta_star M P -> bstar P N -> (exists P', bstar M P' /\ eta_star P' N).
@@ -410,6 +421,7 @@ Qed.
 (** Finally, we prove the full eta-postponement theorem using the
     separate reduction version in [eta_postponement_basic].
 **)
+
 Theorem eta_postponement:
   forall M N,
     beta_eta_star M N -> (exists P, bstar M P /\ eta_star P N).

@@ -30,6 +30,7 @@ Example inner_bred :
 Proof. apply bred_appl. apply bred_lam. apply bred_base. Qed.
 
 (** [bred] is closed under applications of [lift] **)
+
 Lemma bred_lift_closed:
   forall M N, forall b k,
     bred M N -> bred (lift k b M) (lift k b N).
@@ -129,6 +130,7 @@ Proof.
 Qed.
 
 (** [bstar] is closed under the basic beta reduction **)
+
 Lemma bstar_bred_closed:
   forall M M' N,
          bstar M M' -> bstar (App (Lam M) N) (subst 0 N M').
@@ -164,6 +166,7 @@ Qed.
 
 (** [bstar] is closed under variable substitution, like all compatible
     relations **)
+
 Lemma bstar_weak_subst:
   forall M, forall k, forall N N',
     bstar N N' -> bstar (subst k N M) (subst k N' M).
@@ -188,6 +191,7 @@ Qed.
 
 (** The is the most useful statement: [bstar] is also substitutive, giving
     complete (parallel) closure under [subst] **)
+
 Lemma bstar_subst_closed:
   forall M M' N N',
    bstar M M' -> bstar N N' -> bstar (App (Lam M) N) (subst 0 N' M').
@@ -200,6 +204,7 @@ Qed.
 
 
 (** * Parallel [beta] reduction *)
+
 Inductive beta_par : lterm -> lterm -> Prop :=
   | beta_par_var: forall n,
         beta_par (Var n) (Var n)
@@ -215,6 +220,7 @@ Inductive beta_par : lterm -> lterm -> Prop :=
 (** Again, we prove a couple of useful results about [beta_par] **)
 
 (** Parallel beta reduction is reflexive on all [lterm]'s **)
+
 Lemma beta_par_refl:
   forall t, beta_par t t.
 Proof.
@@ -228,6 +234,7 @@ Proof.
 Qed.
 
 (** Parallel beta subsumes [bred] **)
+
 Lemma bred_imp_beta_par:
   forall M N,
     bred M N -> beta_par M N.
@@ -238,6 +245,7 @@ Proof.
 Qed.
 
 (** [beta_par] implies [bstar] **)
+
 Lemma beta_par_imp_bstar:
   forall M N,
     beta_par M N -> bstar M N.
@@ -251,6 +259,7 @@ Proof.
 Qed.
 
 (** [beta_par] is closed under [shift k] **)
+
 Lemma beta_par_shift:
   forall k, forall M M', beta_par M M' -> beta_par (shift k M) (shift k M').
 Proof.
@@ -275,6 +284,7 @@ Proof.
 Qed.
 
 (** Transitive closure of [beta_par] **)
+
 Definition beta_par_trans := clos_trans lterm beta_par.
 
 (** We now show the equivalence between [bstar] and the transitive closure of
