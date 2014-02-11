@@ -3,9 +3,9 @@ Require Import Omega.
 Require Import Coq.Arith.Compare_dec.
 Require Import Coq.Arith.Plus.
 Require Import Coq.Arith.Lt.
-Require Import Omega.
 
 (** (l)ift (t)erms by some (l)evel if greater or equal the (b)ound **)
+
 Fixpoint lift (l: nat) (b: nat) (t: lterm) : lterm :=
   match t with
       | Var i as v =>  if (lt_dec i b) then v else Var (i+l)
@@ -16,7 +16,8 @@ Fixpoint lift (l: nat) (b: nat) (t: lterm) : lterm :=
 Definition shift (b: nat) (t: lterm) : lterm :=
   lift 1 b t.
 
-(** Substitute the variable with index [[v]] by [[r]] in the term [[t]] **)
+(** Substitute the variable with index [v] by [r] in the term [t] **)
+
 Fixpoint subst (v: nat) (r: lterm) (t: lterm) : lterm :=
   match t with
       | Var i =>  match (nat_compare i v) with
@@ -218,9 +219,10 @@ Qed.
 (** The substitution lemma.
     The named version looks like this:
 
-       [[x =/= y]] and [[x]] not free in [[L]] implies:
-           [M[x/N][y/L] = M[y/L][x/(N[y/L])]]
+       [x =/= y] and [x] not free in [L] implies:
+           [M[x/N][y/L] = M[y/L][x/(N[y/L])]
 **)
+
 Lemma subst_lemma: forall (M N L: lterm), forall (i j: nat),
    (i <= j) ->
        subst j L (subst i N M) = subst i (subst (j-i) L N) (subst (j+1) L M).
@@ -238,6 +240,7 @@ Qed.
 
 (** Attempting to substitute a variable with index [k] in a term which is
     already shifted by [k] simply un-shifts the term: **)
+
 Lemma subst_shift_ident:
     forall t, forall k v,
     subst k v (shift k t) =  t.
@@ -261,6 +264,7 @@ Qed.
 
 (** Similarly, if the variable we're substituting in is [Var 0], then
     it gets unshifted even more: **)
+
 Lemma subst_k_shift_S_k:
     forall t, forall k,
     subst k (Var 0) (shift (S k) t) = t.
@@ -311,6 +315,7 @@ Qed.
 
 (** Given compatible bounds, a sequence of [lift]s commutes in a very specific
     way: **)
+
 Lemma lift_lift:
     forall M, forall b1 b2 k1 k2,
       b1 <= b2 ->
@@ -354,6 +359,7 @@ Proof.
 Qed.
 
 (** This is a reverse statement of [lift_lift]: **)
+
 Lemma lift_lift_rev:
   forall wk k ws s t,
   k >= s + ws ->
@@ -367,6 +373,7 @@ Proof.
 Qed.
 
 (** [lift] distributes over [subst], also in a specific way: **)
+
 Lemma lift_distr_subst:
   forall M N, forall v, forall i b,
     v <= b ->

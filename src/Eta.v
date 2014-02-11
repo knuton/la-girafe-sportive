@@ -9,27 +9,30 @@ Require Import Coq.Arith.Compare_dec.
 
 Module Export Eta.
 
-(** * η-conversion *)
+(** * $\eta$#η#-conversion *)
 
 (** We define [eta] conversion as the compatible closure of the [eta_base]
     relation. In literature eta-conversion is usually specified as:
 
-        [[λx. (f x) ~> f]], if [[x]] is not free in [[f]]
+        [λx. (f x) -> f], if [x] is not free in [f]
 
     Using de Bruijn indices this corresponds to ensuring that
-    [[f]] contains no references to the variable with index [0] (or any of it's
+    [f] contains no references to the variable with index [0] (or any of it's
     lifted occurrences), which can be expressed by the condition
+
         [f = shift 0 g]
-    Ensuring that *all* variables in [[g]] are of higher binding level.
+
+    ensuring that _all_ variables in [g] are of higher binding level.
 
     Moreover, after the eta-conversion we have lost one λ binder,
-    hence we "un-shift" [[f]] to [[g]].
+    hence we "un-shift" [f] to [g].
 **)
 
 Inductive eta_prim : lterm -> lterm -> Prop :=
    eta_base (f g: lterm): (f = shift 0 g) -> eta_prim (Lam (App f (Var 0))) g.
 
 (** We defined [eta] as the compatible closure of the primitive relation. **)
+
 Definition eta := clos_compat eta_prim.
 
 (** A couple of examples to make sure our definition works with at least
@@ -53,7 +56,9 @@ Qed.
 
 (** We prove a couple of substitution lemmas regarding [eta]. **)
 
-(** [eta_prim] is substitutive (as per Barendregt's definition) **)
+(** [eta_prim] is substitutive (as per Barendregt's definition)
+**)
+
 Lemma eta_prim_substitutive:
   forall (M N L: lterm) (n: nat),
     eta_prim M N -> eta_prim (subst n L M) (subst n L N).
@@ -128,7 +133,7 @@ Proof.
   simpl. apply clos_appr. apply IHM2. assumption.
 Qed.
 
-(** * Reflexive-transitive closure of η-conversion *)
+(** * Reflexive-transitive closure of $\eta$#η#-conversion *)
 
 Definition eta_star := clos_refl_trans lterm eta.
 Definition eta_star_step := rt_step lterm eta.
@@ -181,6 +186,7 @@ Proof.
 Qed.
 
 (** Additionally, [eta_star] is closed under lifting **)
+
 Lemma eta_star_lift_closed:
   forall M N, forall k b,
     eta_star M N -> eta_star (lift k b M) (lift k b N).
@@ -240,6 +246,7 @@ Inductive eta_par : lterm -> lterm -> Prop :=
 (** Some general properties about [eta_par] **)
 
 (** Parallel eta is reflexive on all [lterm]s **)
+
 Lemma eta_par_refl:
   forall t, eta_par t t.
 Proof.
@@ -252,6 +259,7 @@ Proof.
 Qed.
 
 (** Parallel eta is closed under lifting **)
+
 Lemma eta_par_lift_closed:
   forall M N, forall k b,
     eta_par M N -> eta_par (lift k b M) (lift k b N).
@@ -276,6 +284,7 @@ Proof.
 Qed.
 
 (** [eta_par] is substitutive **)
+
 Lemma eta_par_substitutive:
   forall (M N L: lterm) (n: nat),
   eta_par M N -> eta_par (subst n L M) (subst n L N).
@@ -294,6 +303,7 @@ Proof.
 Qed.
 
 (** [eta_par] is fully closed under parallel substitution **)
+
 Lemma eta_par_subst_closed:
   forall (M M' N N': lterm), forall n,
     eta_par M M' -> eta_par N N' -> eta_par (subst n N M) (subst n N' M').
@@ -323,6 +333,7 @@ Qed.
 (** We now describe the relationships between [eta], [eta_par] and [eta_star] **)
 
 (** [eta] implies [eta_par] **)
+
 Lemma eta_imp_eta_par:
   forall M N, eta M N -> eta_par M N.
 Proof.
@@ -336,6 +347,7 @@ Proof.
 Qed.
 
 (** [eta_par] implies [eta_star] **)
+
 Lemma eta_par_imp_eta_star:
   forall M N,
     eta_par M N -> eta_star M N.
@@ -349,10 +361,12 @@ Proof.
 Qed.
 
 (** The transitive closure of [eta_par] **)
+
 Definition eta_par_trans := clos_trans lterm eta_par.
 
 (** Finally, we show that [eta_star] is equivalent to the transitive closure of
     [eta_par] **)
+
 Lemma eta_star_eq_closure_of_eta_par:
   forall M N,
     eta_star M N <-> eta_par_trans M N.
@@ -375,6 +389,7 @@ Qed.
 
 (** We now define a function for expressing a [k]-fold [eta] expansion of
     an [lterm]. **)
+
 Fixpoint lam_k (k: nat) (M: lterm) : lterm :=
   match k with
     | 0 => M
@@ -403,6 +418,7 @@ Proof.
 Qed.
 
 (** A trivial fact **)
+
 Example lam_k_zero:
   forall M, lam_k 0 M = M.
 Proof.
@@ -410,6 +426,7 @@ Proof.
 Qed.
 
 (** This commutativity lemma which will be useful later. **)
+
 Lemma shift_0_lam_commute:
     forall n, forall t,
       shift 0 (lam_k n t) = (lam_k n (shift 0 t)).
@@ -426,8 +443,8 @@ Proof.
 Qed.
 
 
-(** We now prove some basic properties about the relationship between [[eta]]
-    and [[lam_k]]. (This is Lemma 3.2 in the Takahashi paper.) **)
+(** We now prove some basic properties about the relationship between [eta]
+    and [lam_k]. (This is Lemma 3.2 in the Takahashi paper.) **)
 
 (* Lemma 3.2 (1) *)
 Lemma eta_par_lam_k_var:
