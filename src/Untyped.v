@@ -26,10 +26,6 @@ Notation "` x" := (PrettyTerm.Var x) (at level 20).
 Notation "\ x ~> M" := (PrettyTerm.Lam x M) (at level 30).
 Infix "$" := PrettyTerm.App (at level 25, left associativity).
 
-Notation "ᵥ x" := (Var x) (at level 20).
-Notation "λ.  M" := (Lam M) (at level 30).
-(* Infix "x  y" := App (at level 25, left associativity). *)
-
 Example prettier :
   (\"f" ~> `"f" $ \"x" ~> `"x" $ `"y") =
   PrettyTerm.Lam "f"
