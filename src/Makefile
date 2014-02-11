@@ -21,7 +21,7 @@ $(DOCDIR)/index.html: $(VERNOCS)
 		-d $(DOCDIR) \
 		$(VERNACS)
 
-$(DOCDIR)/%.tex: %.v
+$(DOCDIR)/%.tex: %.vo
 	@mkdir -p $(DOCDIR)
 	coqdoc \
 		--utf8 \
@@ -29,7 +29,7 @@ $(DOCDIR)/%.tex: %.v
 		--parse-comments \
 		--latex \
 		-d $(DOCDIR) \
-		$<
+		$*.v
 
 %.vo: %.v
 	coqc $<
