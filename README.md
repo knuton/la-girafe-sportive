@@ -10,8 +10,10 @@ Standardization theorems, formalizing parts of, respectively:
 * Masako Takahashi.
   <cite>[Parallel Reductions in Lambda-calculus][takahashi]</cite><br>
   (Information and Computation, Volume 118, 1995)
-* Ryo Kashima.<cite>[A Proof of the Standardization Theorem in
-  Lambda-Calculus][kashima]</cite><br>
+* Ryo Kashima.
+  <cite>
+    [A Proof of the Standardization Theorem in Lambda-Calculus][kashima]
+  </cite><br>
   Research Reports on Mathematical and Computing Sciences, C-145, (Tokyo
   Institute of Technology, 2000).
 
